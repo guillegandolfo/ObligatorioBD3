@@ -1,4 +1,6 @@
-package accessoBD;
+package persistencia.consultas;
+
+
 
 public class Consultas {
 	

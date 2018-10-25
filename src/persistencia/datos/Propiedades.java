@@ -1,9 +1,9 @@
-package persistencia;
+package persistencia.datos;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-import Excepciones.Exc_Persistencia;
+import logica.Excepciones.Exc_Persistencia;
 
 public class Propiedades {
 	

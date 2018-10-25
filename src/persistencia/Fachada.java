@@ -2,9 +2,6 @@ package persistencia;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-
-
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -13,10 +10,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedList;
 
-import VO.VORevision;
-import VO.VoFolio;
-import Excepciones.Exc_Persistencia;
-import accessoBD.Consultas;
+import persistencia.consultas.Consultas;
+import persistencia.datos.Propiedades;
+import logica.Excepciones.Exc_Persistencia;
+import logica.VO.VORevision;
+import logica.VO.VoFolio;
+
 
 
 public class Fachada extends UnicastRemoteObject {
