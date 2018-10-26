@@ -4,9 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
+import java.util.LinkedList;
 import logica.Excepciones.Exc_Persistencia;
 import logica.Objetos.Folio;
 import persistencia.consultas.Consultas;
@@ -39,91 +37,103 @@ public class DAOFolios implements IDAOFolios{
         return existeFolio;
     }
 
-    public void insert(Folio fol, IConexion ic) throws ExceptionPersistencia {
-        /*Inicializo las variables*/
-        Conexion con = (Conexion) ic;
-        Connection c = con.getConexion();
+    public void insert(Folio fol, Connection con) throws Exc_Persistencia {
 
-        /*Hago la consulta a la base de datos*/
         try {
-            PreparedStatement pstmt = c.prepareStatement(Consultas.INGRESAR_NINIO);
-            pstmt.setInt(1, ninio.getCedula());
-            pstmt.setString(2, ninio.getNombre());
-            pstmt.setString(3, ninio.getApellido());
-            pstmt.executeUpdate();
-            pstmt.close();
+        	Consultas consulta = new Consultas();
+
+        	boolean existe = this.member(fol.getCodigo(), con);
+    		//Consulto si existe 
+        	if (existe){
+        		String query = consulta.insertarFolio();
+        		PreparedStatement pstmt = con.prepareStatement(query);
+    			pstmt.setString(1, fol.getCodigo());
+    			pstmt.setString(2, fol.getCaratula());
+    			pstmt.setInt(3, fol.getPaginas());
+    			pstmt.executeUpdate();
+        	
+        		pstmt.close();
+        	}
+        	
         } catch (SQLException ex) {
-            throw new ExceptionPersistencia(ExceptionPersistencia.OBTENER_DATOS);
+            throw new Exc_Persistencia("Error de conexion");
         }
     }
 
-    public Ninio find(int cedulaNinio, IConexion ic) throws ExceptionPersistencia {
-        /*Inicializo las variables*/
-        Ninio ninio = null;
-        Conexion con = (Conexion) ic;
-        Connection c = con.getConexion();
+    public Folio find(String cod, Connection con) throws Exc_Persistencia {
 
-        /*Hago la consulta a la base de datos*/
+        Folio folio = null;
+
         try {
-            PreparedStatement pstmt = c.prepareStatement(Consultas.OBTENER_NINIO);
-            pstmt.setInt(1, cedulaNinio);
+        	Consultas consulta = new Consultas();
+            PreparedStatement pstmt = con.prepareStatement(consulta.existeFolios());
+            pstmt.setString(1, cod);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                ninio = new Ninio(rs.getInt("cedula"), rs.getString("nombre"), rs.getString("apellido"), new DAOJuguetes(rs.getInt("cedula")));
+                folio = new Folio(rs.getString("codigo"), rs.getString("caratula"), rs.getInt("paginas"));
             }
             rs.close();
             pstmt.close();
         } catch (SQLException e) {
-            throw new ExceptionPersistencia(ExceptionPersistencia.OBTENER_DATOS);
+            throw new Exc_Persistencia("Error de conexion");
         }
 
-        return ninio;
+        return folio;
     }
 
-    public void delete(int cedulaNinio, IConexion ic) throws ExceptionPersistencia {
-        /*Inicializo las variables*/
-        Conexion con = (Conexion) ic;
-        Connection c = con.getConexion();
+    public void delete(String cod, Connection con) throws Exc_Persistencia {
 
-        /*Hago la consulta a la base de datos*/
         try {
-            /*TODO antes tengo que borrar los juguetes del ninio*/
-            this.find(cedulaNinio, ic).borrarJuguetes(ic);
-            System.out.println("Despues borrar juguetes");
-            PreparedStatement pstmt = c.prepareStatement(Consultas.BORRAR_NINIO);
-            pstmt.setInt(1, cedulaNinio);
-            pstmt.executeUpdate();
-            pstmt.close();
+
+    		boolean existe = this.member(cod, con);
+    		//Consulto si existe 
+    		if (existe){
+    			//Elimino las revisiones
+        		Consultas consulta = new Consultas();
+    			String query = consulta.eliminarRevisiones();
+    			PreparedStatement pstmt = con.prepareStatement(query);
+    			pstmt.setString(1, cod);
+    			pstmt.executeUpdate();
+    			
+    			//Elimino el Folio
+    			query = consulta.eliminarFolio();
+    			pstmt = con.prepareStatement(query);
+    			pstmt.setString(1, cod);
+    			pstmt.executeUpdate();
+    			pstmt.close();
+    			
+    		}
+    		
         } catch (SQLException e) {
-            throw new ExceptionPersistencia(ExceptionPersistencia.BORRAR_DATOS);
+            throw new Exc_Persistencia("Error de conexion");
         }
     }
 
-    public List<VONinio> listarNinios(IConexion ic) throws ExceptionPersistencia {
-        /*Inicializo las variables*/
-        Conexion con = (Conexion) ic;
-        Connection c = con.getConexion();
-        List<VONinio> ret = new ArrayList<>();
+    public LinkedList<Folio> listarFolios(Connection con) throws Exc_Persistencia {
 
-        /*Hago la consulta a la base de datos*/
+    	LinkedList<Folio> Lista = new LinkedList <Folio>();
+
         try {
-            PreparedStatement pstmt = c.prepareStatement(Consultas.LISTAR_NINIOS);
+        	Consultas consulta = new Consultas();
+            PreparedStatement pstmt = con.prepareStatement(consulta.listarFolios());
             ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
-                int cedula = rs.getInt("cedula");
-                String nombre = rs.getString("nombre");
-                String apellido = rs.getString("apellido");
-                ret.add(new VONinio(cedula, nombre, apellido));
-            }
+    			String Codigo = rs.getString("codigo");
+    			String Caratula = rs.getString("caratula");
+    			int Paginas = rs.getInt("paginas");
+    			
+    			Folio folio = new Folio(Codigo, Caratula, Paginas);
+    			Lista.add(folio);
+    		}
+
             rs.close();
             pstmt.close();
         } catch (SQLException e) {
-            throw new ExceptionPersistencia(ExceptionPersistencia.OBTENER_DATOS);
+            throw new Exc_Persistencia("Error de conexion");
         }
 
-        /*Devuelvo el resultado*/
-        return ret;
+		return Lista;
     }
     
     
