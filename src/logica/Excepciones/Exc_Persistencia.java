@@ -11,4 +11,6 @@ public class Exc_Persistencia extends Exception{
 	public Exc_Persistencia(String mensaje){
 		super(mensaje);
 	}
+	
+	
 }

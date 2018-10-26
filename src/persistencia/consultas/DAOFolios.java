@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import logica.Excepciones.Exc_Persistencia;
+import logica.Objetos.Folio;
 import persistencia.consultas.Consultas;
 
 public class DAOFolios implements IDAOFolios{
