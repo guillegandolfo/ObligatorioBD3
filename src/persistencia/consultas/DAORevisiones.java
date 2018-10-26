@@ -60,6 +60,13 @@ public class DAORevisiones {
 		}
 		
 	
+	public int Largo(Connection con) throws Exc_Persistencia{
+		
+		
+		
+		return 2;
+	}
+	
 	
 	
 }

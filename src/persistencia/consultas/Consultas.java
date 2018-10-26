@@ -2,7 +2,6 @@ package persistencia.consultas;
 
 
 
-
 public class Consultas {
 	
 	public Consultas() {
@@ -43,6 +42,11 @@ public class Consultas {
 	
 	public String listarRevisiones(){
 		return "select * from Juridico.Revisiones where codigoFolio = (?) order by numero";
+	}
+	
+	public String LargoRevisiones() {
+	//	String query = "select max(numero) from Juridico.Revisiones where codigoFolio = (?)";
+		return query;
 	}
 	
 }
