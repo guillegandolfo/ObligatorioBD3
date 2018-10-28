@@ -12,9 +12,9 @@ import java.util.LinkedList;
 
 import persistencia.consultas.Consultas;
 import persistencia.datos.Propiedades;
-import logica.Excepciones.Exc_Persistencia;
-import logica.VO.VORevision;
-import logica.VO.VoFolio;
+import logica.excepciones.Exc_Persistencia;
+import logica.vo.VORevision;
+import logica.vo.VoFolio;
 
 
 

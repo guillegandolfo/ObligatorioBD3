@@ -1,4 +1,4 @@
-package logica.Objetos;
+package logica.objetos;
 
 import java.io.Serializable;
 

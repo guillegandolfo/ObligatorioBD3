@@ -10,6 +10,10 @@ public class Conexion implements IConexion {
 		this.con = con;
 	}
 	
+	public Connection getConexion() {
+		return con;
+	}
+
 	public void setConexion(Connection con) {
 		this.con = con;
 	}

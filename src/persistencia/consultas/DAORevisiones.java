@@ -6,7 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import logica.Excepciones.Exc_Persistencia;;
+import logica.excepciones.Exc_Persistencia;;
 
 public class DAORevisiones {
 

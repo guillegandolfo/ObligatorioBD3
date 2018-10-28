@@ -1,6 +1,6 @@
 package persistencia.poolConexiones;
 
-import logica.excepciones.*;
+import logica.excepciones.PersistenciaException;
 
 public interface IPoolConexiones {
 

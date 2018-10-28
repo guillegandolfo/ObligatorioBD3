@@ -1,4 +1,4 @@
-package logica.VO;
+package logica.vo;
 
 import java.io.Serializable;
 

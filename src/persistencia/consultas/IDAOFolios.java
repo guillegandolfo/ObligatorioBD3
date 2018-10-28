@@ -2,8 +2,9 @@ package persistencia.consultas;
 
 import java.sql.Connection;
 import java.util.LinkedList;
-import logica.Excepciones.Exc_Persistencia;
-import logica.Objetos.Folio;
+
+import logica.excepciones.Exc_Persistencia;
+import logica.objetos.Folio;
 
 public interface IDAOFolios {
 

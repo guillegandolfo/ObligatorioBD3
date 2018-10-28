@@ -5,8 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
-import logica.Excepciones.Exc_Persistencia;
-import logica.Objetos.Folio;
+
+import logica.excepciones.Exc_Persistencia;
+import logica.objetos.Folio;
 import persistencia.consultas.Consultas;
 
 public class DAOFolios implements IDAOFolios{
