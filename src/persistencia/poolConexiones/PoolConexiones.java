@@ -48,7 +48,6 @@ public class PoolConexiones implements IPoolConexiones {
 		}	
 	}
 	
-	@Override
 	public IConexion obtenerConexion(boolean modifica) throws PersistenciaException {
 		
 		IConexion conexion = null;
@@ -106,7 +105,6 @@ public class PoolConexiones implements IPoolConexiones {
 		return conexion;
 	}
 	
-	@Override
 	public void liberarConexion(IConexion con, boolean ok) throws PersistenciaException{
 		// TODO Auto-generated method stub
 		
