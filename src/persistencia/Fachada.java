@@ -11,7 +11,7 @@ import java.sql.Statement;
 import java.util.LinkedList;
 
 import persistencia.consultas.Consultas;
-import persistencia.datos.Propiedades;
+
 import logica.excepciones.Exc_Persistencia;
 import logica.vo.VORevision;
 import logica.vo.VoFolio;
@@ -42,12 +42,12 @@ public class Fachada extends UnicastRemoteObject {
 	}
 	
 	private Fachada() throws RemoteException, Exc_Persistencia, ClassNotFoundException{
-		Propiedades p = new Propiedades();
+		/*Propiedades p = new Propiedades();
 		String driver = p.buscar("driver");
 		String url = p.buscar("url");
 		String usuario = p.buscar("usuario");
 		String password = p.buscar("password");
-		Class.forName(this.driver);
+		Class.forName(this.driver);*/
 	}
 
 
