@@ -26,7 +26,7 @@ public class Consultas {
 	/*public String eliminarFolio(){
 		return "delete from Juridico.Folios where codigo = (?)";
 	}*/
-	public String borrarFolioRevisiones() {
+	public String eliminarFolio() {
 		//Marcar en BD para borrar revisiones en cascada
 		return "delete from folios where codigo = (?)";
 	}	
