@@ -1,4 +1,4 @@
-package persistencia.consultas;
+package persistencia.daos;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

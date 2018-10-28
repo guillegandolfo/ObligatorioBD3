@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 import logica.excepciones.Exc_Persistencia;
-import persistencia.datos.Propiedades;
+import persistencia.config.Propiedades;
 
 
 public class main

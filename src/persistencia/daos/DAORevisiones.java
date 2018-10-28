@@ -1,4 +1,4 @@
-package persistencia.consultas;
+package persistencia.daos;
 import java.lang.String;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -6,7 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import logica.excepciones.Exc_Persistencia;;
+import logica.excepciones.Exc_Persistencia;
+import persistencia.consultas.Consultas;;
 
 public class DAORevisiones {
 
