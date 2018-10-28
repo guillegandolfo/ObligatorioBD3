@@ -45,10 +45,10 @@ public class DAOFolios implements IDAOFolios{
     public void insert(Folio fol, IConexion ic) throws Exc_Persistencia {
 
         try {
+        	Consultas consulta = new Consultas();
+        	boolean existe = this.member(fol.getCodigo(), ic);
         	Conexion c = (Conexion) ic;
             Connection con = c.getConexion();
-        	Consultas consulta = new Consultas();
-        	boolean existe = this.member(fol.getCodigo(), con);
     		//Consulto si existe 
         	if (existe){
         		String query = consulta.insertarFolio();
@@ -92,9 +92,10 @@ public class DAOFolios implements IDAOFolios{
     public void delete(String cod, IConexion ic) throws Exc_Persistencia {
 
         try {
+
+    		boolean existe = this.member(cod, ic);
         	Conexion c = (Conexion) ic;
             Connection con = c.getConexion();
-    		boolean existe = this.member(cod, con);
     		//Consulto si existe 
     		if (existe){
     			//Elimino las revisiones

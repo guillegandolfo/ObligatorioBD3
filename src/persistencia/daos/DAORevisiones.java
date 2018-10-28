@@ -5,9 +5,12 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedList;
 
+import logica.vo.VORevision;
 import logica.excepciones.Exc_Persistencia;
-import persistencia.consultas.Consultas;;
+import logica.objetos.Revision;
+import persistencia.consultas.Consultas;
 import persistencia.poolConexiones.Conexion;
 import persistencia.poolConexiones.IConexion;
 
@@ -54,8 +57,7 @@ public class DAORevisiones {
 			}
 			
 			rs.close();
-			pstmt.close();
-			con.close();	
+			pstmt.close();	
 				
 		}
 		catch(SQLException e) {
@@ -65,13 +67,129 @@ public class DAORevisiones {
 		}
 		
 	
-	public int Largo(Connection con) throws Exc_Persistencia{
+	public int Largo(String CodFolio, IConexion ic) throws Exc_Persistencia{
+    	
+		int Cantidad = 0;
+		try{
+			Conexion c = (Conexion) ic;
+	        Connection con = c.getConexion();
+	        Consultas consulta = new Consultas();
+			String query = consulta.MaxFolioId();
+			PreparedStatement pstmt = con.prepareStatement(query);
+			pstmt.setString(1, CodFolio);
+			ResultSet rs = pstmt.executeQuery();
+	        
+	        if (rs.next()){
+	        	Cantidad = rs.getInt(1);
+	        }
+			
+            rs.close();
+            pstmt.close();
+          
+	        } catch (SQLException e) {
+	            throw new Exc_Persistencia("Error en la conexion");
+	        }
+			return Cantidad;
+		}
+
+	
+	public Revision kEsimo(int numero, IConexion ic) throws Exc_Persistencia{
+    	
+		Revision rev = new Revision();
+		try{
+		Conexion c = (Conexion) ic;
+        Connection con = c.getConexion();
+        Consultas consulta = new Consultas();
+		String query = consulta.existeRevision();
+		PreparedStatement pstmt = con.prepareStatement(query);
+		pstmt.setString(1, this.codigoFolio);
+		pstmt.setInt(2, numero);
+		ResultSet rs = pstmt.executeQuery();
+        if (rs.next()){
+        	rev.setNumero(rs.getInt(1));
+        	rev.setCodigoFolio(rs.getString(2));
+        	rev.setDescripcion(rs.getString(3));
+        }
+        
+        rs.close();
+        pstmt.close();
+      
+        } catch (SQLException e) {
+            throw new Exc_Persistencia("Error en la conexion");
+        }
 		
-		
-		
-		return 2;
+		return rev;
 	}
 	
-	
+	public LinkedList <VORevision> listarRevisiones(IConexion ic) throws SQLException, Exc_Persistencia{
+		
+		LinkedList <VORevision> Lista = new LinkedList <VORevision>();
+		try{
+			Conexion c = (Conexion) ic;
+	        Connection con = c.getConexion();
+	        
+			Consultas consulta = new Consultas();
+			String query = consulta.existeFolios();
+			PreparedStatement pstmt = con.prepareStatement(query);
+			pstmt.setString(1, this.codigoFolio);
+			ResultSet rs = pstmt.executeQuery();
+			//Consulto si existe Folio
+			if (rs.next()){
+				
+				query = consulta.listarRevisiones();		
+				pstmt = con.prepareStatement(query);
+				pstmt.setString(1, this.codigoFolio);
+				rs = pstmt.executeQuery();		
+				
+				//Recorro resultados
+				while (rs.next()){
+					int Numero = rs.getInt("numero");
+					String CodigoFolio = rs.getString("codigoFolio");
+					String Descripcion = rs.getString("descripcion");
+					
+					VORevision Revision = new VORevision(Numero, CodigoFolio, Descripcion);
+					Lista.add(Revision);
+				}
+			}
+			
+		    rs.close();
+		    pstmt.close();
+	      
+	    } catch (SQLException e) {
+	        throw new Exc_Persistencia("Error en la conexion");
+	    }
+			
+		return Lista;
+	}	
+		
+	public void borrarRevision(int numero, IConexion ic) throws Exc_Persistencia{
+    	
+		try{
+		Conexion c = (Conexion) ic;
+        Connection con = c.getConexion();
+		Consultas consulta = new Consultas();
+		String query = consulta.existeFolios();
+		PreparedStatement pstmt = con.prepareStatement(query);
+		pstmt.setString(1, this.codigoFolio);
+		ResultSet rs = pstmt.executeQuery();
+		//Consulto si existe 
+		if (rs.next()){
+			//Elimino la revision
+			query = consulta.eliminarRevision();
+			pstmt = con.prepareStatement(query);
+			pstmt.setString(1, this.codigoFolio);
+			pstmt.setInt(2, numero);
+			pstmt.executeUpdate();
+			
+		}
+		rs.close();
+		pstmt.close();
+      
+        } catch (SQLException e) {
+            throw new Exc_Persistencia("Error en la conexion");
+        }
+	}
+
 	
 }
+	
