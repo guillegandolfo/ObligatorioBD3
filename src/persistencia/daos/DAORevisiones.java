@@ -8,6 +8,8 @@ import java.sql.SQLException;
 
 import logica.excepciones.Exc_Persistencia;
 import persistencia.consultas.Consultas;;
+import persistencia.poolConexiones.Conexion;
+import persistencia.poolConexiones.IConexion;
 
 public class DAORevisiones {
 
@@ -18,10 +20,12 @@ public class DAORevisiones {
 		this.codigoFolio = codF;
 	}
 	
-	public void InsBack( String CodFolio, String Desc ,Connection con) throws Exc_Persistencia{
+	public void InsBack(String CodFolio, String Desc ,IConexion ic) throws Exc_Persistencia{
 
 		try 
 		{
+        	Conexion c = (Conexion) ic;
+            Connection con = c.getConexion();
 			Consultas consulta = new Consultas();
 			String query = consulta.existeFolios();
 			PreparedStatement pstmt = con.prepareStatement(query);

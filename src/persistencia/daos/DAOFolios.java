@@ -9,16 +9,20 @@ import java.util.LinkedList;
 import logica.excepciones.Exc_Persistencia;
 import logica.objetos.Folio;
 import persistencia.consultas.Consultas;
+import persistencia.poolConexiones.Conexion;
+import persistencia.poolConexiones.IConexion;
 
 public class DAOFolios implements IDAOFolios{
 
     public DAOFolios() throws Exc_Persistencia {
     }
 
-    public boolean member(String cod, Connection con) throws Exc_Persistencia {
+    public boolean member(String cod, IConexion ic) throws Exc_Persistencia {
 
         boolean existeFolio = false;
         try {
+        	Conexion c = (Conexion) ic;
+            Connection con = c.getConexion();
     		Consultas consulta = new Consultas();
     		String query = consulta.existeFolios();
     		PreparedStatement pstmt = con.prepareStatement(query);
@@ -38,11 +42,12 @@ public class DAOFolios implements IDAOFolios{
         return existeFolio;
     }
 
-    public void insert(Folio fol, Connection con) throws Exc_Persistencia {
+    public void insert(Folio fol, IConexion ic) throws Exc_Persistencia {
 
         try {
+        	Conexion c = (Conexion) ic;
+            Connection con = c.getConexion();
         	Consultas consulta = new Consultas();
-
         	boolean existe = this.member(fol.getCodigo(), con);
     		//Consulto si existe 
         	if (existe){
@@ -61,11 +66,13 @@ public class DAOFolios implements IDAOFolios{
         }
     }
 
-    public Folio find(String cod, Connection con) throws Exc_Persistencia {
+    public Folio find(String cod, IConexion ic) throws Exc_Persistencia {
 
         Folio folio = null;
 
         try {
+        	Conexion c = (Conexion) ic;
+            Connection con = c.getConexion();
         	Consultas consulta = new Consultas();
             PreparedStatement pstmt = con.prepareStatement(consulta.existeFolios());
             pstmt.setString(1, cod);
@@ -82,10 +89,11 @@ public class DAOFolios implements IDAOFolios{
         return folio;
     }
 
-    public void delete(String cod, Connection con) throws Exc_Persistencia {
+    public void delete(String cod, IConexion ic) throws Exc_Persistencia {
 
         try {
-
+        	Conexion c = (Conexion) ic;
+            Connection con = c.getConexion();
     		boolean existe = this.member(cod, con);
     		//Consulto si existe 
     		if (existe){
@@ -110,11 +118,13 @@ public class DAOFolios implements IDAOFolios{
         }
     }
 
-    public LinkedList<Folio> listarFolios(Connection con) throws Exc_Persistencia {
+    public LinkedList<Folio> listarFolios(IConexion ic) throws Exc_Persistencia {
 
     	LinkedList<Folio> Lista = new LinkedList <Folio>();
 
         try {
+        	Conexion c = (Conexion) ic;
+            Connection con = c.getConexion();
         	Consultas consulta = new Consultas();
             PreparedStatement pstmt = con.prepareStatement(consulta.listarFolios());
             ResultSet rs = pstmt.executeQuery();
