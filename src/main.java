@@ -1,20 +1,21 @@
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Properties;
 
 import logica.excepciones.Exc_Persistencia;
-import persistencia.datos.Propiedades;;
+import persistencia.datos.Propiedades;
 
 
 public class main
 {
 	public static void main (final String[] args) throws Exc_Persistencia, IOException
 	{
-		try
-			{
-
+	try {
 				Propiedades p = new Propiedades();
 				String driver = p.buscar("driver");
 				String url = p.buscar("url");
