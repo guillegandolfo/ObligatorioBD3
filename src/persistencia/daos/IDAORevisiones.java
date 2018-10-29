@@ -11,14 +11,18 @@ import logica.vo.VORevision;
 
 public interface IDAORevisiones {
 
+	public String getCodigoFolio();
+
+	public void setCodigoFolio(String codigoFolio);
+	
 	public void InsBack(String CodFolio, String Desc ,IConexion ic) throws Exc_Persistencia;
 	
 	public int Largo(String CodFolio, IConexion ic) throws Exc_Persistencia;
 	
-	public Revision kEsimo(int numero, IConexion ic) throws Exc_Persistencia;
+	public VORevision kEsimo(int numero, IConexion ic) throws Exc_Persistencia;
 	
 	public LinkedList <VORevision> listarRevisiones(IConexion ic) throws SQLException, Exc_Persistencia;
 	
-	public void borrarRevision(int numero, IConexion ic) throws Exc_Persistencia;
+	public void borrarRevisiones(IConexion ic) throws Exc_Persistencia;
 	
 }

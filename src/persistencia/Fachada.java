@@ -2,9 +2,12 @@ package persistencia;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.LinkedList;
+
 import logica.excepciones.Exc_Persistencia;
 import logica.excepciones.PersistenciaException;
 import logica.objetos.Folio;
+import logica.vo.VORevision;
 import logica.vo.VoFolio;
 import persistencia.daos.DAOFolios;
 import persistencia.daos.IDAOFolios;
@@ -57,9 +60,12 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
             throw new PersistenciaException("Error en el alta de Folio");
         }
     }
-
-
-    public void insertarRevision(String codFolio, String desc, int cedN) throws RemoteException, PersistenciaException {
+    
+	///////////////////////////
+	//////////REVISION/////////
+	///////////////////////////
+    
+    public void altaRevision(String codFolio, String desc, int cedN) throws RemoteException, PersistenciaException {
         IConexion ic = this.ipc.obtenerConexion(true);
         try {
         	//Verifico si existe Folio
@@ -75,6 +81,83 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
             throw new PersistenciaException("Error de conexion");
         }
         
+    }
+    
+    public int cantidadRevisiones(String codFolio) throws RemoteException, PersistenciaException {
+        IConexion ic = this.ipc.obtenerConexion(true);
+        int Cantidad =0;
+        try {
+        	//Verifico si existe Folio
+            if(this.Folios.member(codFolio, ic)){
+            	Cantidad = this.Revisiones.Largo(codFolio, ic);
+            }
+            else {
+                throw new Exc_Persistencia("No existe Folio");
+            }
+            this.ipc.liberarConexion(ic, true);
+        } catch (Exception e) {
+            this.ipc.liberarConexion(ic, false);
+            throw new PersistenciaException("Error de conexion");
+        }
+        return Cantidad;
+    }
+    
+    public VORevision kEsimo(String codFolio, int Numero) throws RemoteException, PersistenciaException {
+        IConexion ic = this.ipc.obtenerConexion(true);
+        VORevision VoR = new VORevision();
+        try {
+        	//Verifico si existe Folio
+            if(this.Folios.member(codFolio, ic)){
+            	this.Revisiones.setCodigoFolio(codFolio);
+            	VoR = this.Revisiones.kEsimo(Numero, ic);
+            }
+            else {
+                throw new Exc_Persistencia("No existe Folio");
+            }
+            this.ipc.liberarConexion(ic, true);
+        } catch (Exception e) {
+            this.ipc.liberarConexion(ic, false);
+            throw new PersistenciaException("Error de conexion");
+        }
+        return VoR;
+    }
+    
+    public LinkedList <VORevision> listarRevisiones(String codFolio, int Numero) throws RemoteException, PersistenciaException {
+        IConexion ic = this.ipc.obtenerConexion(true);
+        LinkedList <VORevision> Lista = new LinkedList <VORevision>();
+        try {
+        	//Verifico si existe Folio
+            if(this.Folios.member(codFolio, ic)){
+            	this.Revisiones.setCodigoFolio(codFolio);
+            	Lista = this.Revisiones.listarRevisiones(ic);
+            }
+            else {
+                throw new Exc_Persistencia("No existe Folio");
+            }
+            this.ipc.liberarConexion(ic, true);
+        } catch (Exception e) {
+            this.ipc.liberarConexion(ic, false);
+            throw new PersistenciaException("Error de conexion");
+        }
+        return Lista;
+    }
+    
+    public void borrarRevisiones(String codFolio) throws RemoteException, PersistenciaException {
+        IConexion ic = this.ipc.obtenerConexion(true);
+        try {
+        	//Verifico si existe Folio
+            if(this.Folios.member(codFolio, ic)){
+            	this.Revisiones.setCodigoFolio(codFolio);
+            	this.Revisiones.borrarRevisiones(ic);
+            }
+            else {
+                throw new Exc_Persistencia("No existe Folio");
+            }
+            this.ipc.liberarConexion(ic, true);
+        } catch (Exception e) {
+            this.ipc.liberarConexion(ic, false);
+            throw new PersistenciaException("Error de conexion");
+        }
     }
 
 }

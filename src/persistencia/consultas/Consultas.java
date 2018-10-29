@@ -35,10 +35,6 @@ public class Consultas {
 		return "delete from Juridico.Revisiones where codigoFolio = (?)";
 	}
 	
-	public String eliminarRevision(){
-		return "delete from Juridico.Revisiones where codigoFolio = (?) and numero = (?)";
-	}
-	
 	public String getDescripcion(){
 		return "select descripcion from Juridico.Revisiones where codigoFolio = (?) and numero = (?)";
 	}

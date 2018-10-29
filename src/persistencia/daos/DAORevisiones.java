@@ -23,6 +23,14 @@ public class DAORevisiones {
 		this.codigoFolio = codF;
 	}
 	
+	public String getCodigoFolio() {
+		return codigoFolio;
+	}
+
+	public void setCodigoFolio(String codigoFolio) {
+		this.codigoFolio = codigoFolio;
+	}
+
 	public void InsBack(String CodFolio, String Desc ,IConexion ic) throws Exc_Persistencia{
 
 		try 
@@ -93,9 +101,9 @@ public class DAORevisiones {
 		}
 
 	
-	public Revision kEsimo(int numero, IConexion ic) throws Exc_Persistencia{
+	public VORevision kEsimo(int numero, IConexion ic) throws Exc_Persistencia{
     	
-		Revision rev = new Revision();
+		VORevision rev = new VORevision();
 		try{
 		Conexion c = (Conexion) ic;
         Connection con = c.getConexion();
@@ -162,7 +170,7 @@ public class DAORevisiones {
 		return Lista;
 	}	
 		
-	public void borrarRevision(int numero, IConexion ic) throws Exc_Persistencia{
+	public void borrarRevisiones(IConexion ic) throws Exc_Persistencia{
     	
 		try{
 		Conexion c = (Conexion) ic;
@@ -175,10 +183,9 @@ public class DAORevisiones {
 		//Consulto si existe 
 		if (rs.next()){
 			//Elimino la revision
-			query = consulta.eliminarRevision();
+			query = consulta.eliminarRevisiones();
 			pstmt = con.prepareStatement(query);
 			pstmt.setString(1, this.codigoFolio);
-			pstmt.setInt(2, numero);
 			pstmt.executeUpdate();
 			
 		}
