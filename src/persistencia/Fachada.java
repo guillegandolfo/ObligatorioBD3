@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import logica.excepciones.Exc_Persistencia;
 import logica.excepciones.PersistenciaException;
 import logica.objetos.Folio;
+import logica.vo.VOFolioMaxRev;
 import logica.vo.VORevision;
 import logica.vo.VoFolio;
 import persistencia.daos.DAOFolios;
@@ -44,6 +45,10 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
         }
     }
 
+	///////////////////////////
+	//////////FOLIOS///////////
+	///////////////////////////
+    
     public void altaFolio(VoFolio VoF) throws PersistenciaException, RemoteException {
         IConexion con = this.ipc.obtenerConexion(true);
         try {
@@ -59,6 +64,82 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
             this.ipc.liberarConexion(con, false);
             throw new PersistenciaException("Error en el alta de Folio");
         }
+    }
+    
+    public boolean member(String Codigo) throws PersistenciaException, RemoteException {
+        IConexion con = this.ipc.obtenerConexion(true);
+        boolean existe = false;
+        try {
+        		existe = this.Folios.member(Codigo, con);
+        		this.ipc.liberarConexion(con, true);
+        } catch (Exception e) {
+            this.ipc.liberarConexion(con, false);
+            throw new PersistenciaException("No se encontro Folio");
+        }
+        return existe;
+    }
+    
+    public VoFolio find(String Codigo) throws PersistenciaException, RemoteException {
+        IConexion con = this.ipc.obtenerConexion(true);
+        VoFolio VoF = new VoFolio();
+        try {
+            if(! this.Folios.member(Codigo, con)){
+                VoF = this.Folios.find(Codigo, con); 
+            }
+            else{
+                throw new PersistenciaException("No se encontro el Folio");
+            }
+            this.ipc.liberarConexion(con, true);
+        } catch (Exception e) {
+            this.ipc.liberarConexion(con, false);
+            throw new PersistenciaException("Error en el alta de Folio");
+        }
+        return VoF;
+    }
+    
+    public void delete(String Codigo) throws PersistenciaException, RemoteException {
+        IConexion con = this.ipc.obtenerConexion(true);
+        try {
+            if(! this.Folios.member(Codigo, con)){
+                this.Folios.delete(Codigo, con); 
+            }
+            else{
+                throw new PersistenciaException("No se encontro Folio a eliminar");
+            }
+            this.ipc.liberarConexion(con, true);
+        } catch (Exception e) {
+            this.ipc.liberarConexion(con, false);
+            throw new PersistenciaException("Error al eliminar Folio");
+        }
+    }
+    
+    public LinkedList <VoFolio> listarFolios() throws RemoteException, PersistenciaException {
+        IConexion con = this.ipc.obtenerConexion(true);
+        LinkedList <VoFolio> Lista = new LinkedList <VoFolio>();
+        try {
+        	//Verifico si existe Folio
+        	Lista = this.Folios.listarFolios(con);
+            this.ipc.liberarConexion(con, true);
+        } catch (Exception e) {
+            this.ipc.liberarConexion(con, false);
+            throw new PersistenciaException("Error de conexion");
+        }
+        return Lista;
+    }
+    
+    
+    public VOFolioMaxRev folioMasRevisado() throws PersistenciaException, RemoteException {
+        IConexion con = this.ipc.obtenerConexion(true);
+        VOFolioMaxRev VoF = new VOFolioMaxRev();
+        try {
+        	
+            VoF = this.Folios.folioMasRevisado(con); 
+            this.ipc.liberarConexion(con, true);
+        } catch (Exception e) {
+            this.ipc.liberarConexion(con, false);
+            throw new PersistenciaException("Error en el alta de Folio");
+        }
+        return VoF;
     }
     
 	///////////////////////////

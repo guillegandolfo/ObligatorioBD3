@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 
+import logica.vo.VOFolioMaxRev;
+import logica.vo.VoFolio;
 import logica.excepciones.Exc_Persistencia;
 import logica.objetos.Folio;
 import persistencia.consultas.Consultas;
@@ -66,9 +68,9 @@ public class DAOFolios implements IDAOFolios{
         }
     }
 
-    public Folio find(String cod, IConexion ic) throws Exc_Persistencia {
+    public VoFolio find(String cod, IConexion ic) throws Exc_Persistencia {
 
-        Folio folio = null;
+    	VoFolio folio = null;
 
         try {
         	Conexion c = (Conexion) ic;
@@ -78,7 +80,7 @@ public class DAOFolios implements IDAOFolios{
             pstmt.setString(1, cod);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                folio = new Folio(rs.getString("codigo"), rs.getString("caratula"), rs.getInt("paginas"));
+                folio = new VoFolio(rs.getString("codigo"), rs.getString("caratula"), rs.getInt("paginas"));
             }
             rs.close();
             pstmt.close();
@@ -119,9 +121,9 @@ public class DAOFolios implements IDAOFolios{
         }
     }
 
-    public LinkedList<Folio> listarFolios(IConexion ic) throws Exc_Persistencia {
+    public LinkedList<VoFolio> listarFolios(IConexion ic) throws Exc_Persistencia {
 
-    	LinkedList<Folio> Lista = new LinkedList <Folio>();
+    	LinkedList<VoFolio> Lista = new LinkedList <VoFolio>();
 
         try {
         	Conexion c = (Conexion) ic;
@@ -135,7 +137,7 @@ public class DAOFolios implements IDAOFolios{
     			String Caratula = rs.getString("caratula");
     			int Paginas = rs.getInt("paginas");
     			
-    			Folio folio = new Folio(Codigo, Caratula, Paginas);
+    			VoFolio folio = new VoFolio(Codigo, Caratula, Paginas);
     			Lista.add(folio);
     		}
 
@@ -148,6 +150,43 @@ public class DAOFolios implements IDAOFolios{
 		return Lista;
     }
     
+    public VOFolioMaxRev folioMasRevisado(IConexion ic) throws Exc_Persistencia {
+
+    	VOFolioMaxRev folio = null;
+
+        try {
+        	Conexion c = (Conexion) ic;
+            Connection con = c.getConexion();
+        	Consultas consulta = new Consultas();
+            PreparedStatement pstmt = con.prepareStatement(consulta.folioMasRevisado());
+            ResultSet rs = pstmt.executeQuery();
+           //Obtengo el folio mas revisado
+            if (rs.next()) {
+            	String Codigo = rs.getString(1);
+            	int Cantidad = rs.getInt(2);
+            	
+            	//Obtengo los datos del Folio
+            	 pstmt = con.prepareStatement(consulta.existeFolios());
+                 pstmt.setString(1, Codigo);
+                 rs = pstmt.executeQuery();
+                 if (rs.next()) {
+                	 folio = new VOFolioMaxRev(Cantidad, Codigo, rs.getString("caratula"), rs.getInt("paginas"));
+                     
+                 }else{
+                	 throw new Exc_Persistencia("Error al obtener el folio");
+                 }
+            }else{
+            	throw new Exc_Persistencia("Error al obtener el folio mas revisado");
+            }
+            rs.close();
+            pstmt.close();
+            
+        } catch (SQLException e) {
+            throw new Exc_Persistencia("Error de conexion");
+        }
+
+        return folio;
+    }
     
 }
 
