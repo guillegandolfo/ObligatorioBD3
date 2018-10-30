@@ -14,7 +14,7 @@ public interface IDAOFolios {
 
     public void insert(Folio fol, IConexion ic) throws Exc_Persistencia;
 
-    public VoFolio find(String cod, IConexion ic) throws Exc_Persistencia;
+    public Folio find(String cod, IConexion ic) throws Exc_Persistencia;
     
     public void delete(String cod, IConexion ic) throws Exc_Persistencia;
 

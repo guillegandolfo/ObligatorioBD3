@@ -1,8 +1,12 @@
 package logica.objetos;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.LinkedList;
 
+import persistencia.daos.IDAORevisiones;
+import persistencia.poolConexiones.IConexion;
+import logica.excepciones.Exc_Persistencia;
 import logica.vo.VORevision;
 
 public class Folio implements Serializable{
@@ -10,6 +14,7 @@ public class Folio implements Serializable{
 	private String codigo;
 	private String caratula;
 	private int paginas;
+	private IDAORevisiones Revisiones;
 	
 	public Folio(){
 		super();
@@ -23,6 +28,7 @@ public class Folio implements Serializable{
 		this.setCodigo(Codigo);
 		this.setCaratula(Caratula);
 		this.setPaginas(Paginas);
+		this.Revisiones.setCodigoFolio(Codigo);
 	}
 
 	public String getCodigo() {
@@ -49,31 +55,37 @@ public class Folio implements Serializable{
 		this.paginas = paginas;
 	}
 	
-	public boolean tieneRevision(int numR){
-		return false;
-	}
-	
-	public int cantidadRevisiones(){
-		return 0;
-	}
-	
-	public void addRevision(Revision rev){
+	public boolean tieneRevision(int numR, IConexion con) throws Exc_Persistencia{
 		
+		boolean tiene = false;
+		int largo = this.Revisiones.Largo(con);
+		if (largo != 0){
+			tiene = true;
+		}
+		
+		return tiene;
 	}
 	
-	public Revision obtenerRevision(int numR){
-		Revision rev = new Revision();
-		
-		return rev;
+	public int cantidadRevisiones(IConexion con) throws Exc_Persistencia{
+		return this.Revisiones.Largo(con);
 	}
 	
-	public LinkedList <VORevision> listarRevisiones(){
-		LinkedList <VORevision> Lista = new LinkedList <VORevision>();
-		
-		return Lista;
+	public void addRevision(Revision rev, IConexion con) throws Exc_Persistencia{
+		this.Revisiones.InsBack(rev.getDescripcion(), con);
 	}
 	
-	public void borrarRevisiones(){
+	public Revision obtenerRevision(int numR, IConexion con) throws Exc_Persistencia{
+		VORevision rev = this.Revisiones.kEsimo(numR, con);
+		Revision revision = new Revision(rev.getNumero(), rev.getCodigoFolio(), rev.getDescripcion());
+		return revision;
+	}
+	
+	public LinkedList <VORevision> listarRevisiones(IConexion con) throws SQLException, Exc_Persistencia{
 		
+		return this.Revisiones.listarRevisiones(con);
+	}
+	
+	public void borrarRevisiones(IConexion con) throws Exc_Persistencia{
+		this.Revisiones.borrarRevisiones(con);
 	}
 }

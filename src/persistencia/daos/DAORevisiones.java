@@ -31,7 +31,7 @@ public class DAORevisiones {
 		this.codigoFolio = codigoFolio;
 	}
 
-	public void InsBack(String CodFolio, String Desc ,IConexion ic) throws Exc_Persistencia{
+	public void InsBack(String Desc ,IConexion ic) throws Exc_Persistencia{
 
 		try 
 		{
@@ -40,14 +40,14 @@ public class DAORevisiones {
 			Consultas consulta = new Consultas();
 			String query = consulta.existeFolios();
 			PreparedStatement pstmt = con.prepareStatement(query);
-			pstmt.setString(1, CodFolio);
+			pstmt.setString(1, this.codigoFolio);
 			ResultSet rs = pstmt.executeQuery();
 			//Consulto si existe 
 			if (rs.next()){
 				int maxrevisionid;
 				query = consulta.MaxFolioId();
 				pstmt = con.prepareStatement(query);
-				pstmt.setString(1, CodFolio);
+				pstmt.setString(1, this.codigoFolio);
 				rs = pstmt.executeQuery();
 				//Si tiene revisiones, obtengo la mayor y si no es 0
 				if (rs.next()){
@@ -59,7 +59,7 @@ public class DAORevisiones {
 				query = consulta.InsertarRevision();
 				pstmt = con.prepareStatement(query);
 				pstmt.setInt(1,maxrevisionid );
-				pstmt.setString(2, CodFolio);
+				pstmt.setString(2, this.codigoFolio);
 				pstmt.setString(3, Desc);
 				pstmt.executeUpdate();
 			}
@@ -75,7 +75,7 @@ public class DAORevisiones {
 		}
 		
 	
-	public int Largo(String CodFolio, IConexion ic) throws Exc_Persistencia{
+	public int Largo(IConexion ic) throws Exc_Persistencia{
     	
 		int Cantidad = 0;
 		try{
@@ -84,7 +84,7 @@ public class DAORevisiones {
 	        Consultas consulta = new Consultas();
 			String query = consulta.MaxFolioId();
 			PreparedStatement pstmt = con.prepareStatement(query);
-			pstmt.setString(1, CodFolio);
+			pstmt.setString(1, this.codigoFolio);
 			ResultSet rs = pstmt.executeQuery();
 	        
 	        if (rs.next()){

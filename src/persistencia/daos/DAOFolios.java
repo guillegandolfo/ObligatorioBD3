@@ -68,9 +68,9 @@ public class DAOFolios implements IDAOFolios{
         }
     }
 
-    public VoFolio find(String cod, IConexion ic) throws Exc_Persistencia {
+    public Folio find(String cod, IConexion ic) throws Exc_Persistencia {
 
-    	VoFolio folio = null;
+    	Folio folio = null;
 
         try {
         	Conexion c = (Conexion) ic;
@@ -80,7 +80,7 @@ public class DAOFolios implements IDAOFolios{
             pstmt.setString(1, cod);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                folio = new VoFolio(rs.getString("codigo"), rs.getString("caratula"), rs.getInt("paginas"));
+                folio = new Folio(rs.getString("codigo"), rs.getString("caratula"), rs.getInt("paginas"));
             }
             rs.close();
             pstmt.close();

@@ -5,7 +5,6 @@ import java.util.LinkedList;
 
 import persistencia.poolConexiones.IConexion;
 import logica.excepciones.Exc_Persistencia;
-import logica.objetos.Revision;
 import logica.vo.VORevision;
 
 
@@ -15,9 +14,9 @@ public interface IDAORevisiones {
 
 	public void setCodigoFolio(String codigoFolio);
 	
-	public void InsBack(String CodFolio, String Desc ,IConexion ic) throws Exc_Persistencia;
+	public void InsBack(String Desc ,IConexion ic) throws Exc_Persistencia;
 	
-	public int Largo(String CodFolio, IConexion ic) throws Exc_Persistencia;
+	public int Largo(IConexion ic) throws Exc_Persistencia;
 	
 	public VORevision kEsimo(int numero, IConexion ic) throws Exc_Persistencia;
 	
