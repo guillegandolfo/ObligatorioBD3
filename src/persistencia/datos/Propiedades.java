@@ -3,7 +3,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-import logica.Excepciones.Exc_Persistencia;
+import logica.excepciones.Exc_Persistencia;
 
 public class Propiedades {
 	

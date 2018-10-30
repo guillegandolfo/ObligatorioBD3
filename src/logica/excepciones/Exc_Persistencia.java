@@ -1,4 +1,4 @@
-package logica.Excepciones;
+package logica.excepciones;
 
 public class Exc_Persistencia extends Exception{
 	/**

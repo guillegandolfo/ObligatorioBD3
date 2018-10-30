@@ -5,7 +5,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import logica.Excepciones.Exc_Persistencia;
+import logica.excepciones.Exc_Persistencia;
 import persistencia.datos.Propiedades;
 
 

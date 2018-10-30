@@ -1,4 +1,4 @@
-package persistencia;
+package logica;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
