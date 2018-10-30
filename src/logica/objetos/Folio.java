@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.LinkedList;
 
-import persistencia.daos.IDAORevisiones;
+import persistencia.daos.DAORevisiones;
 import persistencia.poolConexiones.IConexion;
 import logica.excepciones.Exc_Persistencia;
 import logica.vo.VORevision;
@@ -14,13 +14,14 @@ public class Folio implements Serializable{
 	private String codigo;
 	private String caratula;
 	private int paginas;
-	private IDAORevisiones Revisiones;
+	private DAORevisiones Revisiones;
 	
 	public Folio(){
 		super();
 		this.setCodigo("");
 		this.setCaratula("");
 		this.setPaginas(1);
+		this.Revisiones = new DAORevisiones("");
 	}
 	
 	public Folio(String Codigo, String Caratula, int Paginas) {
@@ -28,7 +29,7 @@ public class Folio implements Serializable{
 		this.setCodigo(Codigo);
 		this.setCaratula(Caratula);
 		this.setPaginas(Paginas);
-		this.Revisiones.setCodigoFolio(Codigo);
+		this.Revisiones = new DAORevisiones(Codigo);
 	}
 
 	public String getCodigo() {

@@ -18,8 +18,6 @@ import persistencia.poolConexiones.IPoolConexiones;
 import persistencia.poolConexiones.PoolConexiones;
 
 
-
-
 public class Fachada extends UnicastRemoteObject implements IFachada {
 
     private static final long serialVersionUID = 1L;
