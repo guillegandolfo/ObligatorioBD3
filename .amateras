@@ -1,5 +1,9 @@
 #EclipseHTMLEditor configuration file
+<<<<<<< HEAD
 #Tue Oct 30 20:31:30 UYT 2018
+=======
+#Tue Oct 30 20:41:48 GMT-03:00 2018
+>>>>>>> origin/master
 javaScriptDeprecated=Off
 javaScriptIndentChar=\ 
 javaScriptCheckTypes=Off
