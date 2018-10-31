@@ -1,26 +1,20 @@
 package grafica.ventanas;
 
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JTextField;
-
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import java.awt.Color;
 import javax.swing.JLabel;
-import javax.swing.ImageIcon;
 import java.awt.Font;
-import java.awt.Image;
-
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Cursor;
-import java.awt.Toolkit;
 import java.awt.SystemColor;
 
-public class FPrincipal {
+public class FPrincipal extends Ventana{
 
 	private JFrame frame;
 	private JTextField textField;
@@ -41,16 +35,11 @@ public class FPrincipal {
 		});
 	}
 
-	/**
-	 * Create the application.
-	 */
+
 	public FPrincipal() {
 		initialize();
 	}
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
 	private void initialize() {
 
 		frame = new JFrame();
