@@ -1,5 +1,7 @@
 package grafica.ventanas;
 
+import grafica.controladores.ControladorAltaRevision;
+
 import java.awt.Dimension;
 
 import javax.swing.JFrame;
@@ -16,8 +18,6 @@ import java.awt.event.WindowEvent;
 
 public class FAltaRevision extends Ventana {
 	private JFrame frame;
-	private JTextField CodigoFolio;
-	private JTextField descripcion;
 	private JTextField textCodigoFolio;
 	private JTextField textDescripcion;
 	
@@ -103,7 +103,13 @@ public class FAltaRevision extends Ventana {
 					if(!codigoFolio.isEmpty()){	
 						 if (!Descripcion.isEmpty()){
 							//Se los mando a la controladora para que me revise que los valores sean correctos.
-							 
+							 System.out.println("1");
+							 ControladorAltaRevision c;
+							 System.out.println("2");
+							 c = new ControladorAltaRevision((FAltaRevision) getVentanaAbierta());
+							 System.out.println("3");
+							 c.altaRevision(codigoFolio, Descripcion);
+							 System.out.println("4");
 						 }else{
 							 mostrarError("La descripcion de la Revision esta vacia",0);
 						 }
@@ -111,7 +117,7 @@ public class FAltaRevision extends Ventana {
 						mostrarError("El Codigo del Folio esta vacio",0);
 					}
 				} catch (Exception e) {
-					mostrarError("Error al cargar el archivo .properties", 0);
+					mostrarError("Error en la ventana", 0);
 				}
 			}
 		});

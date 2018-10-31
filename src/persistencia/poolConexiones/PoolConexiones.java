@@ -1,13 +1,11 @@
 package persistencia.poolConexiones;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Properties;
 
+import persistencia.config.Propiedades;
+import logica.excepciones.ConfiguracionException;
 import logica.excepciones.PersistenciaException;
 
 public class PoolConexiones implements IPoolConexiones {
@@ -22,29 +20,24 @@ public class PoolConexiones implements IPoolConexiones {
 	private int creadas;
 	private int tope;
 	
-	public PoolConexiones () throws PersistenciaException {
+	public PoolConexiones () throws ConfiguracionException {
 		
 		try {
-			Properties p = new Properties();
-			String archivo = "config/config.properties";
-			p.load(new FileInputStream(archivo));
 			
-			driver = p.getProperty("driver");
-			url = p.getProperty("url");
-			user = p.getProperty("username");
-			password = p.getProperty("password");
+			Propiedades p = new Propiedades();
+			driver = p.getDriver();
+			url = p.getUrl();
+			user = p.getUser();
+			password = p.getPass();
 			
 			//Definir pool
 			tamanio = 5;//leer de properties
 			tope = 0;
 			conexiones = new Conexion[tamanio];
 
-		} catch (FileNotFoundException e) {
+		} catch (ConfiguracionException e) {
 			// TODO Auto-generated catch block
-			throw new PersistenciaException("Ocurrio un error");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			throw new PersistenciaException("Ocurrio un error");
+			throw new ConfiguracionException("Ocurrio un error en el pool de Conexiones");
 		}	
 	}
 	

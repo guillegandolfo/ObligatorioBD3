@@ -5,13 +5,15 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+
+import persistencia.config.Propiedades;
+import logica.excepciones.ConfiguracionException;
 import logica.excepciones.Exc_Persistencia;
-import persistencia.datos.Propiedades;
 
 
 public class main
 {
-	public static void main (final String[] args) throws Exc_Persistencia, IOException
+	public static void main (final String[] args) throws Exc_Persistencia, IOException, ConfiguracionException
 	{
 	try {
 				Propiedades p = new Propiedades();

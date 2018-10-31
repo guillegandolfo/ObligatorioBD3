@@ -1,21 +1,13 @@
 package logica;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
-import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.rmi.server.UnicastRemoteObject;
-import java.util.Properties;
 
 import logica.Fachada;
-import logica.excepciones.ConexionBDException;
 import logica.excepciones.ConfiguracionException;
 import logica.excepciones.PersistenciaException;
-import logica.excepciones.ServidorException;
 import persistencia.config.Propiedades;
 
 public class Servidor {
@@ -29,20 +21,21 @@ public class Servidor {
         	Propiedades p = new Propiedades();
 			String ip = p.getIpServidor();
 			String puerto = p.getPuertoServidor();
+			
 			int port = Integer.parseInt(puerto);
-
             // pongo a correr el rmiregistry
-            Registry reg = LocateRegistry.createRegistry(port);
-            
+			//Registry registry  = LocateRegistry.createRegistry(port);
+			LocateRegistry.getRegistry(port);
+			
             // publico el objeto remoto en dicha ip y puerto
-            String ruta = "//" + ip + ":" + puerto + "/logicaPersistencia/accesoBD";
-             
+            String ruta = "//" + ip + ":" + puerto + "/logica/Fachada";
             Fachada fachada = Fachada.getInstancia();
             System.out.println("Antes de publicar");
             
             Naming.rebind(ruta, fachada);
             
             System.out.println("Luego de publicar");
+
             
         } catch (ConfiguracionException e) // si ocurre cualquier problema de red
         {
