@@ -79,7 +79,7 @@ public class FPrincipal {
 		btnAbFolio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				FAbFolio formFolios = new FAbFolio();
-				formFolios.setVisible(true);
+				//formFolios.setVisible(true);
 			}
 		});
 		panel.setLayout(null);

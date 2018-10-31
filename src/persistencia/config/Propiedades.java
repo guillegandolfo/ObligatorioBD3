@@ -3,6 +3,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
+import logica.excepciones.ConfiguracionException;
 import logica.excepciones.Exc_Persistencia;
 
 public class Propiedades {
@@ -10,50 +11,61 @@ public class Propiedades {
 	private Properties prop;
 	
 	
-	public Propiedades() 
-	{	
-			prop = new Properties();
-			String pathProperties =  ".settings/datos.properties";
-			try {
-				prop.load(new FileInputStream(pathProperties));
-			} catch (IOException ex) {
-				// TODO Auto-generated catch block
-				ex.printStackTrace();
-			} 				
+	public Propiedades() throws ConfiguracionException {	
+		prop = new Properties();
+		String pathProperties =  ".settings/datos.properties";
+		try {
+			prop.load(new FileInputStream(pathProperties));
+		} catch (IOException ex) {
+			// TODO Auto-generated catch block
+			throw new ConfiguracionException("No se ha podido cargar la configuracion"); 
+		} 				
 	}
 	
-	public String GetDriver() 
+	public String getDriver() 
 	{
 		String driver;
 		driver = prop.getProperty("driver");
 		return driver;
 	}
 	
-	public String GetUrl() 
+	public String getUrl() 
 	{
 		String url;
 		url = prop.getProperty("url");
 		return url;
 	}
 	
-	public String GetUser() 
+	public String getUser() 
 	{
 		String usr;
 		usr = prop.getProperty("usuario");
 		return usr;
 	}
 	
-	public String GetPass() 
+	public String getPass() 
 	{
 		String pass;
 		pass = prop.getProperty("password");
 		return pass;
 	}
 	
+	public String getIpServidor() 
+	{
+		String ip;
+		ip = prop.getProperty("ipServidor");
+		return ip;
+	}
 	
-	public String buscar(String nomProp) throws Exc_Persistencia{ 
+	public String getPuertoServidor() 
+	{
+		String puerto;
+		puerto = prop.getProperty("puertoServidor");
+		return puerto;
+	}
 	
-		
+	public String buscar(String nomProp) throws ConfiguracionException { 
+
 		try{
 			Properties p = new Properties();
 			String nombreProperties = ".settings/datos.properties";
@@ -71,12 +83,10 @@ public class Propiedades {
 				String archivo = p.getProperty("password");
 				return archivo;
 			}else{
-			throw new Exc_Persistencia("No se encuentra los datos en la Properties");
+				throw new ConfiguracionException("No se encuentra los datos en la Properties");
 			}
-		}
-		catch (IOException e){ 
-			e.printStackTrace();
-		throw new Exc_Persistencia("Hubo un error al buscar la properties");
+		} catch (IOException e){ 
+			throw new ConfiguracionException("Hubo un error al buscar la properties");
 		}	
 	}
 }

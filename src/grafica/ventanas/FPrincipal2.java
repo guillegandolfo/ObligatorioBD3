@@ -109,8 +109,8 @@ public class FPrincipal2 {
 		btnFolios.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				FAbFolio formFolios = new FAbFolio();
-				//formFolios.setVisible(true);
-				panel.add(formFolios);
+				formFolios.setVisible(true);
+				//panel.add(formFolios);
 			}
 		});
 		btnFolios.setForeground(Color.BLACK);

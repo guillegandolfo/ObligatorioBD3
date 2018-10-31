@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import logica.vo.VOFolioMaxRev;
 import logica.vo.VoFolio;
 import logica.excepciones.Exc_Persistencia;
+import logica.excepciones.PersistenciaException;
 import logica.objetos.Folio;
 import persistencia.consultas.Consultas;
 import persistencia.poolConexiones.Conexion;
@@ -16,10 +17,9 @@ import persistencia.poolConexiones.IConexion;
 
 public class DAOFolios implements IDAOFolios{
 
-    public DAOFolios() throws Exc_Persistencia {
-    }
+    //public DAOFolios() throws PersistenciaException {}
 
-    public boolean member(String cod, IConexion ic) throws Exc_Persistencia {
+    public boolean member(String cod, IConexion ic) throws PersistenciaException {
 
         boolean existeFolio = false;
         try {
@@ -38,13 +38,13 @@ public class DAOFolios implements IDAOFolios{
             pstmt.close();
 
         } catch (SQLException e) {
-            throw new Exc_Persistencia("Error en la conexion");
+            throw new PersistenciaException("Error en la conexion");
         }
 
         return existeFolio;
     }
 
-    public void insert(Folio fol, IConexion ic) throws Exc_Persistencia {
+    public void insert(Folio fol, IConexion ic) throws PersistenciaException {
 
         try {
         	Consultas consulta = new Consultas();
@@ -64,11 +64,11 @@ public class DAOFolios implements IDAOFolios{
         	}
         	
         } catch (SQLException ex) {
-            throw new Exc_Persistencia("Error de conexion");
+            throw new PersistenciaException("Error de conexion");
         }
     }
 
-    public Folio find(String cod, IConexion ic) throws Exc_Persistencia {
+    public Folio find(String cod, IConexion ic) throws PersistenciaException {
 
     	Folio folio = null;
 
@@ -85,13 +85,13 @@ public class DAOFolios implements IDAOFolios{
             rs.close();
             pstmt.close();
         } catch (SQLException e) {
-            throw new Exc_Persistencia("Error de conexion");
+            throw new PersistenciaException("Error de conexion");
         }
 
         return folio;
     }
 
-    public void delete(String cod, IConexion ic) throws Exc_Persistencia {
+    public void delete(String cod, IConexion ic) throws PersistenciaException {
 
         try {
 
@@ -117,11 +117,11 @@ public class DAOFolios implements IDAOFolios{
     		}
     		
         } catch (SQLException e) {
-            throw new Exc_Persistencia("Error de conexion");
+            throw new PersistenciaException("Error de conexion");
         }
     }
 
-    public LinkedList<VoFolio> listarFolios(IConexion ic) throws Exc_Persistencia {
+    public LinkedList<VoFolio> listarFolios(IConexion ic) throws PersistenciaException {
 
     	LinkedList<VoFolio> Lista = new LinkedList <VoFolio>();
 
@@ -144,13 +144,13 @@ public class DAOFolios implements IDAOFolios{
             rs.close();
             pstmt.close();
         } catch (SQLException e) {
-            throw new Exc_Persistencia("Error de conexion");
+            throw new PersistenciaException("Error de conexion");
         }
 
 		return Lista;
     }
     
-    public VOFolioMaxRev folioMasRevisado(IConexion ic) throws Exc_Persistencia {
+    public VOFolioMaxRev folioMasRevisado(IConexion ic) throws PersistenciaException {
 
     	VOFolioMaxRev folio = null;
 
@@ -173,16 +173,16 @@ public class DAOFolios implements IDAOFolios{
                 	 folio = new VOFolioMaxRev(Cantidad, Codigo, rs.getString("caratula"), rs.getInt("paginas"));
                      
                  }else{
-                	 throw new Exc_Persistencia("Error al obtener el folio");
+                	 throw new PersistenciaException("Error al obtener el folio");
                  }
             }else{
-            	throw new Exc_Persistencia("Error al obtener el folio mas revisado");
+            	throw new PersistenciaException("Error al obtener el folio mas revisado");
             }
             rs.close();
             pstmt.close();
             
         } catch (SQLException e) {
-            throw new Exc_Persistencia("Error de conexion");
+            throw new PersistenciaException("Error de conexion");
         }
 
         return folio;

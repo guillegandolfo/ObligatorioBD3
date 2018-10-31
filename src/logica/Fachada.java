@@ -23,23 +23,23 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
     private static final long serialVersionUID = 1L;
 
     private static Fachada f = null;
-    private IDAOFolios Folios;
+    private IDAOFolios folios;
     private IPoolConexiones ipc = null;
 
     //singleton
-    public static Fachada getInstancia() throws PersistenciaException, RemoteException, Exc_Persistencia {
+    public static Fachada getInstancia() throws PersistenciaException, RemoteException {
         if (f == null) {
             Fachada.f = new Fachada();
         }
         return Fachada.f;
     }
 
-    private Fachada() throws RemoteException, PersistenciaException, Exc_Persistencia  {
+    private Fachada() throws RemoteException, PersistenciaException  {
         try {
-            this.Folios = new DAOFolios();
+            this.folios = new DAOFolios();
             this.ipc = new PoolConexiones();
         } catch (PersistenciaException e) {
-            throw new Exc_Persistencia("Error en la conexion");
+            throw new PersistenciaException("Error en la conexion");
         }
     }
 
@@ -51,9 +51,9 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
         IConexion con = this.ipc.obtenerConexion(true);
         try {
         	//Si no existe el folio a insertar
-            if(! this.Folios.member(VoF.getCodigo(), con)){
+            if(! this.folios.member(VoF.getCodigo(), con)){
                 Folio Fol = new Folio(VoF.getCodigo(), VoF.getCaratula(), VoF.getPaginas());
-                this.Folios.insert(Fol, con);
+                this.folios.insert(Fol, con);
             }
             else{
                 throw new PersistenciaException("Error en el alta de Folio");
@@ -70,7 +70,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
         boolean existe = false;
         try {
         		//Uso directamente el metodo en el DAOFolios
-        		existe = this.Folios.member(Codigo, con);
+        		existe = this.folios.member(Codigo, con);
         		this.ipc.liberarConexion(con, true);
         } catch (Exception e) {
             this.ipc.liberarConexion(con, false);
@@ -83,7 +83,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
         IConexion con = this.ipc.obtenerConexion(true);
         VoFolio VoF = null;
         try {
-        	Folio Fo = this.Folios.find(Codigo, con);
+        	Folio Fo = this.folios.find(Codigo, con);
         	
         	//Si existe el folio
             if(Fo != null){
@@ -104,8 +104,8 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
         IConexion con = this.ipc.obtenerConexion(true);
         try {
         	//Si existe el folio a eliminar
-            if(this.Folios.member(Codigo, con)){
-                this.Folios.delete(Codigo, con); 
+            if(this.folios.member(Codigo, con)){
+                this.folios.delete(Codigo, con); 
             }
             else{
                 throw new PersistenciaException("No se encontro Folio a eliminar");
@@ -121,7 +121,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
         IConexion con = this.ipc.obtenerConexion(true);
         LinkedList <VoFolio> Lista = new LinkedList <VoFolio>();
         try {
-        	Lista = this.Folios.listarFolios(con);
+        	Lista = this.folios.listarFolios(con);
             this.ipc.liberarConexion(con, true);
         } catch (Exception e) {
             this.ipc.liberarConexion(con, false);
@@ -135,7 +135,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
         IConexion con = this.ipc.obtenerConexion(true);
         VOFolioMaxRev VoF = new VOFolioMaxRev();
         try {
-            VoF = this.Folios.folioMasRevisado(con); 
+            VoF = this.folios.folioMasRevisado(con); 
             this.ipc.liberarConexion(con, true);
         } catch (Exception e) {
             this.ipc.liberarConexion(con, false);
@@ -151,7 +151,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
     public void altaRevision(String codFolio, String desc) throws RemoteException, PersistenciaException {
         IConexion con = this.ipc.obtenerConexion(true);
         try {
-        	Folio Fol = this.Folios.find(codFolio, con);
+        	Folio Fol = this.folios.find(codFolio, con);
         	
         	//Si existe folio
         	if (Fol != null){
@@ -174,7 +174,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
         IConexion con = this.ipc.obtenerConexion(true);
         int Cantidad =0;
         try {
-        	Folio Fol = this.Folios.find(codFolio, con);
+        	Folio Fol = this.folios.find(codFolio, con);
         	if (Fol != null){
             	Cantidad = Fol.cantidadRevisiones(con);
         	}else{
@@ -193,7 +193,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
         IConexion con = this.ipc.obtenerConexion(true);
         VORevision VoR = new VORevision();
         try {
-        	Folio Fol = this.Folios.find(codFolio, con);
+        	Folio Fol = this.folios.find(codFolio, con);
         	if (Fol != null){
             	Revision rev = Fol.obtenerRevision(Numero, con);
             	VoR.setNumero(Numero);
@@ -215,7 +215,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
         IConexion con = this.ipc.obtenerConexion(true);
         LinkedList <VORevision> Lista = new LinkedList <VORevision>();
         try {
-        	Folio Fol = this.Folios.find(codFolio, con);
+        	Folio Fol = this.folios.find(codFolio, con);
         	if (Fol != null){
         		Lista = Fol.listarRevisiones(con);
         	}else{
@@ -232,7 +232,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
     public void borrarRevisiones(String codFolio) throws RemoteException, PersistenciaException {
         IConexion con = this.ipc.obtenerConexion(true);
         try {
-        	Folio Fol = this.Folios.find(codFolio, con);
+        	Folio Fol = this.folios.find(codFolio, con);
         	if (Fol != null){
         		Fol.borrarRevisiones(con);
         	}else{
