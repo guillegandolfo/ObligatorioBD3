@@ -1,12 +1,16 @@
 package persistencia.poolConexiones;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
-import persistencia.config.Propiedades;
 import logica.excepciones.ConfiguracionException;
 import logica.excepciones.PersistenciaException;
+import persistencia.config.Propiedades;
 
 public class PoolConexiones implements IPoolConexiones {
 
@@ -23,6 +27,9 @@ public class PoolConexiones implements IPoolConexiones {
 	public PoolConexiones () throws ConfiguracionException {
 		
 		try {
+			/*Properties p = new Properties();
+			String archivo = "config/config.properties";
+			p.load(new FileInputStream(archivo));*/
 			
 			Propiedades p = new Propiedades();
 			driver = p.getDriver();
@@ -34,11 +41,12 @@ public class PoolConexiones implements IPoolConexiones {
 			tamanio = 5;//leer de properties
 			tope = 0;
 			conexiones = new Conexion[tamanio];
+			nivelTransaccionalidad = Connection.TRANSACTION_SERIALIZABLE;
 
 		} catch (ConfiguracionException e) {
 			// TODO Auto-generated catch block
-			throw new ConfiguracionException("Ocurrio un error en el pool de Conexiones");
-		}	
+			throw new ConfiguracionException("Ocurrio un error con la configuracion de datos de los servidores");
+		} 	
 	}
 	
 	public IConexion obtenerConexion(boolean modifica) throws PersistenciaException {
@@ -98,13 +106,13 @@ public class PoolConexiones implements IPoolConexiones {
 		return conexion;
 	}
 	
-	public void liberarConexion(IConexion con, boolean ok) throws PersistenciaException{
+	public void liberarConexion(IConexion con, boolean ok) throws PersistenciaException {
 		// TODO Auto-generated method stub
 		
 		//1- Recibe con y la agrega en el arreglo
 		//2- Hace notify
 		synchronized (this) {
-			if (ok) {
+			if (ok && con != null) {
 				try {
 					((Conexion) con).getConexion().commit();
 				} catch(SQLException ex) {

@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import logica.excepciones.ConfiguracionException;
 import logica.excepciones.Exc_Persistencia;
 import logica.excepciones.PersistenciaException;
+import logica.excepciones.YaExisteFolioException;
 import logica.objetos.Folio;
 import logica.objetos.Revision;
 import logica.vo.VOFolioMaxRev;
@@ -28,24 +29,19 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
     private IPoolConexiones ipc = null;
 
     //singleton
-    public static Fachada getInstancia() throws PersistenciaException, RemoteException {
+    public static Fachada getInstancia() throws ConfiguracionException, RemoteException {
         if (f == null) {
-            try {
-				Fachada.f = new Fachada();
-			} catch (ConfiguracionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+            Fachada.f = new Fachada();
         }
         return Fachada.f;
     }
 
-    private Fachada() throws RemoteException, PersistenciaException, ConfiguracionException  {
+    private Fachada() throws RemoteException, ConfiguracionException  {
         try {
             this.folios = new DAOFolios();
             this.ipc = new PoolConexiones();
         } catch (ConfiguracionException e) {
-            throw new PersistenciaException("Error en la conexion");
+            throw new ConfiguracionException(e.getMessage());
         }
     }
 
@@ -53,16 +49,19 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 	//////////FOLIOS///////////
 	///////////////////////////
     
-    public void altaFolio(VoFolio VoF) throws PersistenciaException, RemoteException {
-        IConexion con = this.ipc.obtenerConexion(true);
-        try {
+    public void agregarFolio(VoFolio VoF) throws YaExisteFolioException, PersistenciaException, RemoteException {
+        
+    	 IConexion con = null;
+    	 try {
+    		 con = this.ipc.obtenerConexion(true);
+       
         	//Si no existe el folio a insertar
-            if(! this.folios.member(VoF.getCodigo(), con)){
+            if(! this.folios.member(VoF.getCodigo(), con)) {
                 Folio Fol = new Folio(VoF.getCodigo(), VoF.getCaratula(), VoF.getPaginas());
                 this.folios.insert(Fol, con);
             }
             else{
-                throw new PersistenciaException("Error en el alta de Folio");
+                throw new YaExisteFolioException("El folio indicado ya existe");
             }
             this.ipc.liberarConexion(con, true);
         } catch (Exception e) {
@@ -71,7 +70,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
         }
     }
     
-    public boolean member(String Codigo) throws PersistenciaException, RemoteException {
+    /*public boolean member(String Codigo) throws PersistenciaException, RemoteException {
         IConexion con = this.ipc.obtenerConexion(true);
         boolean existe = false;
         try {
@@ -83,7 +82,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
             throw new PersistenciaException("No se encontro Folio");
         }
         return existe;
-    }
+    }*/
     
     public VoFolio find(String Codigo) throws PersistenciaException, RemoteException {
         IConexion con = this.ipc.obtenerConexion(true);
@@ -154,7 +153,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 	//////////REVISION/////////
 	///////////////////////////
     
-    public void altaRevision(String codFolio, String desc) throws RemoteException, PersistenciaException {
+    public void agregarRevision(String codFolio, String desc) throws RemoteException, PersistenciaException {
         IConexion con = this.ipc.obtenerConexion(true);
         try {
         	Folio Fol = this.folios.find(codFolio, con);
@@ -235,7 +234,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
         return Lista;
     }
     
-    public void borrarRevisiones(String codFolio) throws RemoteException, PersistenciaException {
+    public void borrarFolioRevisiones(String codFolio) throws RemoteException, PersistenciaException {
         IConexion con = this.ipc.obtenerConexion(true);
         try {
         	Folio Fol = this.folios.find(codFolio, con);
@@ -251,7 +250,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
         }
     }
 
-	public void altaRevision(String codFolio, String desc, int cedN)
+	public void agregarRevision(String codFolio, String desc, int cedN)
 			throws RemoteException, PersistenciaException {
 		// TODO Auto-generated method stub
 		

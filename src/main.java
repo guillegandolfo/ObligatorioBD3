@@ -6,18 +6,19 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import persistencia.config.Propiedades;
+import logica.excepciones.ConexionBDException;
 import logica.excepciones.ConfiguracionException;
 import logica.excepciones.Exc_Persistencia;
+import persistencia.config.Propiedades;
 
 
 public class main
 {
-	public static void main (final String[] args) throws Exc_Persistencia, IOException, ConfiguracionException
+	public static void main (final String[] args) throws ConexionBDException, IOException
 	{
 	try {
 				Propiedades p = new Propiedades();
-				String driver = p.buscar("driver");
+				String driver = p.getDriver();
 				String url = p.buscar("url");
 				String usuario = p.buscar("usuario");
 				String password = p.buscar("password");
@@ -85,10 +86,14 @@ public class main
 				System.out.println("EXITO!!!");	
 				
 			}
-			catch (SQLException  e){	
+			catch (SQLException  e) {	
 				e.printStackTrace();
+				//throw new ConexionBDException("No se ha podido crear la base de datos correctamente");
 			}
 			catch (ClassNotFoundException  e){	
+				e.printStackTrace();
+			}
+			catch (ConfiguracionException  e){	
 				e.printStackTrace();
 			}
 

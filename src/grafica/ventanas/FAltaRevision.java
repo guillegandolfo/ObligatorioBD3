@@ -8,7 +8,6 @@ import javax.swing.JFrame;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JButton;
-
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -106,7 +105,8 @@ public class FAltaRevision extends Ventana {
 							 System.out.println("1");
 							 ControladorAltaRevision c;
 							 System.out.println("2");
-							 c = new ControladorAltaRevision((FAltaRevision) getVentanaAbierta());
+						
+							 c = new ControladorAltaRevision((FAltaRevision)getVentanaAbierta());
 							 System.out.println("3");
 							 c.altaRevision(codigoFolio, Descripcion);
 							 System.out.println("4");
