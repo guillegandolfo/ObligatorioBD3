@@ -2,6 +2,7 @@ package persistencia.config;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
+
 import logica.excepciones.ConfiguracionException;
 
 public class Propiedades {

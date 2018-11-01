@@ -48,11 +48,11 @@ public class DAOFolios implements IDAOFolios{
 
         try {
         	Consultas consulta = new Consultas();
-        	boolean existe = this.member(fol.getCodigo(), ic);
+        	//boolean existe = this.member(fol.getCodigo(), ic);
         	Conexion c = (Conexion) ic;
             Connection con = c.getConexion();
     		//Consulto si existe 
-        	if (existe){
+        	//if (existe){
         		String query = consulta.insertarFolio();
         		PreparedStatement pstmt = con.prepareStatement(query);
     			pstmt.setString(1, fol.getCodigo());
@@ -61,7 +61,7 @@ public class DAOFolios implements IDAOFolios{
     			pstmt.executeUpdate();
         	
         		pstmt.close();
-        	}
+        	//}
         	
         } catch (SQLException ex) {
             throw new PersistenciaException("Error de conexion");
