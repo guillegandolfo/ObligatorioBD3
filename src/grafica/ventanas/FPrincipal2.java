@@ -36,6 +36,7 @@ import java.awt.event.MouseMotionAdapter;
 import java.rmi.RemoteException;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
+import grafica.ventanas.FolioMasRevisado;
 
 public class FPrincipal2 {
 
@@ -127,8 +128,11 @@ public class FPrincipal2 {
 		JButton btnFolios = new JButton("Folios");
 		
 		final FAbFolio vfolio = FAbFolio.getInstancia();
+		final FolioMasRevisado Vfoliomasrev = FolioMasRevisado.getInstancia();
 		vfolio.setLocation(0, 0);
 		desk.add(vfolio);
+		desk.add(Vfoliomasrev);
+		
 		
 		
 		
@@ -149,6 +153,13 @@ public class FPrincipal2 {
 		panel_1.add(btnRevisiones);
 		
 		JButton btnMasRevisado = new JButton("Mas Revisado");
+		btnMasRevisado.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Vfoliomasrev.putClientProperty("dragMode", "fixed");				
+				Vfoliomasrev.show();
+				//Vfoliomasrev.listarFolios();				
+			}
+		});
 		btnMasRevisado.setForeground(Color.BLACK);
 		btnMasRevisado.setBounds(71, 328, 131, 23);
 		panel_1.add(btnMasRevisado);
@@ -163,8 +174,7 @@ public class FPrincipal2 {
 	
 		btnRespaldo.setBorder(null);
 		btnRespaldo.setBorderPainted(false);
-		btnRespaldo.setBackground(new Color(128, 0, 0));
-		
+		btnRespaldo.setBackground(new Color(128, 0, 0));		
 		btnRespaldo.setForeground(Color.BLACK);
 		btnRespaldo.setBounds(0, 385, 286, 49);
 		panel_1.add(btnRespaldo);
@@ -187,11 +197,7 @@ public class FPrincipal2 {
 		separator_2.setBounds(0, 432, 291, 2);
 		panel_1.add(separator_2);
 		
-		btnRespaldo.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			
-			}
-		});
+
 		//jPanelConFondo.setVisible(true);
 		/**/
 		
