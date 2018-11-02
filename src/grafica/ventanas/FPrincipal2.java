@@ -52,7 +52,6 @@ public class FPrincipal2 {
 				try {
 					FPrincipal2 window = new FPrincipal2();
 					window.frame.setVisible(true);
-					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -134,8 +133,6 @@ public class FPrincipal2 {
 		desk.add(Vfoliomasrev);
 		
 		
-		
-		
 		btnFolios.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {	
 				vfolio.putClientProperty("dragMode", "fixed");				
@@ -196,8 +193,22 @@ public class FPrincipal2 {
 		JSeparator separator_2 = new JSeparator();
 		separator_2.setBounds(0, 432, 291, 2);
 		panel_1.add(separator_2);
+<<<<<<< HEAD
 		
 
+=======
+				
+		final prueba v = prueba.getInstancia();
+		v.setLocation(0, 0);
+		desk.add(v);
+		btnRespaldo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				v.putClientProperty("dragMode", "fixed");				
+				v.show();
+				v.listarFolios();
+			}
+		});
+>>>>>>> 22704e1a3a5bd83757b2a49bff8ed5036f66fecb
 		//jPanelConFondo.setVisible(true);
 		/**/
 		
