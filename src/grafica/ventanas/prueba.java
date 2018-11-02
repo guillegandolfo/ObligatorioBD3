@@ -38,24 +38,24 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class FAbFolio extends JInternalFrame {
+public class prueba extends JInternalFrame {
 	private static JInternalFrame frame;
 	private JTextField textField;
 	private JTable tablaAlumnos;
-	private ControladorFolio controlador = new ControladorFolio(this);
+	//private ControladorFolio controlador = new ControladorFolio(this);
 	DefaultTableModel modelo;
 	/**
 	 * Launch the application.
 	 */
 	
-	private static FAbFolio f = null;
+	private static prueba f = null;
    
     //singleton
-    public static FAbFolio getInstancia() {
+    public static prueba getInstancia() {
         if (f == null) {
-        	FAbFolio.f = new FAbFolio();
+        	prueba.f = new prueba();
         }
-        return FAbFolio.f;
+        return prueba.f;
     }
 
 	public static void main(String[] args) {
@@ -78,7 +78,7 @@ public class FAbFolio extends JInternalFrame {
 	/**
 	 * Create the frame.
 	 */
-	private FAbFolio() {
+	private prueba() {
 		setClosable(true);
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		
@@ -101,15 +101,14 @@ public class FAbFolio extends JInternalFrame {
 		btnAgregar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				VoFolio folio = new VoFolio("codigo6", "caratula", 1);
-				Boolean ok = controlador.agregarFolio(folio);
+				/*Boolean ok = controlador.agregarFolio(folio);
 				
 				if (ok){
-					Object[] fila = new Object[3]; 
-				    fila[0] = folio.getCodigo(); 
-				    fila[1] = folio.getCaratula(); 
-				    fila[2] = folio.getPaginas();			             
-				    modelo.addRow(fila);
-				}
+				Object[] fila = new Object[3]; 
+			    fila[0] = folio.getCodigo(); 
+			    fila[1] = folio.getCaratula(); 
+			    fila[2] = folio.getPaginas();			             
+			    modelo.addRow(fila);}*/
 			}
 		});
 		btnAgregar.setBounds(190, 197, 89, 23);
@@ -147,7 +146,7 @@ public class FAbFolio extends JInternalFrame {
 	}
 	public void listarFolios () {
 		
-		LinkedList<VoFolio> listado = new LinkedList<VoFolio>();
+		/*LinkedList<VoFolio> listado = new LinkedList<VoFolio>();
 		
 		listado = controlador.listarFolios();
 		modelo.setRowCount(0);
@@ -156,9 +155,11 @@ public class FAbFolio extends JInternalFrame {
 		    Object[] fila = new Object[3]; 
 		    fila[0] = folio.getCodigo(); 
 		    fila[1] = folio.getCaratula(); 
-
-  		    modelo.addRow(fila); 
-		}
+		    fila[2] = folio.getPaginas();
+		   
+		             
+		    modelo.addRow(fila); 
+		}*/
 		
 	}
 }
