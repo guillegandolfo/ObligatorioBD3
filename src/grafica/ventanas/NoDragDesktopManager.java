@@ -6,8 +6,6 @@ import javax.swing.JComponent;
 public class NoDragDesktopManager extends DefaultDesktopManager
 {
     /**
-     * Clase Utilitaria para grafica
-	 * Se agrega funcionalidad extra a DefaultDesktopManager para usarse en internal frames.
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
