@@ -193,10 +193,7 @@ public class FPrincipal2 {
 		JSeparator separator_2 = new JSeparator();
 		separator_2.setBounds(0, 432, 291, 2);
 		panel_1.add(separator_2);
-<<<<<<< HEAD
-		
 
-=======
 				
 		final prueba v = prueba.getInstancia();
 		v.setLocation(0, 0);
@@ -208,9 +205,7 @@ public class FPrincipal2 {
 				v.listarFolios();
 			}
 		});
->>>>>>> 22704e1a3a5bd83757b2a49bff8ed5036f66fecb
-		//jPanelConFondo.setVisible(true);
-		/**/
+
 		
 	}
 }

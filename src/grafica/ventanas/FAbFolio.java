@@ -42,7 +42,7 @@ public class FAbFolio extends JInternalFrame {
 	private static JInternalFrame frame;
 	private JTextField textField;
 	private JTable tablaAlumnos;
-	private ControladorFolio controlador = new ControladorFolio(this);
+	private ControladorFolio controlador ;
 	DefaultTableModel modelo;
 	/**
 	 * Launch the application.
@@ -79,6 +79,7 @@ public class FAbFolio extends JInternalFrame {
 	 * Create the frame.
 	 */
 	private FAbFolio() {
+		controlador = new ControladorFolio(this);
 		setClosable(true);
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		
