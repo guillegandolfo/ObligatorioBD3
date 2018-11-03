@@ -26,6 +26,8 @@ public class ControladorFolio {
 	private String resultado = "";
 	
 	public ControladorFolio(FAbFolio jinternalFrame) {
+		super();
+		// TODO Auto-generated constructor stub
 		this.ventana = jinternalFrame;
 		
 		try {
