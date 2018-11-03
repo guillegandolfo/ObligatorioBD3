@@ -4,14 +4,15 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import logica.Fachada;
 import logica.excepciones.ConfiguracionException;
+import logica.excepciones.Exc_Persistencia;
 import logica.excepciones.ServidorException;
 import persistencia.config.Propiedades;
 
 public class Servidor {
 
+    public static void main(String[] args) throws ServidorException, Exc_Persistencia {
         // instancio mi Objeto Remoto y lo publico
         // en el rmiregistry
 
@@ -21,7 +22,9 @@ public class Servidor {
 			String ip = p.getIpServidor();
 			String puerto = p.getPuertoServidor();
 			int port = Integer.parseInt(puerto);
+			
             // pongo a correr el rmiregistry
+            LocateRegistry.getRegistry(port);// createRegistry(port);
             
             // publico el objeto remoto en dicha ip y puerto
             String ruta = "//" + ip + ":" + puerto + "/logica";
