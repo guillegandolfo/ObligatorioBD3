@@ -26,16 +26,7 @@ public class ControladorFolio {
 	private String resultado = "";
 	
 	public ControladorFolio(FAbFolio jinternalFrame) {
-<<<<<<< HEAD
-=======
-		super();
-		// TODO Auto-generated constructor stub
-<<<<<<< HEAD
-		this.ventana = ventana;
-=======
->>>>>>> 40c3460f1f6b11363f223320f509e7b5d4f3ae2f
 		this.ventana = jinternalFrame;
->>>>>>> origin/master
 		
 		try {
 			Propiedades p = new Propiedades();
@@ -45,17 +36,10 @@ public class ControladorFolio {
 
 			fachada = (IFachada)Naming.lookup("//" + ip + ":" + port + "/logica");
 		} catch (ConfiguracionException e){
-<<<<<<< HEAD
-			ventana.imprimirVentana(e.getMessage());
-		} catch (IOException e) {
-		// TODO Auto-generated catch block
-	    	ventana.imprimirVentana("Ha ocurrido un error al establecer conexion con el servidor");
-=======
 			jinternalFrame.imprimirVentana(e.getMessage());
 		} catch (IOException e) {
 		// TODO Auto-generated catch block
 	    	jinternalFrame.imprimirVentana("Ha ocurrido un error al establecer conexion con el servidor");
->>>>>>> origin/master
 	    }
 		catch (NotBoundException e) {
 			// TODO Auto-generated catch block
@@ -86,19 +70,12 @@ public class ControladorFolio {
 		return voAlumno;
 	}*/
 	
-<<<<<<< HEAD
-	public void agregarFolio (VoFolio folio) {
-		try {
-			fachada.agregarFolio(folio);
-			ventana.imprimirVentana("Folio ingresado correctamente");
-=======
 	public Boolean agregarFolio (VoFolio folio) {
 		Boolean ok = false;
 		try {
 			fachada.agregarFolio(folio);
 			ventana.imprimirVentana("Folio ingresado correctamente");
 			ok = true;
->>>>>>> origin/master
 			//ventana.limpiarFrame();
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
@@ -128,24 +105,6 @@ public class ControladorFolio {
 		return lista;
 	}
 	
-<<<<<<< HEAD
-	public LinkedList<VoFolio> listarFolios() {
-		LinkedList<VoFolio> lista = new LinkedList<VoFolio>();
-		try {
-			lista = fachada.listarFolios();
-			//ventana.limpiarFrame();
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			ventana.imprimirVentana("Error en el servidor. " + e.getMessage());
-		}  catch (Exception e) {
-			// TODO Auto-generated catch block
-			ventana.imprimirVentana(e.getMessage());
-		}
-		return lista;
-	}
-	
-=======
->>>>>>> origin/master
 	/*public void modificarAlumno (VOAlumno alu) {
 
 		try {
