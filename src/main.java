@@ -14,7 +14,7 @@ import persistencia.config.Propiedades;
 
 public class main
 {
-	public static void main (final String[] args) throws ConexionBDException, IOException
+	public static void main (final String[] args) throws ConexionBDException, IOException, Exc_Persistencia
 	{
 	try {
 				Propiedades p = new Propiedades();
@@ -93,7 +93,7 @@ public class main
 			catch (ClassNotFoundException  e){	
 				e.printStackTrace();
 			}
-			catch (ConfiguracionException  e){	
+			catch (Exc_Persistencia  e){	
 				e.printStackTrace();
 			}
 

@@ -1,14 +1,11 @@
 package persistencia.poolConexiones;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Properties;
 
 import logica.excepciones.ConfiguracionException;
+import logica.excepciones.Exc_Persistencia;
 import logica.excepciones.PersistenciaException;
 import persistencia.config.Propiedades;
 
@@ -24,7 +21,7 @@ public class PoolConexiones implements IPoolConexiones {
 	private int creadas;
 	private int tope;
 	
-	public PoolConexiones () throws ConfiguracionException {
+	public PoolConexiones () throws ConfiguracionException, Exc_Persistencia {
 		
 		try {
 			/*Properties p = new Properties();
@@ -43,7 +40,7 @@ public class PoolConexiones implements IPoolConexiones {
 			conexiones = new Conexion[tamanio];
 			nivelTransaccionalidad = Connection.TRANSACTION_SERIALIZABLE;
 
-		} catch (ConfiguracionException e) {
+		} catch (Exc_Persistencia e) {
 			// TODO Auto-generated catch block
 			throw new ConfiguracionException("Ocurrio un error con la configuracion de datos de los servidores");
 		} 	

@@ -1,22 +1,19 @@
 package grafica.controladores;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import grafica.ventanas.FAbFolio;
+
 import java.io.IOException;
-import java.io.InputStream;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.LinkedList;
-import java.util.Properties;
 
-import grafica.ventanas.FAbFolio;
-import grafica.ventanas.FAbFolio;
+import persistencia.config.Propiedades;
 import logica.IFachada;
 import logica.excepciones.ConfiguracionException;
+import logica.excepciones.Exc_Persistencia;
 import logica.excepciones.YaExisteFolioException;
 import logica.vo.VoFolio;
-import persistencia.config.Propiedades;
 
 
 public class ControladorFolio {
@@ -25,14 +22,13 @@ public class ControladorFolio {
 	private IFachada fachada;
 	private String resultado = "";
 	
-	public ControladorFolio(FAbFolio jinternalFrame) {
+	public ControladorFolio(FAbFolio jinternalFrame) throws Exc_Persistencia {
 		super();
 		// TODO Auto-generated constructor stub
-<<<<<<< HEAD
-		this.ventana = ventana;
-=======
+
+
 		this.ventana = jinternalFrame;
->>>>>>> origin/master
+
 		
 		try {
 			Propiedades p = new Propiedades();
@@ -41,20 +37,15 @@ public class ControladorFolio {
 			int port = Integer.parseInt(puerto);
 
 			fachada = (IFachada)Naming.lookup("//" + ip + ":" + port + "/logica");
-		} catch (ConfiguracionException e){
-<<<<<<< HEAD
+		} catch (Exc_Persistencia e){
+
 			ventana.imprimirVentana(e.getMessage());
 		} catch (IOException e) {
 		// TODO Auto-generated catch block
 	    	ventana.imprimirVentana("Ha ocurrido un error al establecer conexion con el servidor");
-=======
+
 			jinternalFrame.imprimirVentana(e.getMessage());
-		} catch (IOException e) {
-		// TODO Auto-generated catch block
-	    	jinternalFrame.imprimirVentana("Ha ocurrido un error al establecer conexion con el servidor");
->>>>>>> origin/master
-	    }
-		catch (NotBoundException e) {
+		} catch (NotBoundException e) {
 			// TODO Auto-generated catch block
 			jinternalFrame.imprimirVentana(e.getMessage());
 		}
@@ -82,20 +73,15 @@ public class ControladorFolio {
 		}
 		return voAlumno;
 	}*/
-	
-<<<<<<< HEAD
-	public void agregarFolio (VoFolio folio) {
-		try {
-			fachada.agregarFolio(folio);
-			ventana.imprimirVentana("Folio ingresado correctamente");
-=======
+
+
 	public Boolean agregarFolio (VoFolio folio) {
 		Boolean ok = false;
 		try {
 			fachada.agregarFolio(folio);
 			ventana.imprimirVentana("Folio ingresado correctamente");
 			ok = true;
->>>>>>> origin/master
+
 			//ventana.limpiarFrame();
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
@@ -110,6 +96,7 @@ public class ControladorFolio {
 		return ok;
 	}
 	
+
 	public LinkedList<VoFolio> listarFolios() {
 		LinkedList<VoFolio> lista = new LinkedList<VoFolio>();
 		try {
@@ -125,24 +112,8 @@ public class ControladorFolio {
 		return lista;
 	}
 	
-<<<<<<< HEAD
-	public LinkedList<VoFolio> listarFolios() {
-		LinkedList<VoFolio> lista = new LinkedList<VoFolio>();
-		try {
-			lista = fachada.listarFolios();
-			//ventana.limpiarFrame();
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			ventana.imprimirVentana("Error en el servidor. " + e.getMessage());
-		}  catch (Exception e) {
-			// TODO Auto-generated catch block
-			ventana.imprimirVentana(e.getMessage());
-		}
-		return lista;
-	}
-	
-=======
->>>>>>> origin/master
+
+
 	/*public void modificarAlumno (VOAlumno alu) {
 
 		try {

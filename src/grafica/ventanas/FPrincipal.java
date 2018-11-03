@@ -3,7 +3,6 @@ package grafica.ventanas;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
 import javax.swing.JTextField;
 
 import java.awt.BorderLayout;
@@ -13,24 +12,18 @@ import javax.swing.JPanel;
 import java.awt.Color;
 
 import javax.swing.JLabel;
-import javax.swing.ImageIcon;
 
 import java.awt.Font;
-import java.awt.Image;
 
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.Cursor;
-import java.awt.Toolkit;
-import java.awt.SystemColor;
 
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 
-import java.awt.Component;
 import java.awt.Dimension;
 
 import javax.swing.border.MatteBorder;
@@ -88,6 +81,7 @@ public class FPrincipal extends Ventana{
 		panel.setBounds(289, 24, 740, 573);
 		frame.getContentPane().add(panel);
 		panel.setLayout(null);
+	
 		
 		/**/
 		/*jPanelConFondo jPanelConFondo = new jPanelConFondo();						
@@ -122,6 +116,7 @@ public class FPrincipal extends Ventana{
 				if(getVentanaAbierta() == null){
 					FAbFolio formFolios = new FAbFolio();
 					setVentanaAbierta(formFolios);
+					formFolios.setVentanaAbierta(formFolios);
 					formFolios.setVisible(true);
 				}
 				else{
@@ -130,16 +125,17 @@ public class FPrincipal extends Ventana{
 			}
 		});
 		btnFolios.setForeground(Color.BLACK);
-		btnFolios.setBounds(71, 204, 131, 23);
+		btnFolios.setBounds(71, 212, 131, 23);
 		panel_1.add(btnFolios);
 		
 		JButton btnRevisiones = new JButton("Revisiones");
 		btnRevisiones.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+
 				if(getVentanaAbierta() == null){
 					FAltaRevision formRevisiones = new FAltaRevision();
 					setVentanaAbierta(formRevisiones);
+					formRevisiones.setVentanaAbierta(formRevisiones);
 					formRevisiones.setVisible(true);
 				}
 				else{
@@ -170,6 +166,24 @@ public class FPrincipal extends Ventana{
 		separator.setForeground(new Color(70, 130, 180));
 		separator.setBackground(new Color(70, 130, 180));
 		separator.setLayout(null);
+		
+		JButton btnAgregarFolio = new JButton("Agregar Folio");
+		btnAgregarFolio.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(getVentanaAbierta() == null){
+					FAltaFolio formAltaFolios = new FAltaFolio();
+					setVentanaAbierta(formAltaFolios);
+					formAltaFolios.setVentanaAbierta(formAltaFolios);
+					formAltaFolios.setVisible(true);
+				}
+				else{
+					getVentanaAbierta().toFront();
+				}
+			}
+		});
+		btnAgregarFolio.setForeground(Color.BLACK);
+		btnAgregarFolio.setBounds(71, 178, 131, 23);
+		panel_1.add(btnAgregarFolio);
 		//jPanelConFondo.setVisible(true);
 		/**/
 	}
