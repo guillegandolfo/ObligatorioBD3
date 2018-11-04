@@ -170,8 +170,9 @@ public class DAOFolios implements IDAOFolios{
                  pstmt.setString(1, Codigo);
                  rs = pstmt.executeQuery();
                  if (rs.next()) {
-                	 folio = new VOFolioMaxRev(Cantidad, Codigo, rs.getString("caratula"), rs.getInt("paginas"));
-                     
+                	 String caratula = rs.getString("caratula");
+                	 int pagina = rs.getInt("paginas");
+                	 folio = new VOFolioMaxRev(Cantidad, Codigo,caratula , pagina);                    
                  }else{
                 	 throw new PersistenciaException("Error al obtener el folio");
                  }

@@ -49,8 +49,8 @@ public class Consultas {
 	public String folioMasRevisado() {
 		/*group by codigo*/
 		return "SELECT f.codigo,count(*) cantidad" + 
-				"	FROM folios f" + 
-				"	inner join revisiones r" + 
+				"	FROM juridico.folios f" + 
+				"	inner join juridico.revisiones r" + 
 				"	on f.codigo = r.codigoFolio" + 
 				"	group by f.codigo" + 
 				"	order by 2 desc" + 

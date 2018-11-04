@@ -75,9 +75,7 @@ public class FAbFolio extends JInternalFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
+
 	private FAbFolio() {
 		setClosable(true);
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
@@ -115,16 +113,14 @@ public class FAbFolio extends JInternalFrame {
 		btnAgregar.setBounds(190, 197, 89, 23);
 		panel.add(btnAgregar);
 		//setBounds(0, 0, 740, 573);
-		setBounds(289, 0, 756, 636);
-		//desk.setBounds(0, 0, 740, 573);
-		
+		setBounds(289, 0, 753, 631);
+		//desk.setBounds(0, 0, 740, 573);		
 		String[] columns = {"Codigo","Caratula","Paginas"};
 		modelo = new DefaultTableModel(columns,0); //0 es la cantidad de rows
 		this.listarFolios();
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(24, 234, 696, 362);
-		panel.add(scrollPane);
-		
+		panel.add(scrollPane);		
 		//Creo la JTable
 		JTable tablaFolios = new JTable(modelo);
 		tablaFolios.setModel(modelo);
@@ -132,19 +128,22 @@ public class FAbFolio extends JInternalFrame {
 		tablaFolios.setLayout(null);
 		scrollPane.setViewportView(tablaFolios);
 		tablaFolios.setModel(modelo);
-		tablaFolios.setBorder(new LineBorder(new Color(0, 0, 0)));
-		
-		inicialize();
-		
-
+		tablaFolios.setBorder(new LineBorder(new Color(0, 0, 0)));		
+		inicialize();		
 	}
+	
+	
 	private void inicialize() {
 		
 	}
+	
+	
 	public void imprimirVentana(String msg) {
 		
 		JOptionPane.showMessageDialog (frame, msg);
 	}
+	
+	
 	public void listarFolios () {
 		
 		LinkedList<VoFolio> listado = new LinkedList<VoFolio>();
