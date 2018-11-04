@@ -4,7 +4,6 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-
 import persistencia.config.Propiedades;
 import grafica.ventanas.FAltaRevision;
 import logica.Fachada;
@@ -20,6 +19,7 @@ public class ControladorAltaRevision {
 	public ControladorAltaRevision(FAltaRevision ventana)throws MalformedURLException, RemoteException, NotBoundException, ConfiguracionException, Exc_Persistencia {
 		try{
 			ven = ventana;
+<<<<<<< HEAD
 
 			Propiedades p = new Propiedades();
 			String puerto = p.getPuertoServidor();
@@ -27,6 +27,13 @@ public class ControladorAltaRevision {
 			this.f = (IFachada) Naming.lookup("//" + ip + ":" + puerto + "/logica");
 			
 		} catch (MalformedURLException | RemoteException | NotBoundException e) {
+=======
+			Propiedades p = new Propiedades();
+			String puerto = p.buscar("Puerto");
+			String ip = p.buscar("Ip");
+			f = (IFachada) Naming.lookup("//"+ip+":"+puerto+"/logica/IFachada");
+		} catch (MalformedURLException | RemoteException | NotBoundException | ConfiguracionException e) {
+>>>>>>> origin/master
 			ven.mostrarError("Error en la controladora", 0);
 		}
 	}

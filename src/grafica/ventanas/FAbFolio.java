@@ -1,5 +1,6 @@
 package grafica.ventanas;
 
+<<<<<<< HEAD
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -16,16 +17,31 @@ import javax.swing.DefaultListModel;
 
 import java.awt.Font;
 
+=======
+import javax.swing.DefaultDesktopManager;
+import javax.swing.DefaultListModel;
+>>>>>>> origin/master
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
+<<<<<<< HEAD
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+=======
+import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRootPane;
+import javax.swing.JScrollPane;
+>>>>>>> origin/master
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
+<<<<<<< HEAD
 
 import java.awt.Dimension;
 
@@ -36,6 +52,32 @@ import javax.swing.JOptionPane;
 public class FAbFolio extends Ventana{
 
 	private JFrame frame;
+=======
+import javax.swing.border.LineBorder;
+import javax.swing.border.MatteBorder;
+import javax.swing.event.InternalFrameEvent;
+import javax.swing.table.DefaultTableModel;
+
+import grafica.controladores.ControladorFolio;
+import logica.Fachada;
+import logica.excepciones.ConfiguracionException;
+import logica.vo.VoFolio;
+import persistencia.daos.DAOFolios;
+import persistencia.daos.IDAOFolios;
+import persistencia.poolConexiones.IPoolConexiones;
+import persistencia.poolConexiones.PoolConexiones;
+
+import java.beans.PropertyChangeListener;
+import java.rmi.RemoteException;
+import java.util.LinkedList;
+import java.beans.PropertyChangeEvent;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class FAbFolio extends JInternalFrame {
+	private static JInternalFrame frame;
+>>>>>>> origin/master
 	private JTextField textField;
 	DefaultListModel<?> model;
 
@@ -71,6 +113,7 @@ public class FAbFolio extends Ventana{
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);	
 		
+<<<<<<< HEAD
 		textField = new JTextField();
 		frame.getContentPane().add(textField, BorderLayout.CENTER);
 		textField.setColumns(10);
@@ -129,17 +172,45 @@ public class FAbFolio extends Ventana{
 		btnSalir.setBounds(130, 563, 131, 23);
 		panel_1.add(btnSalir);
 		btnSalir.setForeground(Color.BLACK);
+=======
+		JPanel panel = new JPanel();
+		panel.setBounds(10, 0, 730, 607);
+		getContentPane().add(panel);
+		panel.setLayout(null);
+		
+		JButton btnBorrar = new JButton("Borrar");
+		btnBorrar.setBounds(304, 197, 89, 23);
+		panel.add(btnBorrar);
+		
+		JButton button = new JButton("New button");
+		button.setBounds(426, 197, 89, 23);
+		panel.add(button);
+>>>>>>> origin/master
 		
 		JButton btnAgregar = new JButton("Agregar");
 		btnAgregar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+<<<<<<< HEAD
 				
+=======
+				VoFolio folio = new VoFolio("codigo6", "caratula", 1);
+				Boolean ok = controlador.agregarFolio(folio);
+				
+				if (ok){
+					Object[] fila = new Object[3]; 
+				    fila[0] = folio.getCodigo(); 
+				    fila[1] = folio.getCaratula(); 
+				    fila[2] = folio.getPaginas();			             
+				    modelo.addRow(fila);
+				}
+>>>>>>> origin/master
 			}
 		});
 		btnAgregar.setForeground(Color.BLACK);
 		btnAgregar.setBounds(71, 204, 131, 23);
 		panel_1.add(btnAgregar);
 		
+<<<<<<< HEAD
 		JButton btnBorrar = new JButton("Borrar");
 		btnBorrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -148,6 +219,29 @@ public class FAbFolio extends Ventana{
 		btnBorrar.setForeground(Color.BLACK);
 		btnBorrar.setBounds(71, 263, 131, 23);
 		panel_1.add(btnBorrar);
+=======
+		String[] columns = {"Codigo","Caratula","Paginas"};
+		modelo = new DefaultTableModel(columns,0); //0 es la cantidad de rows
+		this.listarFolios();
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(24, 234, 696, 362);
+		panel.add(scrollPane);
+		
+		//Creo la JTable
+		JTable tablaFolios = new JTable(modelo);
+		tablaFolios.setModel(modelo);
+		scrollPane.setViewportView(tablaFolios);
+		tablaFolios.setLayout(null);
+		scrollPane.setViewportView(tablaFolios);
+		tablaFolios.setModel(modelo);
+		tablaFolios.setBorder(new LineBorder(new Color(0, 0, 0)));
+		
+		inicialize();
+		
+
+	}
+	private void inicialize() {
+>>>>>>> origin/master
 		
 		JSeparator separator = new JSeparator();
 		separator.setBounds(286, 0, 5, 597);
@@ -167,8 +261,14 @@ public class FAbFolio extends Ventana{
 		JOptionPane.showMessageDialog (frame, msg);
 	}
 
+<<<<<<< HEAD
 	public void setVisible(boolean isVisible) {
 		// TODO Auto-generated method stub
 		this.frame.setVisible(isVisible);
+=======
+  		    modelo.addRow(fila); 
+		}
+		
+>>>>>>> origin/master
 	}
 }

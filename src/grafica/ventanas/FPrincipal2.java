@@ -29,9 +29,14 @@ import javax.swing.SwingConstants;
 import java.awt.Component;
 import java.awt.Dimension;
 import javax.swing.border.MatteBorder;
+
+import logica.excepciones.ConfiguracionException;
+
 import java.awt.event.MouseMotionAdapter;
+import java.rmi.RemoteException;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
+import grafica.ventanas.FolioMasRevisado;
 
 public class FPrincipal2 {
 
@@ -47,7 +52,6 @@ public class FPrincipal2 {
 				try {
 					FPrincipal2 window = new FPrincipal2();
 					window.frame.setVisible(true);
-					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -68,11 +72,12 @@ public class FPrincipal2 {
 	private void initialize() {
 
 		frame = new JFrame();
+		frame.setResizable(false);
 		frame.getContentPane().setBackground(new Color(70, 130, 180));
 		frame.setBounds(100, 100, 1045, 636);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);	
-		frame.setUndecorated(true);
+		//frame.setUndecorated(true);
 		
 		textField = new JTextField();
 		frame.getContentPane().add(textField, BorderLayout.CENTER);
@@ -88,7 +93,7 @@ public class FPrincipal2 {
 		panel.setLayout(null);
 		
 		final JDesktopPane desk = new JDesktopPane();
-		desk.setBounds(0, 0, 740, 573);
+		desk.setBounds(0, 0, 756, 636);
 		desk.setDesktopManager( new NoDragDesktopManager() );
 		desk.setBackground(new Color(230, 230, 250));
 		panel.add(desk);
@@ -120,11 +125,19 @@ public class FPrincipal2 {
 		btnSalir.setForeground(Color.BLACK);
 		
 		JButton btnFolios = new JButton("Folios");
+		
+		final FAbFolio vfolio = FAbFolio.getInstancia();
+		final FolioMasRevisado Vfoliomasrev = FolioMasRevisado.getInstancia();
+		vfolio.setLocation(0, 0);
+		desk.add(vfolio);
+		desk.add(Vfoliomasrev);
+		
+		
 		btnFolios.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				FAbFolio formFolios = new FAbFolio();
-				formFolios.setVisible(true);
-				//panel.add(formFolios);
+			public void actionPerformed(ActionEvent e) {	
+				vfolio.putClientProperty("dragMode", "fixed");				
+				vfolio.show();
+				vfolio.listarFolios();
 			}
 		});
 		btnFolios.setForeground(Color.BLACK);
@@ -137,6 +150,13 @@ public class FPrincipal2 {
 		panel_1.add(btnRevisiones);
 		
 		JButton btnMasRevisado = new JButton("Mas Revisado");
+		btnMasRevisado.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Vfoliomasrev.putClientProperty("dragMode", "fixed");				
+				Vfoliomasrev.show();
+				//Vfoliomasrev.listarFolios();				
+			}
+		});
 		btnMasRevisado.setForeground(Color.BLACK);
 		btnMasRevisado.setBounds(71, 328, 131, 23);
 		panel_1.add(btnMasRevisado);
@@ -151,8 +171,7 @@ public class FPrincipal2 {
 	
 		btnRespaldo.setBorder(null);
 		btnRespaldo.setBorderPainted(false);
-		btnRespaldo.setBackground(new Color(128, 0, 0));
-		
+		btnRespaldo.setBackground(new Color(128, 0, 0));		
 		btnRespaldo.setForeground(Color.BLACK);
 		btnRespaldo.setBounds(0, 385, 286, 49);
 		panel_1.add(btnRespaldo);
@@ -174,33 +193,22 @@ public class FPrincipal2 {
 		JSeparator separator_2 = new JSeparator();
 		separator_2.setBounds(0, 432, 291, 2);
 		panel_1.add(separator_2);
-		final JinternalFrame vent = new JinternalFrame();
-		vent.setLocation(0, 0);
+<<<<<<< HEAD
 		
-		
-		desk.add(vent);
-		
-		JLabel lbl_close = new JLabel("X");
-		lbl_close.setBounds(703, 0, 37, 27);
-		desk.add(lbl_close);
-		lbl_close.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
+
+=======
 				
-				System.exit(0);
-			}
-		});
-		lbl_close.setHorizontalAlignment(SwingConstants.CENTER);
-		lbl_close.setForeground(new Color(241, 57, 83));
-		lbl_close.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		
+		final prueba v = prueba.getInstancia();
+		v.setLocation(0, 0);
+		desk.add(v);
 		btnRespaldo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				vent.putClientProperty("dragMode", "fixed");
-				
-				vent.show();
+				v.putClientProperty("dragMode", "fixed");				
+				v.show();
+				v.listarFolios();
 			}
 		});
+>>>>>>> 22704e1a3a5bd83757b2a49bff8ed5036f66fecb
 		//jPanelConFondo.setVisible(true);
 		/**/
 		

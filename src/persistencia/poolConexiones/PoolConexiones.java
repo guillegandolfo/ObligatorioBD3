@@ -16,7 +16,7 @@ public class PoolConexiones implements IPoolConexiones {
 	private String user;
 	private String password;
 	private int nivelTransaccionalidad; 
-	private Conexion[] conexiones;
+	private IConexion[] conexiones;
 	private int tamanio;
 	private int creadas;
 	private int tope;
@@ -35,7 +35,7 @@ public class PoolConexiones implements IPoolConexiones {
 			password = p.getPass();
 			
 			//Definir pool
-			tamanio = 5;//leer de properties
+			tamanio = 4;//leer de properties
 			tope = 0;
 			conexiones = new Conexion[tamanio];
 			nivelTransaccionalidad = Connection.TRANSACTION_SERIALIZABLE;
@@ -53,9 +53,9 @@ public class PoolConexiones implements IPoolConexiones {
 		synchronized (this) {
 			while (conexion == null) {
 				//1- Verificar si tengo alguna con para prestar en el arreglo
-				if (creadas > 0 && tope > 0) {
+				if ( tope > 0) {
 					//2- Si hay alguna, la saco del arreglo y la retorno
-					conexion = this.conexiones[tope];
+					conexion = this.conexiones[tope-1];
 					
 					try {
 						((Conexion) conexion).getConexion().setAutoCommit(false);
@@ -109,21 +109,27 @@ public class PoolConexiones implements IPoolConexiones {
 		//1- Recibe con y la agrega en el arreglo
 		//2- Hace notify
 		synchronized (this) {
-			if (ok && con != null) {
-				try {
-					((Conexion) con).getConexion().commit();
-				} catch(SQLException ex) {
-					throw new PersistenciaException("Ocurrio un error");
+			if ( con != null) {
+				conexiones[tope] = con;
+				tope++;
+				if (ok) {
+					try {
+						((Conexion) con).getConexion().commit();
+						
+					} catch(SQLException ex) {
+						throw new PersistenciaException("Ocurrio un error");
+					}
 				}
-			}
-			else {
-				try {
-					((Conexion) con).getConexion().rollback();
-				} catch(SQLException ex) {
-					throw new PersistenciaException("Ocurrio un error");
+				else {
+					try {
+						((Conexion) con).getConexion().rollback();
+					} catch(SQLException ex) {
+						throw new PersistenciaException("Ocurrio un error");
+					}
 				}
+				notify();
 			}
-			notify();
+			
 		}
 		
 	}

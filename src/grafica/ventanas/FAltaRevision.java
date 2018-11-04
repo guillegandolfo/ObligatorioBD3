@@ -3,6 +3,7 @@ package grafica.ventanas;
 import grafica.controladores.ControladorAltaRevision;
 import java.awt.Dimension;
 import javax.swing.JFrame;
+<<<<<<< HEAD
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JButton;
@@ -114,6 +115,24 @@ public class FAltaRevision extends Ventana {
 					}else{
 						mostrarError("El Codigo del Folio esta vacio",0);
 					}
+=======
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+
+public class FAltaRevision extends JFrame {
+
+	private JPanel contentPane;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					FAltaRevision frame = new FAltaRevision();
+					frame.setVisible(true);
+>>>>>>> origin/master
 				} catch (Exception e) {
 					mostrarError("Error en la ventana", 0);
 				}
