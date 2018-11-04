@@ -25,7 +25,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
     private static final long serialVersionUID = 1L;
 
     private static Fachada f = null;
-    private IDAOFolios folios;
+    private IDAOFolios daoFolios;
     private IPoolConexiones ipc = null;
 
     //singleton
@@ -38,7 +38,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 
     private Fachada() throws RemoteException, ConfiguracionException  {
         try {
-            this.folios = new DAOFolios();
+            this.daoFolios = new DAOFolios();
             this.ipc = new PoolConexiones();
         } catch (ConfiguracionException e) {
             throw new ConfiguracionException(e.getMessage());
@@ -56,9 +56,9 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
     		 con = this.ipc.obtenerConexion(true);
        
         	//Si no existe el folio a insertar
-            if(! this.folios.member(VoF.getCodigo(), con)) {
+            if(! this.daoFolios.member(VoF.getCodigo(), con)) {
                 Folio Fol = new Folio(VoF.getCodigo(), VoF.getCaratula(), VoF.getPaginas());
-                this.folios.insert(Fol, con);
+                this.daoFolios.insert(Fol, con);
             }
             else{
                 throw new YaExisteFolioException("El folio indicado ya existe");
@@ -69,64 +69,13 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
             throw new PersistenciaException("Error en el alta de Folio");
         }
     }
-    
-    /*public boolean member(String Codigo) throws PersistenciaException, RemoteException {
-        IConexion con = this.ipc.obtenerConexion(true);
-        boolean existe = false;
-        try {
-        		//Uso directamente el metodo en el DAOFolios
-        		existe = this.folios.member(Codigo, con);
-        		this.ipc.liberarConexion(con, true);
-        } catch (Exception e) {
-            this.ipc.liberarConexion(con, false);
-            throw new PersistenciaException("No se encontro Folio");
-        }
-        return existe;
-    }*/
-    
-    public VoFolio find(String Codigo) throws PersistenciaException, RemoteException {
-        IConexion con = this.ipc.obtenerConexion(true);
-        VoFolio VoF = null;
-        try {
-        	Folio Fo = this.folios.find(Codigo, con);
-        	
-        	//Si existe el folio
-            if(Fo != null){
-                VoF = new VoFolio(Fo.getCodigo(), Fo.getCaratula(), Fo.getPaginas());
-            }
-            else{
-                throw new PersistenciaException("No se encontro el Folio");
-            }
-            this.ipc.liberarConexion(con, true);
-        } catch (Exception e) {
-            this.ipc.liberarConexion(con, false);
-            throw new PersistenciaException("Error en el alta de Folio");
-        }
-        return VoF;
-    }
-    
-    public void delete(String Codigo) throws PersistenciaException, RemoteException {
-        IConexion con = this.ipc.obtenerConexion(true);
-        try {
-        	//Si existe el folio a eliminar
-            if(this.folios.member(Codigo, con)){
-                this.folios.delete(Codigo, con); 
-            }
-            else{
-                throw new PersistenciaException("No se encontro Folio a eliminar");
-            }
-            this.ipc.liberarConexion(con, true);
-        } catch (Exception e) {
-            this.ipc.liberarConexion(con, false);
-            throw new PersistenciaException("Error al eliminar Folio");
-        }
-    }
+
     
     public LinkedList <VoFolio> listarFolios() throws RemoteException, PersistenciaException {
         IConexion con = this.ipc.obtenerConexion(true);
         LinkedList <VoFolio> Lista = new LinkedList <VoFolio>();
         try {
-        	Lista = this.folios.listarFolios(con);
+        	Lista = this.daoFolios.listarFolios(con);
             this.ipc.liberarConexion(con, true);
         } catch (Exception e) {
             this.ipc.liberarConexion(con, false);
@@ -140,7 +89,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
         IConexion con = this.ipc.obtenerConexion(true);
         VOFolioMaxRev VoF = new VOFolioMaxRev();
         try {
-            VoF = this.folios.folioMasRevisado(con); 
+            VoF = this.daoFolios.folioMasRevisado(con); 
             this.ipc.liberarConexion(con, true);
         } catch (Exception e) {
             this.ipc.liberarConexion(con, false);
@@ -156,7 +105,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
     public void agregarRevision(String codFolio, String desc) throws RemoteException, PersistenciaException {
         IConexion con = this.ipc.obtenerConexion(true);
         try {
-        	Folio Fol = this.folios.find(codFolio, con);
+        	Folio Fol = this.daoFolios.find(codFolio, con);
         	
         	//Si existe folio
         	if (Fol != null){
@@ -179,7 +128,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
         IConexion con = this.ipc.obtenerConexion(true);
         int Cantidad =0;
         try {
-        	Folio Fol = this.folios.find(codFolio, con);
+        	Folio Fol = this.daoFolios.find(codFolio, con);
         	if (Fol != null){
             	Cantidad = Fol.cantidadRevisiones(con);
         	}else{
@@ -194,33 +143,11 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
         return Cantidad;
     }
     
-    public VORevision kEsimo(String codFolio, int Numero) throws RemoteException, PersistenciaException {
-        IConexion con = this.ipc.obtenerConexion(true);
-        VORevision VoR = new VORevision();
-        try {
-        	Folio Fol = this.folios.find(codFolio, con);
-        	if (Fol != null){
-            	Revision rev = Fol.obtenerRevision(Numero, con);
-            	VoR.setNumero(Numero);
-            	VoR.setCodigoFolio(codFolio);
-            	VoR.setDescripcion(rev.getDescripcion());
-        	}else{
-        		throw new Exc_Persistencia("No existe Folio");
-        	}
-        	
-            this.ipc.liberarConexion(con, true);
-        } catch (Exception e) {
-            this.ipc.liberarConexion(con, false);
-            throw new PersistenciaException("Error de conexion");
-        }
-        return VoR;
-    }
-    
     public LinkedList <VORevision> listarRevisiones(String codFolio, int Numero) throws RemoteException, PersistenciaException {
         IConexion con = this.ipc.obtenerConexion(true);
         LinkedList <VORevision> Lista = new LinkedList <VORevision>();
         try {
-        	Folio Fol = this.folios.find(codFolio, con);
+        	Folio Fol = this.daoFolios.find(codFolio, con);
         	if (Fol != null){
         		Lista = Fol.listarRevisiones(con);
         	}else{
@@ -237,11 +164,12 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
     public void borrarFolioRevisiones(String codFolio) throws RemoteException, PersistenciaException {
         IConexion con = this.ipc.obtenerConexion(true);
         try {
-        	Folio Fol = this.folios.find(codFolio, con);
-        	if (Fol != null){
-        		Fol.borrarRevisiones(con);
+        	Folio folio = this.daoFolios.find(codFolio, con);
+        	if (folio != null){
+        		
+        		this.daoFolios.delete(codFolio, con);
         	}else{
-        		throw new Exc_Persistencia("No existe Folio");
+        		throw new PersistenciaException("No existe Folio");
         	}
             this.ipc.liberarConexion(con, true);
         } catch (Exception e) {

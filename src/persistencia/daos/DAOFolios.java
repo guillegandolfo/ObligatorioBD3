@@ -102,14 +102,14 @@ public class DAOFolios implements IDAOFolios{
     		if (existe){
     			//Elimino las revisiones
         		Consultas consulta = new Consultas();
-    			String query = consulta.eliminarRevisiones();
+    			/*String query = consulta.eliminarRevisiones();
     			PreparedStatement pstmt = con.prepareStatement(query);
     			pstmt.setString(1, cod);
     			pstmt.executeUpdate();
-    			
+    			*/
     			//Elimino el Folio
-    			query = consulta.eliminarFolio();
-    			pstmt = con.prepareStatement(query);
+    			String query = consulta.eliminarFolio();
+    			PreparedStatement pstmt = con.prepareStatement(query);
     			pstmt.setString(1, cod);
     			pstmt.executeUpdate();
     			pstmt.close();

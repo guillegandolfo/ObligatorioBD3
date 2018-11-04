@@ -43,7 +43,7 @@ public class main
 						"descripcion Varchar(60) not null,\r\n" + 
 						"primary key (numero, codigoFolio),\r\n" + 
 						"CONSTRAINT fk_codigoFolio FOREIGN KEY (codigoFolio) REFERENCES Juridico.Folios (Codigo)\r\n" + 
-						");");
+						"ON DELETE CASCADE);");
 				pstmt.execute();
 				System.out.println("Creo la tabla Revisiones");
 				

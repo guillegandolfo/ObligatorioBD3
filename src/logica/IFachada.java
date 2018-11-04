@@ -26,13 +26,5 @@ public interface IFachada extends Remote {
     
     public void borrarFolioRevisiones(String codFolio) throws RemoteException, PersistenciaException;
     
-    /*public VORevision kEsimo(String codFolio, int Numero) throws RemoteException, PersistenciaException;
-    
-    public boolean member(String Codigo) throws PersistenciaException, RemoteException;
-    
-    public VoFolio find(String Codigo) throws PersistenciaException, RemoteException;
-    
-    public void delete(String Codigo) throws PersistenciaException, RemoteException;*/
-    
 }
 

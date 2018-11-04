@@ -14,14 +14,14 @@ public class Folio implements Serializable{
 	private String codigo;
 	private String caratula;
 	private int paginas;
-	private DAORevisiones Revisiones;
+	private DAORevisiones revisiones;
 	
 	public Folio(){
 		super();
 		this.setCodigo("");
 		this.setCaratula("");
 		this.setPaginas(1);
-		this.Revisiones = new DAORevisiones("");
+		this.revisiones = new DAORevisiones("");
 	}
 	
 	public Folio(String Codigo, String Caratula, int Paginas) {
@@ -29,7 +29,7 @@ public class Folio implements Serializable{
 		this.setCodigo(Codigo);
 		this.setCaratula(Caratula);
 		this.setPaginas(Paginas);
-		this.Revisiones = new DAORevisiones(Codigo);
+		this.revisiones = new DAORevisiones(Codigo);
 	}
 
 	public String getCodigo() {
@@ -59,7 +59,7 @@ public class Folio implements Serializable{
 	public boolean tieneRevision(int numR, IConexion con) throws Exc_Persistencia{
 		
 		boolean tiene = false;
-		int largo = this.Revisiones.Largo(con);
+		int largo = this.revisiones.Largo(con);
 		if (largo != 0){
 			tiene = true;
 		}
@@ -68,25 +68,29 @@ public class Folio implements Serializable{
 	}
 	
 	public int cantidadRevisiones(IConexion con) throws Exc_Persistencia{
-		return this.Revisiones.Largo(con);
+		return this.revisiones.Largo(con);
 	}
 	
 	public void addRevision(Revision rev, IConexion con) throws Exc_Persistencia{
-		this.Revisiones.InsBack(rev.getDescripcion(), con);
+		this.revisiones.InsBack(rev.getDescripcion(), con);
 	}
 	
 	public Revision obtenerRevision(int numR, IConexion con) throws Exc_Persistencia{
-		VORevision rev = this.Revisiones.kEsimo(numR, con);
+		VORevision rev = this.revisiones.kEsimo(numR, con);
 		Revision revision = new Revision(rev.getNumero(), rev.getCodigoFolio(), rev.getDescripcion());
 		return revision;
 	}
 	
 	public LinkedList <VORevision> listarRevisiones(IConexion con) throws SQLException, Exc_Persistencia{
 		
-		return this.Revisiones.listarRevisiones(con);
+		return this.revisiones.listarRevisiones(con);
 	}
 	
 	public void borrarRevisiones(IConexion con) throws Exc_Persistencia{
-		this.Revisiones.borrarRevisiones(con);
+		this.revisiones.borrarRevisiones(con);
+	}
+	
+	public void borrarFolio(IConexion con) throws Exc_Persistencia{
+		this.revisiones.borrarRevisiones(con);
 	}
 }

@@ -92,6 +92,23 @@ public class ControladorFolio {
 		return ok;
 	}
 	
+	public Boolean borrarFolio (String codFolio) {
+		Boolean ok = false;
+		try {
+			fachada.borrarFolioRevisiones(codFolio);
+			ventana.imprimirVentana("Folio borrado correctamente");
+			ok = true;
+			//ventana.limpiarFrame();
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			ventana.imprimirVentana("Error en el servidor. " + e.getMessage());
+		}  catch (Exception e) {
+			// TODO Auto-generated catch block
+			ventana.imprimirVentana(e.getMessage());
+		}
+		return ok;
+	}
+	
 	public LinkedList<VoFolio> listarFolios() {
 		LinkedList<VoFolio> lista = new LinkedList<VoFolio>();
 		try {
@@ -106,24 +123,5 @@ public class ControladorFolio {
 		}
 		return lista;
 	}
-	
-	/*public void modificarAlumno (VOAlumno alu) {
-
-		try {
-			fachada.modificarAlumno(alu);
-			ventana.imprimirVentana("Alumno modificado correctamente");
-			ventana.limpiarFrame();
-
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			ventana.imprimirVentana("Error en el servidor. " + e.getMessage());
-		} catch (NoExisteAlumnoException e) {
-			// TODO Auto-generated catch block
-			ventana.imprimirVentana(e.getMessage());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			ventana.imprimirVentana(e.getMessage());
-		}
-	}*/
 
 }
