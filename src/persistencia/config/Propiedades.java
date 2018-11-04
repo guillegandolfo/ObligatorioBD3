@@ -3,21 +3,21 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-import logica.excepciones.ConfiguracionException;
+import logica.excepciones.Exc_Persistencia;;
 
 public class Propiedades {
 	
 	private Properties prop;
 	
 	
-	public Propiedades() throws ConfiguracionException {	
+	public Propiedades() throws Exc_Persistencia {	
 		prop = new Properties();
 		String pathProperties =  ".settings/datos.properties";
 		try {
 			prop.load(new FileInputStream(pathProperties));
 		} catch (IOException ex) {
 			// TODO Auto-generated catch block
-			throw new ConfiguracionException("No se ha podido cargar la configuracion"); 
+			throw new Exc_Persistencia("No se ha podido cargar la configuracion"); 
 		} 				
 	}
 	
@@ -63,7 +63,14 @@ public class Propiedades {
 		return puerto;
 	}
 	
-	public String buscar(String nomProp) throws ConfiguracionException { 
+	public String getFabrica() 
+	{
+		String fabrica;
+		fabrica = prop.getProperty("fabrica");
+		return fabrica;
+	}
+	
+	public String buscar(String nomProp) throws Exc_Persistencia { 
 
 		try{
 			Properties p = new Properties();
@@ -78,14 +85,17 @@ public class Propiedades {
 			}else if((nomProp == "usuario")){
 				String archivo = p.getProperty("usuario");
 				return archivo;
+			}else if((nomProp == "fabrica")){
+				String archivo = p.getProperty("fabrica");
+				return archivo;
 			}else if((nomProp == "password")){
 				String archivo = p.getProperty("password");
 				return archivo;
 			}else{
-				throw new ConfiguracionException("No se encuentra los datos en la Properties");
+				throw new Exc_Persistencia("No se encuentra los datos en la Properties");
 			}
 		} catch (IOException e){ 
-			throw new ConfiguracionException("Hubo un error al buscar la properties");
+			throw new Exc_Persistencia("Hubo un error al buscar la properties");
 		}	
 	}
 }

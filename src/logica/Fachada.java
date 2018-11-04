@@ -29,14 +29,14 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
     private IPoolConexiones ipc = null;
 
     //singleton
-    public static Fachada getInstancia() throws ConfiguracionException, RemoteException {
+    public static Fachada getInstancia() throws ConfiguracionException, RemoteException, Exc_Persistencia {
         if (f == null) {
             Fachada.f = new Fachada();
         }
         return Fachada.f;
     }
 
-    private Fachada() throws RemoteException, ConfiguracionException  {
+    private Fachada() throws RemoteException, ConfiguracionException, Exc_Persistencia  {
         try {
             this.folios = new DAOFolios();
             this.ipc = new PoolConexiones();
@@ -154,16 +154,22 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 	///////////////////////////
     
     public void agregarRevision(String codFolio, String desc) throws RemoteException, PersistenciaException {
-        IConexion con = this.ipc.obtenerConexion(true);
+    	System.out.println("Entro a la fachada");
+    	IConexion con = this.ipc.obtenerConexion(true);
+    	System.out.println("Tengo Conexion");
         try {
+        	System.out.println("1");
         	Folio Fol = this.folios.find(codFolio, con);
-        	
+        	System.out.println("2");
         	//Si existe folio
         	if (Fol != null){
+        		System.out.println("3");
         		int Numero = Fol.cantidadRevisiones(con) + 1;
+        		System.out.println("4");
             	Revision rev = new Revision(Numero, codFolio, desc);
-            	
+            	System.out.println("5");
             	Fol.addRevision(rev, con);
+            	System.out.println("6");
         	}else{
         		throw new Exc_Persistencia("No existe Folio");
         	}
@@ -250,10 +256,5 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
         }
     }
 
-	public void agregarRevision(String codFolio, String desc, int cedN)
-			throws RemoteException, PersistenciaException {
-		// TODO Auto-generated method stub
-		
-	}
 
 }

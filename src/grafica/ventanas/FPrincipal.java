@@ -7,13 +7,32 @@ import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import java.awt.Color;
 import javax.swing.JLabel;
+<<<<<<< HEAD
+
 import java.awt.Font;
+
+=======
+import java.awt.Font;
+>>>>>>> origin/master
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+<<<<<<< HEAD
+
+import javax.swing.JSeparator;
+import javax.swing.SwingConstants;
+
+import java.awt.Dimension;
+
+import javax.swing.border.MatteBorder;
+
+
+
+=======
 import java.awt.Cursor;
 import java.awt.SystemColor;
 
+>>>>>>> origin/master
 public class FPrincipal extends Ventana{
 
 	private JFrame frame;
@@ -72,6 +91,9 @@ public class FPrincipal extends Ventana{
 			}
 		});
 		panel.setLayout(null);
+<<<<<<< HEAD
+	
+=======
 		panel.add(btnAbFolio);
 		
 		JButton btnRevision = new JButton("Revisiones");
@@ -129,6 +151,7 @@ public class FPrincipal extends Ventana{
 		//btnSalir.setBackground(Color.GREY);
 		btnSalir.setBounds(644, 259, 131, 23);
 		panel.add(btnSalir);
+>>>>>>> origin/master
 		
 		/**/
 		/*jPanelConFondo jPanelConFondo = new jPanelConFondo();						
@@ -150,6 +173,90 @@ public class FPrincipal extends Ventana{
 		lblJurdico.setFont(new Font("MingLiU_HKSCS-ExtB", Font.BOLD, 40));
 		lblJurdico.setBounds(521, 69, 191, 46);
 		panel_1.add(lblJurdico);
+<<<<<<< HEAD
+		
+		JButton btnSalir = new JButton("Salir");
+		btnSalir.setBounds(130, 563, 131, 23);
+		panel_1.add(btnSalir);
+		btnSalir.setForeground(Color.BLACK);
+		
+		JButton btnFolios = new JButton("Folios");
+		btnFolios.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				if(getVentanaAbierta() == null){
+					FAbFolio formFolios = new FAbFolio();
+					setVentanaAbierta(formFolios);
+					formFolios.setVentanaAbierta(formFolios);
+					formFolios.setVisible(true);
+				}
+				else{
+					getVentanaAbierta().toFront();
+				}
+			}
+		});
+		btnFolios.setForeground(Color.BLACK);
+		btnFolios.setBounds(71, 212, 131, 23);
+		panel_1.add(btnFolios);
+		
+		JButton btnRevisiones = new JButton("Revisiones");
+		btnRevisiones.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+
+				if(getVentanaAbierta() == null){
+					FAltaRevision formRevisiones = new FAltaRevision();
+					setVentanaAbierta(formRevisiones);
+					formRevisiones.setVentanaAbierta(formRevisiones);
+					formRevisiones.setVisible(true);
+				}
+				else{
+					getVentanaAbierta().toFront();
+				}
+			}
+		});
+		btnRevisiones.setForeground(Color.BLACK);
+		btnRevisiones.setBounds(71, 263, 131, 23);
+		panel_1.add(btnRevisiones);
+		
+		JButton btnMasRevisado = new JButton("Mas Revisado");
+		btnMasRevisado.setForeground(Color.BLACK);
+		btnMasRevisado.setBounds(71, 328, 131, 23);
+		panel_1.add(btnMasRevisado);
+		
+		JButton btnRespaldo = new JButton("Respaldo");
+		btnRespaldo.setForeground(Color.BLACK);
+		btnRespaldo.setBounds(71, 398, 131, 23);
+		panel_1.add(btnRespaldo);
+		
+		JSeparator separator = new JSeparator();
+		separator.setBounds(286, 0, 5, 597);
+		panel_1.add(separator);
+		separator.setBorder(new MatteBorder(5, 5, 5, 5, (Color) new Color(119, 136, 153)));
+		separator.setPreferredSize(new Dimension(0, 1));
+		separator.setOrientation(SwingConstants.VERTICAL);
+		separator.setForeground(new Color(70, 130, 180));
+		separator.setBackground(new Color(70, 130, 180));
+		separator.setLayout(null);
+		
+		JButton btnAgregarFolio = new JButton("Agregar Folio");
+		btnAgregarFolio.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(getVentanaAbierta() == null){
+					FAltaFolio formAltaFolios = new FAltaFolio();
+					setVentanaAbierta(formAltaFolios);
+					formAltaFolios.setVentanaAbierta(formAltaFolios);
+					formAltaFolios.setVisible(true);
+				}
+				else{
+					getVentanaAbierta().toFront();
+				}
+			}
+		});
+		btnAgregarFolio.setForeground(Color.BLACK);
+		btnAgregarFolio.setBounds(71, 178, 131, 23);
+		panel_1.add(btnAgregarFolio);
+=======
+>>>>>>> origin/master
 		//jPanelConFondo.setVisible(true);
 		/**/
 	}

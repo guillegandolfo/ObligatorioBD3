@@ -1,22 +1,19 @@
 package grafica.controladores;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import grafica.ventanas.FAbFolio;
+
 import java.io.IOException;
-import java.io.InputStream;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.LinkedList;
-import java.util.Properties;
 
-import grafica.ventanas.FAbFolio;
-import grafica.ventanas.FAbFolio;
+import persistencia.config.Propiedades;
 import logica.IFachada;
 import logica.excepciones.ConfiguracionException;
+import logica.excepciones.Exc_Persistencia;
 import logica.excepciones.YaExisteFolioException;
 import logica.vo.VoFolio;
-import persistencia.config.Propiedades;
 
 
 public class ControladorFolio {
@@ -25,10 +22,17 @@ public class ControladorFolio {
 	private IFachada fachada;
 	private String resultado = "";
 	
-	public ControladorFolio(FAbFolio jinternalFrame) {
+	public ControladorFolio(FAbFolio jinternalFrame) throws Exc_Persistencia {
 		super();
 		// TODO Auto-generated constructor stub
+<<<<<<< HEAD
+
+
 		this.ventana = jinternalFrame;
+
+=======
+		this.ventana = jinternalFrame;
+>>>>>>> origin/master
 		
 		try {
 			Propiedades p = new Propiedades();
@@ -37,6 +41,17 @@ public class ControladorFolio {
 			int port = Integer.parseInt(puerto);
 
 			fachada = (IFachada)Naming.lookup("//" + ip + ":" + port + "/logica");
+<<<<<<< HEAD
+		} catch (Exc_Persistencia e){
+
+			ventana.imprimirVentana(e.getMessage());
+		} catch (IOException e) {
+		// TODO Auto-generated catch block
+	    	ventana.imprimirVentana("Ha ocurrido un error al establecer conexion con el servidor");
+
+			jinternalFrame.imprimirVentana(e.getMessage());
+		} catch (NotBoundException e) {
+=======
 		} catch (ConfiguracionException e){
 			jinternalFrame.imprimirVentana(e.getMessage());
 		} catch (IOException e) {
@@ -44,6 +59,7 @@ public class ControladorFolio {
 	    	jinternalFrame.imprimirVentana("Ha ocurrido un error al establecer conexion con el servidor");
 	    }
 		catch (NotBoundException e) {
+>>>>>>> origin/master
 			// TODO Auto-generated catch block
 			jinternalFrame.imprimirVentana(e.getMessage());
 		}
@@ -71,13 +87,22 @@ public class ControladorFolio {
 		}
 		return voAlumno;
 	}*/
+<<<<<<< HEAD
+
+
+=======
 	
+>>>>>>> origin/master
 	public Boolean agregarFolio (VoFolio folio) {
 		Boolean ok = false;
 		try {
 			fachada.agregarFolio(folio);
 			ventana.imprimirVentana("Folio ingresado correctamente");
 			ok = true;
+<<<<<<< HEAD
+
+=======
+>>>>>>> origin/master
 			//ventana.limpiarFrame();
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
@@ -92,6 +117,7 @@ public class ControladorFolio {
 		return ok;
 	}
 	
+
 	public LinkedList<VoFolio> listarFolios() {
 		LinkedList<VoFolio> lista = new LinkedList<VoFolio>();
 		try {
@@ -107,6 +133,11 @@ public class ControladorFolio {
 		return lista;
 	}
 	
+<<<<<<< HEAD
+
+
+=======
+>>>>>>> origin/master
 	/*public void modificarAlumno (VOAlumno alu) {
 
 		try {
