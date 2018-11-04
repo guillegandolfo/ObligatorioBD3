@@ -154,7 +154,7 @@ public class FPrincipal2 {
 			public void actionPerformed(ActionEvent arg0) {
 				Vfoliomasrev.putClientProperty("dragMode", "fixed");				
 				Vfoliomasrev.show();
-				//Vfoliomasrev.listarFolios();				
+				Vfoliomasrev.GetMasRevisado();			
 			}
 		});
 		btnMasRevisado.setForeground(Color.BLACK);
