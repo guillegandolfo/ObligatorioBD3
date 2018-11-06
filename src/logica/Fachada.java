@@ -3,7 +3,6 @@ package logica;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.LinkedList;
-
 import logica.excepciones.ConfiguracionException;
 import logica.excepciones.Exc_Persistencia;
 import logica.excepciones.PersistenciaException;
@@ -13,11 +12,12 @@ import logica.objetos.Revision;
 import logica.vo.VOFolioMaxRev;
 import logica.vo.VORevision;
 import logica.vo.VoFolio;
+import persistencia.Fabrica.FabricaAbstracta;
+import persistencia.config.Propiedades;
 import persistencia.daos.DAOFolios;
 import persistencia.daos.IDAOFolios;
 import persistencia.poolConexiones.IConexion;
 import persistencia.poolConexiones.IPoolConexiones;
-import persistencia.poolConexiones.PoolConexiones;
 
 
 public class Fachada extends UnicastRemoteObject implements IFachada {
@@ -27,19 +27,23 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
     private static Fachada f = null;
     private IDAOFolios daoFolios;
     private IPoolConexiones ipc = null;
+	private FabricaAbstracta fabrica;
 
     //singleton
-    public static Fachada getInstancia() throws ConfiguracionException, RemoteException {
+    public static Fachada getInstancia() throws ConfiguracionException, RemoteException, InstantiationException, IllegalAccessException, ClassNotFoundException, Exc_Persistencia {
         if (f == null) {
             Fachada.f = new Fachada();
         }
         return Fachada.f;
     }
 
-    private Fachada() throws RemoteException, ConfiguracionException  {
+    private Fachada() throws RemoteException, ConfiguracionException, InstantiationException, IllegalAccessException, ClassNotFoundException, Exc_Persistencia  {
         try {
-            this.daoFolios = new DAOFolios();
-            this.ipc = new PoolConexiones();
+        	Propiedades p = new Propiedades();
+    
+            this.fabrica = (FabricaAbstracta) Class.forName(p.getFabrica()).newInstance();
+            this.daoFolios = this.fabrica.crearIDAOFolio();
+            this.ipc = this.fabrica.crearIPoolConexiones();
         } catch (ConfiguracionException e) {
             throw new ConfiguracionException(e.getMessage());
         }

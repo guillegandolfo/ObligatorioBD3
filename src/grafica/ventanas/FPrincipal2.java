@@ -1,42 +1,26 @@
 package grafica.ventanas;
 
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
 import javax.swing.JTextField;
-
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import java.awt.Color;
 import javax.swing.JLabel;
-import javax.swing.DefaultDesktopManager;
-import javax.swing.ImageIcon;
 import java.awt.Font;
-import java.awt.Image;
-
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JDesktopPane;
-
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.Cursor;
-import java.awt.Toolkit;
-import java.awt.SystemColor;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
-import java.awt.Component;
 import java.awt.Dimension;
 import javax.swing.border.MatteBorder;
-
-import logica.excepciones.ConfiguracionException;
-
-import java.awt.event.MouseMotionAdapter;
-import java.rmi.RemoteException;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
+import grafica.ventanas.FAbFolio;
 import grafica.ventanas.FolioMasRevisado;
+import grafica.ventanas.NoDragDesktopManager;
 
 public class FPrincipal2 {
 

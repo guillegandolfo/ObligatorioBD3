@@ -6,7 +6,7 @@ import persistencia.daos.IDAOFolios;
 import persistencia.daos.IDAORevisiones;
 import persistencia.poolConexiones.IPoolConexiones;
 
-//Cambio
+
 public interface FabricaAbstracta {
 
     public IDAOFolios crearIDAOFolio();

@@ -1,19 +1,14 @@
 package logica;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
-import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.rmi.server.UnicastRemoteObject;
-import java.util.Properties;
 
 import logica.Fachada;
 import logica.excepciones.ConfiguracionException;
-import logica.excepciones.PersistenciaException;
+import logica.excepciones.Exc_Persistencia;
 import logica.excepciones.ServidorException;
 import persistencia.config.Propiedades;
 
@@ -31,7 +26,7 @@ public class Servidor {
 			int port = Integer.parseInt(puerto);
 
             // pongo a correr el rmiregistry
-            Registry reg = LocateRegistry.createRegistry(port);
+            LocateRegistry.getRegistry(port);
             
             // publico el objeto remoto en dicha ip y puerto
             String ruta = "//" + ip + ":" + puerto + "/logica";
@@ -52,7 +47,19 @@ public class Servidor {
         } catch (IOException e) // si ocurre cualquier otro error de E/S
         {
         	throw new ServidorException(e.getMessage());
-        }
+        } catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exc_Persistencia e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
 	

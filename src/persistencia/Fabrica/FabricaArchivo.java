@@ -2,18 +2,18 @@ package persistencia.Fabrica;
 
 import logica.excepciones.ConfiguracionException;
 import logica.excepciones.Exc_Persistencia;
-import persistencia.daos.DAOFolios;
+import persistencia.daos.DAOFoliosArchivo;
 import persistencia.daos.DAORevisiones;
 import persistencia.daos.IDAOFolios;
 import persistencia.daos.IDAORevisiones;
 import persistencia.poolConexiones.IPoolConexiones;
-import persistencia.poolConexiones.PoolConexiones;
+import persistencia.poolConexiones.PoolConexionesArchivo;
 
-//Cambio
+
 public class FabricaArchivo implements FabricaAbstracta{
 
     public IDAOFolios crearIDAOFolio() {
-        return new DAOFolios();
+        return new DAOFoliosArchivo();
     }
 
     public IDAORevisiones crearIDAORevisiones(String codFolio) {
@@ -22,7 +22,7 @@ public class FabricaArchivo implements FabricaAbstracta{
 
     
     public IPoolConexiones crearIPoolConexiones() throws ConfiguracionException, Exc_Persistencia {
-        return new PoolConexiones();
+        return new PoolConexionesArchivo();
     }
 
     
