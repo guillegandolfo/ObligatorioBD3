@@ -8,7 +8,6 @@ public class VORevision implements Serializable{
 	private String codigoFolio;
 	private String descripcion;
 	
-	
 	public VORevision(){
 		super();
 		this.setNumero(0);
