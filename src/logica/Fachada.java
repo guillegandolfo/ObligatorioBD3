@@ -4,7 +4,6 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.LinkedList;
 
-import logica.excepciones.ConfiguracionException;
 import logica.excepciones.Exc_Persistencia;
 import logica.excepciones.PersistenciaException;
 import logica.excepciones.YaExisteFolioException;
@@ -36,12 +35,21 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
         return Fachada.f;
     }
 
+<<<<<<< HEAD
     private Fachada() throws RemoteException, ConfiguracionException, Exc_Persistencia  {
         try {
             this.folios = new DAOFolios();
             this.ipc = new PoolConexiones();
         } catch (ConfiguracionException e) {
             throw new ConfiguracionException(e.getMessage());
+=======
+    private Fachada() throws RemoteException, PersistenciaException  {
+        try {
+            this.folios = new DAOFolios();
+            this.ipc = new PoolConexiones();
+        } catch (PersistenciaException e) {
+            throw new PersistenciaException("Error en la conexion");
+>>>>>>> parent of d30371c... asa
         }
     }
 

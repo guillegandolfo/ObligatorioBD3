@@ -5,16 +5,25 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+<<<<<<< HEAD
 
 import logica.excepciones.ConexionBDException;
 import logica.excepciones.ConfiguracionException;
 import logica.excepciones.Exc_Persistencia;
 import persistencia.config.Propiedades;
+=======
+import logica.excepciones.Exc_Persistencia;
+import persistencia.datos.Propiedades;
+>>>>>>> parent of d30371c... asa
 
 
 public class main
 {
+<<<<<<< HEAD
 	public static void main (final String[] args) throws ConexionBDException, IOException, Exc_Persistencia
+=======
+	public static void main (final String[] args) throws Exc_Persistencia, IOException
+>>>>>>> parent of d30371c... asa
 	{
 	try {
 				Propiedades p = new Propiedades();

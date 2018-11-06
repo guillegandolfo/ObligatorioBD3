@@ -18,7 +18,11 @@ public interface IFachada extends Remote {
     
     public VOFolioMaxRev folioMasRevisado() throws PersistenciaException, RemoteException;
     
+<<<<<<< HEAD
     public void agregarRevision(String codFolio, String desc) throws RemoteException, PersistenciaException;
+=======
+    public void altaRevision(String codFolio, String desc, int cedN) throws RemoteException, PersistenciaException;
+>>>>>>> parent of d30371c... asa
     
     public int cantidadRevisiones(String codFolio) throws RemoteException, PersistenciaException;
     

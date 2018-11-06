@@ -1,11 +1,18 @@
 package persistencia.poolConexiones;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
+<<<<<<< HEAD
 import logica.excepciones.ConfiguracionException;
 import logica.excepciones.Exc_Persistencia;
+=======
+>>>>>>> parent of d30371c... asa
 import logica.excepciones.PersistenciaException;
 import persistencia.config.Propiedades;
 
@@ -21,18 +28,26 @@ public class PoolConexiones implements IPoolConexiones {
 	private int creadas;
 	private int tope;
 	
+<<<<<<< HEAD
 	public PoolConexiones () throws ConfiguracionException, Exc_Persistencia {
 		
 		try {
 			/*Properties p = new Properties();
 			String archivo = "config/config.properties";
 			p.load(new FileInputStream(archivo));*/
+=======
+	public PoolConexiones () throws PersistenciaException {
+		
+		try {
+			Properties p = new Properties();
+			String archivo = "config/config.properties";
+			p.load(new FileInputStream(archivo));
+>>>>>>> parent of d30371c... asa
 			
-			Propiedades p = new Propiedades();
-			driver = p.getDriver();
-			url = p.getUrl();
-			user = p.getUser();
-			password = p.getPass();
+			driver = p.getProperty("driver");
+			url = p.getProperty("url");
+			user = p.getProperty("username");
+			password = p.getProperty("password");
 			
 			//Definir pool
 			tamanio = 4;//leer de properties
@@ -40,10 +55,20 @@ public class PoolConexiones implements IPoolConexiones {
 			conexiones = new Conexion[tamanio];
 			nivelTransaccionalidad = Connection.TRANSACTION_SERIALIZABLE;
 
+<<<<<<< HEAD
 		} catch (Exc_Persistencia e) {
 			// TODO Auto-generated catch block
 			throw new ConfiguracionException("Ocurrio un error con la configuracion de datos de los servidores");
 		} 	
+=======
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			throw new PersistenciaException("Ocurrio un error");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			throw new PersistenciaException("Ocurrio un error");
+		}	
+>>>>>>> parent of d30371c... asa
 	}
 	
 	public IConexion obtenerConexion(boolean modifica) throws PersistenciaException {

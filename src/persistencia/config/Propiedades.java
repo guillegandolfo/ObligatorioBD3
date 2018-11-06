@@ -3,7 +3,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
+<<<<<<< HEAD
 import logica.excepciones.Exc_Persistencia;;
+=======
+import logica.excepciones.ConfiguracionException;
+import logica.excepciones.Exc_Persistencia;
+>>>>>>> parent of d30371c... asa
 
 public class Propiedades {
 	
