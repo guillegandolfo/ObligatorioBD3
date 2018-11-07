@@ -1,20 +1,18 @@
 package persistencia.daos;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.LinkedList;
-
 import logica.excepciones.PersistenciaException;
 import logica.objetos.Folio;
 import logica.vo.VOFolioMaxRev;
 import logica.vo.VoFolio;
-import persistencia.poolConexiones.ConexionArchivo;
 import persistencia.poolConexiones.IConexion;
 
 
@@ -31,132 +29,138 @@ public class DAOFoliosArchivo implements IDAOFolios, Serializable{
 
     }
     
-    private Folio leerFolioDeArchivo(String archivo) throws PersistenciaException{
+    private Folio leerFolioDeArchivo(String archivo) throws FileNotFoundException{
     	
-        Folio fol = null;
-        FileInputStream Arch = null;
-        ObjectInputStream flujo = null;
-        try {
-            Arch = new FileInputStream(archivo);
-            flujo = new ObjectInputStream(Arch);
-            fol = (Folio) flujo.readObject();
-        } catch (FileNotFoundException ex) {
-        	throw new PersistenciaException("Error abrir el archivo");
-        } catch (IOException ex) {
-        	throw new PersistenciaException("Error abrir el flujo");
-        } catch (ClassNotFoundException ex) {
-        	throw new PersistenciaException("Error obtener datos del archivo");
-        } finally {
-            if(flujo != null){
-                try {
-                    flujo.close();
-                } catch (IOException ex) {
-                	throw new PersistenciaException("Error cerrando el flujo");
-                }
-            }
-            if(Arch != null){
-                try {
-                    Arch.close();
-                } catch (IOException ex) {
-                	throw new PersistenciaException("Error cerrando el archivo");
-                }
-            }
-        }
-        return fol;
+        Folio fol = new Folio();
+        FileReader fr = null;
+        BufferedReader br = null;
+        File file = new File(archivo);
+		try {
+			
+			//Abro el flujo
+	         fr = new FileReader (file);
+	         br = new BufferedReader(fr);
+	         String linea;
+	         if((linea=br.readLine())!=null){
+
+                fol.setCodigo(linea);
+                linea = br.readLine();
+                fol.setCaratula(linea);
+                linea = br.readLine();
+                fol.setPaginas(Integer.parseInt(linea));
+
+	         }
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+    	} finally {
+	        try {
+				br.close();
+				fr.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}
+		return fol;
     }
 
     public boolean member(String cod, IConexion ic) throws PersistenciaException {
-    		System.out.println("1");
-            boolean existe = true;
-            System.out.println("2");
+    		boolean existe = false;
+ 
             for(File archFolio : this.folder.listFiles()){
-            	System.out.println("2.Iterador");
+
                 String nombreArch = archFolio.getName();
-                System.out.println("3");
-                if(nombreArch.contains("Folios - " + cod)){
-                	System.out.println("4");
-                    existe = true;
+                if(nombreArch.equals("Folios-" + cod.trim() + ".txt")){
+
+                    existe = true; 
                 }
-            }     
-            System.out.println("5");
+            }
+        
         return existe;
     }
 
     public void insert(Folio fol, IConexion ic) throws PersistenciaException {
-    	System.out.println("1");
-    	System.out.println("2");
-    	FileOutputStream Arch = null;
-    	System.out.println("3");
-    	ObjectOutputStream flujo = null;
-    	System.out.println("4");
+
+    	String archivo = this.folder.getPath()+"/Folios-" + fol.getCodigo() + ".txt";
+    	BufferedWriter bufferedWriter = null;
+    	
         try {
-        	System.out.println("5");
-            String archivo = this.folder.getPath()+"/Folios-" + fol.getCodigo() + ".txt";
-        	System.out.println("6");
-            Arch = new FileOutputStream(archivo);
-        	System.out.println("7");
-            flujo = new ObjectOutputStream(Arch);
-        	System.out.println("8");
-            flujo.writeObject(fol);
-        	System.out.println("9");
-        	
-        } catch (FileNotFoundException ex) {
-            throw new PersistenciaException("Error en la Persistencia");
+         
+        	bufferedWriter = new BufferedWriter(new FileWriter(archivo));
+
+        	bufferedWriter.write(fol.getCodigo());
+        	bufferedWriter.newLine();
+        	bufferedWriter.write(fol.getCaratula());
+        	bufferedWriter.newLine();
+        	bufferedWriter.write(String.valueOf(fol.getPaginas()));
+	    	
         } catch (IOException e) {
-        	throw new PersistenciaException("Error abrir el flujo");
-		} finally {
-            try {
-                flujo.close();
-            } catch (IOException ex){
-                throw new PersistenciaException("Error en la Persistencia");
-            }
-            try {
-                Arch.close();
-            } catch (IOException ex) {
-               throw new PersistenciaException("Error al cerrar el archivo");
-            }
-        }
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+	    } finally {
+	    
+		    if (bufferedWriter != null) {
+		    	try {
+					bufferedWriter.flush();
+					bufferedWriter.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		    	
+		    }
+	    }
+
     }
 
     
     public Folio find(String cod, IConexion ic) throws PersistenciaException {
-    	ConexionArchivo con = (ConexionArchivo) ic;
+
     	Folio fol = new Folio();
         for(File archFolio : this.folder.listFiles()){
             String nombreArch = archFolio.getName();
-            if(nombreArch.contains("Folios - " + cod)){
+            if(nombreArch.contains("Folios-" + cod + ".txt")){
             	fol.setCodigo(cod);
-                fol = this.leerFolioDeArchivo(archFolio.getPath());
+                try {
+					fol = this.leerFolioDeArchivo(archFolio.getPath());
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
             }
         }
         return fol;
     }
 
     public void delete(String cod, IConexion ic) throws PersistenciaException {
-    	ConexionArchivo con = (ConexionArchivo) ic;
+
         for(File archFolio : this.folder.listFiles()){
             String nombreArch = archFolio.getName();
-            if(nombreArch.contains("Folios - " + cod)){
+            if(nombreArch.contains("Folios-" + cod + ".txt")){
             	archFolio.delete();
             }
         }
     }
 
     public LinkedList<VoFolio> listarFolios(IConexion ic) throws PersistenciaException {
-    	ConexionArchivo con = (ConexionArchivo) ic;
     	LinkedList<VoFolio> list = new LinkedList<VoFolio>();
     	Folio fol = new Folio();
         for(File archFolio : this.folder.listFiles()){
-           
-            fol = this.leerFolioDeArchivo(archFolio.getPath());
+            try {
+				fol = this.leerFolioDeArchivo(archFolio.getPath());
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
             VoFolio VoF = new VoFolio(fol.getCodigo(), fol.getCaratula(), fol.getPaginas());
             list.add(VoF);
-            
         }
+
         return list;
     }
 
-    //Sin terminar
     public VOFolioMaxRev folioMasRevisado(IConexion ic) throws PersistenciaException {
         return null;
     }

@@ -164,7 +164,7 @@ public class FAbFolio extends JInternalFrame {
 					imprimirVentana("Ingrese todos los datos necesarios para un folio.");
 				} else {
 					VoFolio folio = new VoFolio(codigo, caratula, paginas);
-					Boolean ok = controlador.agregarFolio(folio);
+					boolean ok = controlador.agregarFolio(folio);
 					
 					if (ok){
 						Object[] fila = new Object[3]; 
@@ -206,7 +206,7 @@ public class FAbFolio extends JInternalFrame {
 		    Object[] fila = new Object[3]; 
 		    fila[0] = folio.getCodigo(); 
 		    fila[1] = folio.getCaratula(); 
-
+		    fila[2] = folio.getPaginas();
   		    modelo.addRow(fila); 
 		}
 		

@@ -44,7 +44,7 @@ public class PoolConexionesArchivo implements IPoolConexiones{
 
     public void liberarConexion(IConexion con, boolean ok) throws PersistenciaException {
         synchronized(this){
-            if(((ConexionArchivo) con).getModifica()){
+        	if(((ConexionArchivo) con).getModifica()){
                 this.escritores--;
             }
             else{

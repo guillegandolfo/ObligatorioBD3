@@ -108,7 +108,7 @@ public class PoolConexiones implements IPoolConexiones {
 	
 	public void liberarConexion(IConexion con, boolean ok) throws PersistenciaException {
 		// TODO Auto-generated method stub
-		
+		System.out.printf("Poolde conexiones liberar");
 		//1- Recibe con y la agrega en el arreglo
 		//2- Hace notify
 		synchronized (this) {

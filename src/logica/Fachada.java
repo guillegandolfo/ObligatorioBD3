@@ -3,6 +3,7 @@ package logica;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.LinkedList;
+
 import logica.excepciones.ConfiguracionException;
 import logica.excepciones.Exc_Persistencia;
 import logica.excepciones.PersistenciaException;
@@ -14,7 +15,6 @@ import logica.vo.VORevision;
 import logica.vo.VoFolio;
 import persistencia.Fabrica.FabricaAbstracta;
 import persistencia.config.Propiedades;
-import persistencia.daos.DAOFolios;
 import persistencia.daos.IDAOFolios;
 import persistencia.poolConexiones.IConexion;
 import persistencia.poolConexiones.IPoolConexiones;
@@ -58,15 +58,14 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
     	 IConexion con = null;
     	 try {
     		 con = this.ipc.obtenerConexion(true);
-       
         	//Si no existe el folio a insertar
-            if(! this.daoFolios.member(VoF.getCodigo(), con)) {
+    		if(!this.daoFolios.member(VoF.getCodigo(), con)) {
                 Folio Fol = new Folio(VoF.getCodigo(), VoF.getCaratula(), VoF.getPaginas());
                 this.daoFolios.insert(Fol, con);
-            }
-            else{
+            }else{
                 throw new YaExisteFolioException("El folio indicado ya existe");
             }
+
             this.ipc.liberarConexion(con, true);
         } catch (Exception e) {
             this.ipc.liberarConexion(con, false);
@@ -76,11 +75,13 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 
     
     public LinkedList <VoFolio> listarFolios() throws RemoteException, PersistenciaException {
-        IConexion con = this.ipc.obtenerConexion(true);
-        LinkedList <VoFolio> Lista = new LinkedList <VoFolio>();
+    	IConexion con = this.ipc.obtenerConexion(true);   	
+        LinkedList <VoFolio> Lista = new LinkedList <VoFolio>(); 
         try {
+        	
         	Lista = this.daoFolios.listarFolios(con);
             this.ipc.liberarConexion(con, true);
+            
         } catch (Exception e) {
             this.ipc.liberarConexion(con, false);
             throw new PersistenciaException("Error de conexion");

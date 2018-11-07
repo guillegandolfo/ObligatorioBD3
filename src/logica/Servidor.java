@@ -26,7 +26,7 @@ public class Servidor {
 			int port = Integer.parseInt(puerto);
 
             // pongo a correr el rmiregistry
-            LocateRegistry.getRegistry(port);
+            LocateRegistry.createRegistry(port);// getRegistry(port);
             
             // publico el objeto remoto en dicha ip y puerto
             String ruta = "//" + ip + ":" + puerto + "/logica";

@@ -1,19 +1,16 @@
 package grafica.controladores;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+
 import java.io.IOException;
-import java.io.InputStream;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.LinkedList;
-import java.util.Properties;
 
-import grafica.ventanas.FAbFolio;
 import grafica.ventanas.FAbFolio;
 import logica.IFachada;
 import logica.excepciones.ConfiguracionException;
+import logica.excepciones.PersistenciaException;
 import logica.excepciones.YaExisteFolioException;
 import logica.vo.VoFolio;
 import persistencia.config.Propiedades;
@@ -35,8 +32,8 @@ public class ControladorFolio {
 			String ip = p.getIpServidor();
 			String puerto = p.getPuertoServidor();
 			int port = Integer.parseInt(puerto);
-
-			fachada = (IFachada)Naming.lookup("//" + ip + ":" + port + "/logica");
+			
+			this.fachada = (IFachada)Naming.lookup("//" + ip + ":" + port + "/logica");
 		} catch (ConfiguracionException e){
 			jinternalFrame.imprimirVentana(e.getMessage());
 		} catch (IOException e) {
@@ -80,11 +77,9 @@ public class ControladorFolio {
 			ok = true;
 			//ventana.limpiarFrame();
 		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
 			ventana.imprimirVentana("Error en el servidor. " + e.getMessage());
-		} catch (YaExisteFolioException e) {
-			// TODO Auto-generated catch block
-			ventana.imprimirVentana(e.getMessage());
+		} catch (YaExisteFolioException | PersistenciaException e) {
+			ventana.imprimirVentana("El Folio ingresado ya existe");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			ventana.imprimirVentana(e.getMessage());
