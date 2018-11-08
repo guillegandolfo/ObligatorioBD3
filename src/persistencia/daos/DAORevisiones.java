@@ -14,7 +14,7 @@ import persistencia.consultas.Consultas;
 import persistencia.poolConexiones.Conexion;
 import persistencia.poolConexiones.IConexion;
 
-public class DAORevisiones {
+public class DAORevisiones implements IDAORevisiones{
 
 	private String codigoFolio;
 	
