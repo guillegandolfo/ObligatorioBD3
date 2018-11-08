@@ -14,8 +14,10 @@ import grafica.ventanas.FAbFolio;
 import grafica.ventanas.FAbFolio;
 import logica.IFachada;
 import logica.excepciones.ConfiguracionException;
+import logica.excepciones.PersistenciaException;
+import logica.excepciones.ServidorException;
 import logica.excepciones.YaExisteFolioException;
-import logica.vo.VoFolio;
+import logica.vo.VOFolio;
 import persistencia.config.Propiedades;
 
 
@@ -23,7 +25,6 @@ public class ControladorFolio {
 
 	private FAbFolio ventana = null;
 	private IFachada fachada;
-	private String resultado = "";
 	
 	public ControladorFolio(FAbFolio jinternalFrame) {
 		super();
@@ -49,30 +50,8 @@ public class ControladorFolio {
 		}
 
 	}
-	/*public VOAlumno buscarAlumno (Integer ced)  {
-		VOAlumno voAlumno = new VOAlumno();
-		try {
-			if (ced.equals(null)) {
-				throw new Exception("La cedula no debe estar vacia");
-			}
-			else
-			{
-				voAlumno = fachada.listarPorCedula(ced);
-			}
-		
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			ventana.imprimirVentana("Error en el servidor. " + e.getMessage());
-		} catch (NoExisteAlumnoException e) {
-			ventana.imprimirVentana("El alumno no existe desea ingresarlo?","Alumno no existe");			
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			ventana.imprimirVentana(e.getMessage());
-		}
-		return voAlumno;
-	}*/
 	
-	public Boolean agregarFolio (VoFolio folio) {
+	public Boolean agregarFolio (VOFolio folio) {
 		Boolean ok = false;
 		try {
 			fachada.agregarFolio(folio);
@@ -84,10 +63,10 @@ public class ControladorFolio {
 			ventana.imprimirVentana("Error en el servidor. " + e.getMessage());
 		} catch (YaExisteFolioException e) {
 			// TODO Auto-generated catch block
-			ventana.imprimirVentana(e.getMessage());
-		} catch (Exception e) {
+			ventana.imprimirVentana("Ya existe folio");
+		} catch (PersistenciaException e) {
 			// TODO Auto-generated catch block
-			ventana.imprimirVentana(e.getMessage());
+			ventana.imprimirVentana("Ocurrio error al agregar el folio");
 		}
 		return ok;
 	}
@@ -102,24 +81,26 @@ public class ControladorFolio {
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			ventana.imprimirVentana("Error en el servidor. " + e.getMessage());
-		}  catch (Exception e) {
+		} catch (PersistenciaException e) {
 			// TODO Auto-generated catch block
-			ventana.imprimirVentana(e.getMessage());
+			ventana.imprimirVentana("Ocurrio error al borrar el folio");
 		}
 		return ok;
 	}
 	
-	public LinkedList<VoFolio> listarFolios() {
-		LinkedList<VoFolio> lista = new LinkedList<VoFolio>();
+	public LinkedList<VOFolio> listarFolios() {
+		LinkedList<VOFolio> lista = new LinkedList<VOFolio>();
 		try {
-			lista = fachada.listarFolios();
-			//ventana.limpiarFrame();
+			if (fachada != null) {
+				lista = fachada.listarFolios();
+			}
+			
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
-			ventana.imprimirVentana("Error en el servidor. " + e.getMessage());
-		}  catch (Exception e) {
+			//throw new ServidorException("Error en el servidor. " + e.getMessage());
+		} catch (PersistenciaException e) {
 			// TODO Auto-generated catch block
-			ventana.imprimirVentana(e.getMessage());
+			// new PersistenciaException(e.getMessage());
 		}
 		return lista;
 	}

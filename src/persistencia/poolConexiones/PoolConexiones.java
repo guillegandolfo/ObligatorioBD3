@@ -64,7 +64,7 @@ public class PoolConexiones implements IPoolConexiones {
 						((Conexion) conexion).getConexion().setAutoCommit(false);
 						((Conexion) conexion).getConexion().setTransactionIsolation(nivelTransaccionalidad);
 					} catch(SQLException ex) {
-						throw new PersistenciaException("Ocurrio un error");
+						throw new PersistenciaException("Ocurrio un error al obtener una conexion");
 					}
 					tope--;
 				}
@@ -77,19 +77,14 @@ public class PoolConexiones implements IPoolConexiones {
 						Connection con = DriverManager.getConnection(url, user, password);
 						conexion = new Conexion(con);
 						creadas++;
-						
-						try {
-							((Conexion) conexion).getConexion().setAutoCommit(false);
-							((Conexion) conexion).getConexion().setTransactionIsolation(nivelTransaccionalidad);
-						} catch(SQLException ex) {
-							throw new PersistenciaException("Ocurrio un error");
-						}
-						
+						((Conexion) conexion).getConexion().setAutoCommit(false);
+						((Conexion) conexion).getConexion().setTransactionIsolation(nivelTransaccionalidad);
+					
 					} catch (ClassNotFoundException e) {
 						
-						throw new PersistenciaException("Ocurrio un error");
+						throw new PersistenciaException("Ocurrio un error al crear una nueva conexion");
 					} catch (SQLException e) {
-						throw new PersistenciaException("Ocurrio un error");
+						throw new PersistenciaException("Ocurrio un error al conectarse con la base de datos");
 					}
 				}
 				else {

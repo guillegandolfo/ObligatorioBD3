@@ -31,6 +31,8 @@ import java.awt.Dimension;
 import javax.swing.border.MatteBorder;
 
 import logica.excepciones.ConfiguracionException;
+import logica.excepciones.PersistenciaException;
+import logica.excepciones.ServidorException;
 
 import java.awt.event.MouseMotionAdapter;
 import java.rmi.RemoteException;
@@ -70,6 +72,7 @@ public class FPrincipal2 {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		
 
 		frame = new JFrame();
 		frame.setResizable(false);
@@ -119,42 +122,58 @@ public class FPrincipal2 {
 		lblJurdico.setBounds(46, 92, 191, 46);
 		panel_1.add(lblJurdico);
 		
-		JButton btnSalir = new JButton("Salir");
-		btnSalir.setBounds(130, 563, 131, 23);
-		panel_1.add(btnSalir);
-		btnSalir.setForeground(Color.BLACK);
+		
 		
 		JButton btnFolios = new JButton("Folios");
 		
-		final FAbFolio vfolio = FAbFolio.getInstancia();
-		final FolioMasRevisado Vfoliomasrev = FolioMasRevisado.getInstancia();
-		vfolio.setLocation(0, 0);
-		desk.add(vfolio);
-		desk.add(Vfoliomasrev);
+		final FAbFolio vfolio;
+			vfolio = FAbFolio.getInstancia();
+			final FolioMasRevisado Vfoliomasrev = FolioMasRevisado.getInstancia();
+			vfolio.setLocation(0, 0);
+			desk.add(vfolio);
+			desk.add(Vfoliomasrev);
+			
+			
+			btnFolios.setForeground(Color.BLACK);
+			btnFolios.setBounds(71, 204, 131, 23);
+			panel_1.add(btnFolios);
 		
+		
+		JButton btnRevisiones = new JButton("Revisiones");
+		final FAltaRevision vrevision = FAltaRevision.getInstancia();
+		vfolio.setLocation(0, 0);
+		desk.add(vrevision);
+		//desk.add(Vfoliomasrev);
+		btnRevisiones.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				vrevision.putClientProperty("dragMode", "fixed");				
+				vrevision.show();
+				vfolio.hide();
+				Vfoliomasrev.hide();
+				//vrevision.listarFolios();
+			}
+		});
+		btnRevisiones.setForeground(Color.BLACK);
+		btnRevisiones.setBounds(71, 263, 131, 23);
+		panel_1.add(btnRevisiones);
 		
 		btnFolios.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {	
 				vfolio.putClientProperty("dragMode", "fixed");				
 				vfolio.show();
-				vfolio.listarFolios();
+					vfolio.listarFolios();
+					vrevision.hide();					
+					Vfoliomasrev.hide();
 			}
 		});
-		btnFolios.setForeground(Color.BLACK);
-		btnFolios.setBounds(71, 204, 131, 23);
-		panel_1.add(btnFolios);
-		
-		JButton btnRevisiones = new JButton("Revisiones");
-		btnRevisiones.setForeground(Color.BLACK);
-		btnRevisiones.setBounds(71, 263, 131, 23);
-		panel_1.add(btnRevisiones);
-		
 		JButton btnMasRevisado = new JButton("Mas Revisado");
 		btnMasRevisado.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Vfoliomasrev.putClientProperty("dragMode", "fixed");				
 				Vfoliomasrev.show();
-				//Vfoliomasrev.listarFolios();				
+				Vfoliomasrev.GetMasRevisado();	
+				vfolio.hide();
+				vrevision.hide();
 			}
 		});
 		btnMasRevisado.setForeground(Color.BLACK);
@@ -194,19 +213,15 @@ public class FPrincipal2 {
 		JSeparator separator_2 = new JSeparator();
 		separator_2.setBounds(0, 432, 291, 2);
 		panel_1.add(separator_2);
-				
-		/*final prueba v = prueba.getInstancia();
-		v.setLocation(0, 0);
-		desk.add(v);
-		btnRespaldo.addActionListener(new ActionListener() {
+		JButton btnSalir = new JButton("Salir");
+		btnSalir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				v.putClientProperty("dragMode", "fixed");				
-				v.show();
-				v.listarFolios();
+				frame.dispose();
 			}
-		});*/
-		//jPanelConFondo.setVisible(true);
-		/**/
+		});
+		btnSalir.setBounds(130, 563, 131, 23);
+		panel_1.add(btnSalir);
+		btnSalir.setForeground(Color.BLACK);
 		
 	}
 }

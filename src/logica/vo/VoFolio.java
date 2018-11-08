@@ -3,20 +3,20 @@ package logica.vo;
 import java.io.Serializable;
 
 
-public class VoFolio implements Serializable{
+public class VOFolio implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private String codigo;
 	private String caratula;
 	private int paginas;
 	
-	public VoFolio(){
+	public VOFolio(){
 		super();
 		this.setCodigo("");
 		this.setCaratula("");
 		this.setPaginas(1);
 	}
 	
-	public VoFolio(String Codigo, String Caratula, int Paginas) {
+	public VOFolio(String Codigo, String Caratula, int Paginas) {
 		super();
 		this.setCodigo(Codigo);
 		this.setCaratula(Caratula);

@@ -8,21 +8,21 @@ import logica.excepciones.PersistenciaException;
 import logica.excepciones.YaExisteFolioException;
 import logica.vo.VOFolioMaxRev;
 import logica.vo.VORevision;
-import logica.vo.VoFolio;
+import logica.vo.VOFolio;
 
 public interface IFachada extends Remote {
 
-    public void agregarFolio(VoFolio VoF) throws YaExisteFolioException, PersistenciaException, RemoteException;
+    public void agregarFolio(VOFolio VoF) throws YaExisteFolioException, PersistenciaException, RemoteException;
     
-    public LinkedList <VoFolio> listarFolios() throws RemoteException, PersistenciaException;
+    public LinkedList <VOFolio> listarFolios() throws RemoteException, PersistenciaException;
     
     public VOFolioMaxRev folioMasRevisado() throws PersistenciaException, RemoteException;
     
-    public void agregarRevision(String codFolio, String desc, int cedN) throws RemoteException, PersistenciaException;
+    public int agregarRevision(String codFolio, String desc) throws RemoteException, PersistenciaException;
     
     public int cantidadRevisiones(String codFolio) throws RemoteException, PersistenciaException;
     
-    public LinkedList <VORevision> listarRevisiones(String codFolio, int Numero) throws RemoteException, PersistenciaException;
+    public LinkedList <VORevision> listarRevisiones(String codFolio) throws RemoteException, PersistenciaException;
     
     public void borrarFolioRevisiones(String codFolio) throws RemoteException, PersistenciaException;
     

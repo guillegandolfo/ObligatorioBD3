@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 
 import logica.vo.VOFolioMaxRev;
-import logica.vo.VoFolio;
+import logica.vo.VOFolio;
 import logica.excepciones.Exc_Persistencia;
 import logica.excepciones.PersistenciaException;
 import logica.objetos.Folio;
@@ -121,9 +121,9 @@ public class DAOFolios implements IDAOFolios{
         }
     }
 
-    public LinkedList<VoFolio> listarFolios(IConexion ic) throws PersistenciaException {
+    public LinkedList<VOFolio> listarFolios(IConexion ic) throws PersistenciaException {
 
-    	LinkedList<VoFolio> Lista = new LinkedList <VoFolio>();
+    	LinkedList<VOFolio> Lista = new LinkedList <VOFolio>();
 
         try {
         	Conexion c = (Conexion) ic;
@@ -137,7 +137,7 @@ public class DAOFolios implements IDAOFolios{
     			String Caratula = rs.getString("caratula");
     			int Paginas = rs.getInt("paginas");
     			
-    			VoFolio folio = new VoFolio(Codigo, Caratula, Paginas);
+    			VOFolio folio = new VOFolio(Codigo, Caratula, Paginas);
     			Lista.add(folio);
     		}
 
@@ -162,11 +162,9 @@ public class DAOFolios implements IDAOFolios{
             ResultSet rs = pstmt.executeQuery();
            //Obtengo el folio mas revisado
             if (rs.next()) {
-            	String Codigo = rs.getString(1);
-            	int Cantidad = rs.getInt(2);
-            	
+            	folio = new VOFolioMaxRev(rs.getInt("cantidad"), rs.getString("codigo"), rs.getString("caratula"), rs.getInt("paginas"));
             	//Obtengo los datos del Folio
-            	 pstmt = con.prepareStatement(consulta.existeFolios());
+            	 /*pstmt = con.prepareStatement(consulta.existeFolios());
                  pstmt.setString(1, Codigo);
                  rs = pstmt.executeQuery();
                  if (rs.next()) {
@@ -174,9 +172,7 @@ public class DAOFolios implements IDAOFolios{
                      
                  }else{
                 	 throw new PersistenciaException("Error al obtener el folio");
-                 }
-            }else{
-            	throw new PersistenciaException("Error al obtener el folio mas revisado");
+                 }*/
             }
             rs.close();
             pstmt.close();

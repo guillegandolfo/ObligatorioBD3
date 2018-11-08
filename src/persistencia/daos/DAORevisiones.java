@@ -57,11 +57,11 @@ public class DAORevisiones {
 				}
 				maxrevisionid ++;
 				query = consulta.InsertarRevision();
-				pstmt = con.prepareStatement(query);
-				pstmt.setInt(1,maxrevisionid );
-				pstmt.setString(2, this.codigoFolio);
-				pstmt.setString(3, Desc);
-				pstmt.executeUpdate();
+				PreparedStatement pstmt2 = con.prepareStatement(query);
+				pstmt2.setInt(1,maxrevisionid );
+				pstmt2.setString(2, this.codigoFolio);
+				pstmt2.setString(3, Desc);
+				pstmt2.executeUpdate();
 			}
 			
 			rs.close();
@@ -151,11 +151,11 @@ public class DAORevisiones {
 				
 				//Recorro resultados
 				while (rs.next()){
-					int Numero = rs.getInt("numero");
-					String CodigoFolio = rs.getString("codigoFolio");
-					String Descripcion = rs.getString("descripcion");
+					int numero = rs.getInt("numero");
+					String codigoFolio = rs.getString("codigoFolio");
+					String descripcion = rs.getString("descripcion");
 					
-					VORevision Revision = new VORevision(Numero, CodigoFolio, Descripcion);
+					VORevision Revision = new VORevision(numero, codigoFolio, descripcion);
 					Lista.add(Revision);
 				}
 			}

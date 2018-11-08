@@ -63,6 +63,13 @@ public class Propiedades {
 		return puerto;
 	}
 	
+	public String getFabrica() 
+	{
+		String fabrica;
+		fabrica = prop.getProperty("fabrica");
+		return fabrica;
+	}
+	
 	public String buscar(String nomProp) throws ConfiguracionException { 
 
 		try{
@@ -80,6 +87,9 @@ public class Propiedades {
 				return archivo;
 			}else if((nomProp == "password")){
 				String archivo = p.getProperty("password");
+				return archivo;
+			}else if ((nomProp == "fabrica")){
+				String archivo = p.getProperty("fabrica");
 				return archivo;
 			}else{
 				throw new ConfiguracionException("No se encuentra los datos en la Properties");

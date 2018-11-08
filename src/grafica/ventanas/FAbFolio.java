@@ -24,7 +24,9 @@ import javax.swing.table.DefaultTableModel;
 import grafica.controladores.ControladorFolio;
 import logica.Fachada;
 import logica.excepciones.ConfiguracionException;
-import logica.vo.VoFolio;
+import logica.excepciones.PersistenciaException;
+import logica.excepciones.ServidorException;
+import logica.vo.VOFolio;
 import persistencia.daos.DAOFolios;
 import persistencia.daos.IDAOFolios;
 import persistencia.poolConexiones.IPoolConexiones;
@@ -80,8 +82,10 @@ public class FAbFolio extends JInternalFrame {
 
 	/**
 	 * Create the frame.
+	 * @throws PersistenciaException 
+	 * @throws ServidorException 
 	 */
-	private FAbFolio() {
+	private FAbFolio()  {
 		setClosable(true);
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		
@@ -104,8 +108,6 @@ public class FAbFolio extends JInternalFrame {
 		tablaFolios.setModel(modelo);
 		scrollPane.setViewportView(tablaFolios);
 		tablaFolios.setLayout(null);
-		scrollPane.setViewportView(tablaFolios);
-		tablaFolios.setModel(modelo);
 		tablaFolios.setBorder(new LineBorder(new Color(0, 0, 0)));
 		
 		txtCodigo = new JTextField();
@@ -119,11 +121,11 @@ public class FAbFolio extends JInternalFrame {
 		panel.add(txtCaratula);
 		
 		JLabel lblCodigo = new JLabel("Codigo");
-		lblCodigo.setBounds(53, 59, 46, 14);
+		lblCodigo.setBounds(53, 59, 87, 14);
 		panel.add(lblCodigo);
 		
 		JLabel lblCaratula = new JLabel("Caratula");
-		lblCaratula.setBounds(53, 93, 46, 14);
+		lblCaratula.setBounds(53, 93, 87, 14);
 		panel.add(lblCaratula);
 		
 		final JSpinner txtPaginas = new JSpinner();
@@ -131,7 +133,7 @@ public class FAbFolio extends JInternalFrame {
 		panel.add(txtPaginas);
 		
 		JLabel lblCantPaginas = new JLabel("Cant. Paginas");
-		lblCantPaginas.setBounds(53, 124, 75, 14);
+		lblCantPaginas.setBounds(53, 124, 99, 14);
 		panel.add(lblCantPaginas);
 		
 		JButton btnBorrar = new JButton("Borrar");
@@ -160,10 +162,10 @@ public class FAbFolio extends JInternalFrame {
 				String caratula = txtCaratula.getText();
 				Integer paginas = (Integer) txtPaginas.getValue();
 			
-				if (codigo.equals("") && caratula.equals("") && paginas <= 0 ) {
+				if (codigo.equals("") || caratula.equals("") || paginas <= 0 ) {
 					imprimirVentana("Ingrese todos los datos necesarios para un folio.");
 				} else {
-					VoFolio folio = new VoFolio(codigo, caratula, paginas);
+					VOFolio folio = new VOFolio(codigo, caratula, paginas);
 					Boolean ok = controlador.agregarFolio(folio);
 					
 					if (ok){
@@ -180,32 +182,26 @@ public class FAbFolio extends JInternalFrame {
 		
 		btnAgregar.setBounds(183, 186, 133, 23);
 		panel.add(btnAgregar);
-		//setBounds(0, 0, 740, 573);
 		setBounds(289, 0, 756, 636);
-		//desk.setBounds(0, 0, 740, 573);
-		
-		inicialize();
-		
-
 	}
-	private void inicialize() {
-		
-	}
+	
 	public void imprimirVentana(String msg) {
 		
 		JOptionPane.showMessageDialog (frame, msg);
 	}
-	public void listarFolios () {
+	
+	public void listarFolios ()  {
 		
-		LinkedList<VoFolio> listado = new LinkedList<VoFolio>();
+		LinkedList<VOFolio> listado = new LinkedList<VOFolio>();
 		
 		listado = controlador.listarFolios();
 		modelo.setRowCount(0);
 		
-		for (VoFolio folio : listado) { 
+		for (VOFolio folio : listado) { 
 		    Object[] fila = new Object[3]; 
 		    fila[0] = folio.getCodigo(); 
 		    fila[1] = folio.getCaratula(); 
+		    fila[2] = folio.getPaginas(); 
 
   		    modelo.addRow(fila); 
 		}
