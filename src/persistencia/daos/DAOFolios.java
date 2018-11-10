@@ -6,16 +6,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 
+import logica.excepciones.ConfiguracionException;
 import logica.vo.VOFolioMaxRev;
 import logica.vo.VoFolio;
-import logica.excepciones.Exc_Persistencia;
 import logica.excepciones.PersistenciaException;
 import logica.objetos.Folio;
 import persistencia.consultas.Consultas;
 import persistencia.poolConexiones.Conexion;
 import persistencia.poolConexiones.IConexion;
 
-public class DAOFolios implements IDAOFolios{
+public class DAOFolios implements IDAOFolios {
 
     //public DAOFolios() throws PersistenciaException {}
 
@@ -68,7 +68,7 @@ public class DAOFolios implements IDAOFolios{
         }
     }
 
-    public Folio find(String cod, IConexion ic) throws PersistenciaException {
+    public Folio find(String cod, IConexion ic) throws ConfiguracionException, PersistenciaException {
 
     	Folio folio = null;
 
@@ -86,6 +86,8 @@ public class DAOFolios implements IDAOFolios{
             pstmt.close();
         } catch (SQLException e) {
             throw new PersistenciaException("Error de conexion");
+        } catch (ConfiguracionException e) {
+            throw new ConfiguracionException("Error al instanciar revisiones del folio");
         }
 
         return folio;
@@ -102,14 +104,14 @@ public class DAOFolios implements IDAOFolios{
     		if (existe){
     			//Elimino las revisiones
         		Consultas consulta = new Consultas();
-    			String query = consulta.eliminarRevisiones();
+    			/*String query = consulta.eliminarRevisiones();
     			PreparedStatement pstmt = con.prepareStatement(query);
     			pstmt.setString(1, cod);
     			pstmt.executeUpdate();
-    			
+    			*/
     			//Elimino el Folio
-    			query = consulta.eliminarFolio();
-    			pstmt = con.prepareStatement(query);
+    			String query = consulta.eliminarFolio();
+    			PreparedStatement pstmt = con.prepareStatement(query);
     			pstmt.setString(1, cod);
     			pstmt.executeUpdate();
     			pstmt.close();
@@ -162,11 +164,9 @@ public class DAOFolios implements IDAOFolios{
             ResultSet rs = pstmt.executeQuery();
            //Obtengo el folio mas revisado
             if (rs.next()) {
-            	String Codigo = rs.getString(1);
-            	int Cantidad = rs.getInt(2);
-            	
+            	folio = new VOFolioMaxRev(rs.getInt("cantidad"), rs.getString("codigo"), rs.getString("caratula"), rs.getInt("paginas"));
             	//Obtengo los datos del Folio
-            	 pstmt = con.prepareStatement(consulta.existeFolios());
+            	 /*pstmt = con.prepareStatement(consulta.existeFolios());
                  pstmt.setString(1, Codigo);
                  rs = pstmt.executeQuery();
                  if (rs.next()) {
@@ -174,9 +174,7 @@ public class DAOFolios implements IDAOFolios{
                      
                  }else{
                 	 throw new PersistenciaException("Error al obtener el folio");
-                 }
-            }else{
-            	throw new PersistenciaException("Error al obtener el folio mas revisado");
+                 }*/
             }
             rs.close();
             pstmt.close();

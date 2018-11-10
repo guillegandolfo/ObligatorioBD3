@@ -1,7 +1,6 @@
-package persistencia.Fabrica;
+package persistencia.fabrica;
 
 import logica.excepciones.ConfiguracionException;
-import logica.excepciones.Exc_Persistencia;
 import persistencia.daos.DAOFolios;
 import persistencia.daos.DAORevisiones;
 import persistencia.daos.IDAOFolios;
@@ -22,8 +21,8 @@ public class FabricaMySQL implements FabricaAbstracta {
         return (IDAORevisiones) new DAORevisiones(codFolio);
     }
 
-    @Override
-    public IPoolConexiones crearIPoolConexiones() throws ConfiguracionException, Exc_Persistencia {
+
+    public IPoolConexiones crearIPoolConexiones() throws ConfiguracionException {
         return new PoolConexiones();
     }
 

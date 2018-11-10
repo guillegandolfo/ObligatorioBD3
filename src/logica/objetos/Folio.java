@@ -1,38 +1,79 @@
 package logica.objetos;
 
+import logica.excepciones.ConfiguracionException;
+import logica.excepciones.ConsultaRevisionException;
+import logica.excepciones.PersistenciaException;
+import logica.vo.VORevision;
+import persistencia.config.Propiedades;
+import persistencia.daos.DAORevisiones;
+import persistencia.daos.IDAORevisiones;
+import persistencia.fabrica.FabricaAbstracta;
+import persistencia.poolConexiones.IConexion;
+
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.LinkedList;
 
-import persistencia.daos.DAORevisiones;
-import persistencia.poolConexiones.IConexion;
-import logica.excepciones.Exc_Persistencia;
-import logica.vo.VORevision;
+public class Folio implements Serializable {
 
-public class Folio implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private String codigo;
 	private String caratula;
 	private int paginas;
-	private DAORevisiones Revisiones;
+	private IDAORevisiones revisiones;
+    private FabricaAbstracta fabrica;
 	
-	public Folio(){
+	public Folio() throws ConfiguracionException {
 		super();
-		this.setCodigo("");
-		this.setCaratula("");
-		this.setPaginas(1);
-		this.Revisiones = new DAORevisiones("");
-	}
+//		this.setCodigo("");
+//		this.setCaratula("");
+//		this.setPaginas(0);
+
+        try {
+            Propiedades p = new Propiedades();
+            this.fabrica = (FabricaAbstracta) Class.forName(p.getFabrica()).newInstance();
+            this.revisiones =  this.fabrica.crearIDAORevisiones(codigo);
+
+        } catch (InstantiationException e) {
+            // TODO Auto-generated catch block
+            throw new ConfiguracionException("Error en la configuracion");
+        } catch (IllegalAccessException e) {
+            // TODO Auto-generated catch block
+            throw new ConfiguracionException("Error en la configuracion");
+        } catch (ClassNotFoundException e) {
+            // TODO Auto-generated catch block
+            throw new ConfiguracionException("No se encontro configuracion necesaria");
+        } catch (ConfiguracionException e) {
+            throw new ConfiguracionException(e.getMessage());
+        }
+    }
 	
-	public Folio(String Codigo, String Caratula, int Paginas) {
+	public Folio(String codigo, String caratula, int paginas) throws ConfiguracionException {
 		super();
-		this.setCodigo(Codigo);
-		this.setCaratula(Caratula);
-		this.setPaginas(Paginas);
-		this.Revisiones = new DAORevisiones(Codigo);
+		this.setCodigo(codigo);
+		this.setCaratula(caratula);
+		this.setPaginas(paginas);
+
+
+        try {
+            Propiedades p = new Propiedades();
+            this.fabrica = (FabricaAbstracta) Class.forName(p.getFabrica()).newInstance();
+            this.revisiones =  this.fabrica.crearIDAORevisiones(codigo);
+
+        } catch (InstantiationException e) {
+            // TODO Auto-generated catch block
+            throw new ConfiguracionException("Error en la configuracion");
+        } catch (IllegalAccessException e) {
+            // TODO Auto-generated catch block
+            throw new ConfiguracionException("Error en la configuracion");
+        } catch (ClassNotFoundException e) {
+            // TODO Auto-generated catch block
+            throw new ConfiguracionException("No se encontro configuracion necesaria");
+        } catch (ConfiguracionException e) {
+            throw new ConfiguracionException(e.getMessage());
+        }
 	}
 
-	public String getCodigo() {
+    public String getCodigo() {
 		return codigo;
 	}
 
@@ -55,11 +96,15 @@ public class Folio implements Serializable{
 	public void setPaginas(int paginas) {
 		this.paginas = paginas;
 	}
-	
-	public boolean tieneRevision(int numR, IConexion con) throws Exc_Persistencia{
+
+    public void setRevisiones(IDAORevisiones revisiones) {
+        this.revisiones = revisiones;
+    }
+
+    public boolean tieneRevision(int numR, IConexion con) throws ConsultaRevisionException {
 		
 		boolean tiene = false;
-		int largo = this.Revisiones.Largo(con);
+		int largo = this.revisiones.largo(con);
 		if (largo != 0){
 			tiene = true;
 		}
@@ -67,26 +112,30 @@ public class Folio implements Serializable{
 		return tiene;
 	}
 	
-	public int cantidadRevisiones(IConexion con) throws Exc_Persistencia{
-		return this.Revisiones.Largo(con);
+	public int cantidadRevisiones(IConexion con) throws ConsultaRevisionException {
+		return this.revisiones.largo(con);
 	}
 	
-	public void addRevision(Revision rev, IConexion con) throws Exc_Persistencia{
-		this.Revisiones.InsBack(rev.getDescripcion(), con);
+	public void addRevision(Revision rev, IConexion con) throws PersistenciaException {
+		this.revisiones.insBack(rev, con);
 	}
 	
-	public Revision obtenerRevision(int numR, IConexion con) throws Exc_Persistencia{
-		VORevision rev = this.Revisiones.kEsimo(numR, con);
+	public Revision obtenerRevision(int numR, IConexion con) throws ConsultaRevisionException {
+		VORevision rev = this.revisiones.kEsimo(numR, con);
 		Revision revision = new Revision(rev.getNumero(), rev.getCodigoFolio(), rev.getDescripcion());
 		return revision;
 	}
 	
-	public LinkedList <VORevision> listarRevisiones(IConexion con) throws SQLException, Exc_Persistencia{
+	public LinkedList <VORevision> listarRevisiones(IConexion con) throws ConsultaRevisionException {
 		
-		return this.Revisiones.listarRevisiones(con);
+		return this.revisiones.listarRevisiones(con);
 	}
 	
-	public void borrarRevisiones(IConexion con) throws Exc_Persistencia{
-		this.Revisiones.borrarRevisiones(con);
+	public void borrarRevisiones(IConexion con) throws PersistenciaException {
+		this.revisiones.borrarRevisiones(con);
+	}
+	
+	public void borrarFolio(IConexion con) throws PersistenciaException {
+		this.revisiones.borrarRevisiones(con);
 	}
 }

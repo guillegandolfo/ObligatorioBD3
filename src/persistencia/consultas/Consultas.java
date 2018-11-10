@@ -16,7 +16,7 @@ public class Consultas {
 	}
 	
 	public String InsertarRevision(){
-		return "insert into Juridico.Revisiones Value('?','?','?')";
+		return "insert into Juridico.Revisiones Values(?,?,?)";
 	}	
 	
 	public String insertarFolio(){
@@ -28,7 +28,7 @@ public class Consultas {
 	}*/
 	public String eliminarFolio() {
 		//Marcar en BD para borrar revisiones en cascada
-		return "delete from folios where codigo = (?)";
+		return "delete from Juridico.Folios where codigo = (?)";
 	}	
 	
 	public String eliminarRevisiones(){
@@ -48,12 +48,12 @@ public class Consultas {
 	}
 	public String folioMasRevisado() {
 		/*group by codigo*/
-		return "SELECT f.codigo,count(*) cantidad" + 
-				"	FROM folios f" + 
-				"	inner join revisiones r" + 
+		return "SELECT f.codigo, f.caratula, f.paginas, count(*) cantidad" + 
+				"	FROM juridico.folios f" + 
+				"	inner join juridico.revisiones r" + 
 				"	on f.codigo = r.codigoFolio" + 
-				"	group by f.codigo" + 
-				"	order by 2 desc" + 
+				"	group by f.codigo ,f.caratula,f.paginas" + 
+				"	order by 4 desc" + 
 				"	limit 1";
 	}
 	

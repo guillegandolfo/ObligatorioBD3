@@ -1,10 +1,9 @@
 package logica;
 
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
-import java.util.LinkedList;
-
-import logica.excepciones.Exc_Persistencia;
+import logica.excepciones.ConfiguracionException;
+import logica.excepciones.NoExisteFolioException;
+import logica.excepciones.LecturaArchivoException;
+import logica.excepciones.ConsultaRevisionException;
 import logica.excepciones.PersistenciaException;
 import logica.excepciones.YaExisteFolioException;
 import logica.objetos.Folio;
@@ -12,11 +11,15 @@ import logica.objetos.Revision;
 import logica.vo.VOFolioMaxRev;
 import logica.vo.VORevision;
 import logica.vo.VoFolio;
-import persistencia.daos.DAOFolios;
+import persistencia.config.Propiedades;
 import persistencia.daos.IDAOFolios;
+import persistencia.fabrica.FabricaAbstracta;
 import persistencia.poolConexiones.IConexion;
 import persistencia.poolConexiones.IPoolConexiones;
-import persistencia.poolConexiones.PoolConexiones;
+
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.LinkedList;
 
 
 public class Fachada extends UnicastRemoteObject implements IFachada {
@@ -24,245 +27,210 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
     private static final long serialVersionUID = 1L;
 
     private static Fachada f = null;
-    private IDAOFolios folios;
+    private IDAOFolios daoFolios;
     private IPoolConexiones ipc = null;
+    private FabricaAbstracta fabrica;
+
+    private Fachada() throws RemoteException, ConfiguracionException {
+        try {
+            Propiedades p = new Propiedades();
+            this.fabrica = (FabricaAbstracta) Class.forName(p.getFabrica()).newInstance();
+
+            this.daoFolios = this.fabrica.crearIDAOFolio();
+            this.ipc = this.fabrica.crearIPoolConexiones();
+        } catch (InstantiationException e) {
+            // TODO Auto-generated catch block
+            throw new ConfiguracionException("Error en la configuracion");
+        } catch (IllegalAccessException e) {
+            // TODO Auto-generated catch block
+            throw new ConfiguracionException("Error en la configuracion");
+        } catch (ClassNotFoundException e) {
+            // TODO Auto-generated catch block
+            throw new ConfiguracionException("No se encontro configuracion necesaria");
+        } catch (ConfiguracionException e) {
+            throw new ConfiguracionException(e.getMessage());
+        }
+    }
 
     //singleton
-    public static Fachada getInstancia() throws ConfiguracionException, RemoteException, Exc_Persistencia {
+    public static Fachada getInstancia() throws ConfiguracionException, RemoteException {
         if (f == null) {
             Fachada.f = new Fachada();
         }
         return Fachada.f;
     }
 
-<<<<<<< HEAD
-    private Fachada() throws RemoteException, ConfiguracionException, Exc_Persistencia  {
-        try {
-            this.folios = new DAOFolios();
-            this.ipc = new PoolConexiones();
-        } catch (ConfiguracionException e) {
-            throw new ConfiguracionException(e.getMessage());
-=======
-    private Fachada() throws RemoteException, PersistenciaException  {
-        try {
-            this.folios = new DAOFolios();
-            this.ipc = new PoolConexiones();
-        } catch (PersistenciaException e) {
-            throw new PersistenciaException("Error en la conexion");
->>>>>>> parent of d30371c... asa
-        }
-    }
+    ///////////////////////////
+    //////////FOLIOS///////////
+    ///////////////////////////
 
-	///////////////////////////
-	//////////FOLIOS///////////
-	///////////////////////////
-    
-    public void agregarFolio(VoFolio VoF) throws YaExisteFolioException, PersistenciaException, RemoteException {
-        
-    	 IConexion con = null;
-    	 try {
-    		 con = this.ipc.obtenerConexion(true);
-       
-        	//Si no existe el folio a insertar
-            if(! this.folios.member(VoF.getCodigo(), con)) {
-                Folio Fol = new Folio(VoF.getCodigo(), VoF.getCaratula(), VoF.getPaginas());
-                this.folios.insert(Fol, con);
-            }
-            else{
+    public void agregarFolio(VoFolio voFolio) throws YaExisteFolioException, PersistenciaException, RemoteException {
+
+        IConexion con = null;
+        try {
+            con = this.ipc.obtenerConexion(true);
+
+            //Si no existe el folio a insertar
+            if (!this.daoFolios.member(voFolio.getCodigo(), con)) {
+                Folio folio = new Folio(voFolio.getCodigo(), voFolio.getCaratula(), voFolio.getPaginas());
+                this.daoFolios.insert(folio, con);
+            } else {
                 throw new YaExisteFolioException("El folio indicado ya existe");
             }
             this.ipc.liberarConexion(con, true);
+        } catch (YaExisteFolioException e) {
+            this.ipc.liberarConexion(con, false);
+            throw new YaExisteFolioException(e.getMessage());
         } catch (Exception e) {
             this.ipc.liberarConexion(con, false);
             throw new PersistenciaException("Error en el alta de Folio");
-        }
-    }
-    
-    /*public boolean member(String Codigo) throws PersistenciaException, RemoteException {
-        IConexion con = this.ipc.obtenerConexion(true);
-        boolean existe = false;
-        try {
-        		//Uso directamente el metodo en el DAOFolios
-        		existe = this.folios.member(Codigo, con);
-        		this.ipc.liberarConexion(con, true);
-        } catch (Exception e) {
-            this.ipc.liberarConexion(con, false);
-            throw new PersistenciaException("No se encontro Folio");
-        }
-        return existe;
-    }*/
-    
-    public VoFolio find(String Codigo) throws PersistenciaException, RemoteException {
-        IConexion con = this.ipc.obtenerConexion(true);
-        VoFolio VoF = null;
-        try {
-        	Folio Fo = this.folios.find(Codigo, con);
-        	
-        	//Si existe el folio
-            if(Fo != null){
-                VoF = new VoFolio(Fo.getCodigo(), Fo.getCaratula(), Fo.getPaginas());
-            }
-            else{
-                throw new PersistenciaException("No se encontro el Folio");
-            }
-            this.ipc.liberarConexion(con, true);
-        } catch (Exception e) {
-            this.ipc.liberarConexion(con, false);
-            throw new PersistenciaException("Error en el alta de Folio");
-        }
-        return VoF;
-    }
-    
-    public void delete(String Codigo) throws PersistenciaException, RemoteException {
-        IConexion con = this.ipc.obtenerConexion(true);
-        try {
-        	//Si existe el folio a eliminar
-            if(this.folios.member(Codigo, con)){
-                this.folios.delete(Codigo, con); 
-            }
-            else{
-                throw new PersistenciaException("No se encontro Folio a eliminar");
-            }
-            this.ipc.liberarConexion(con, true);
-        } catch (Exception e) {
-            this.ipc.liberarConexion(con, false);
-            throw new PersistenciaException("Error al eliminar Folio");
-        }
-    }
-    
-    public LinkedList <VoFolio> listarFolios() throws RemoteException, PersistenciaException {
-        IConexion con = this.ipc.obtenerConexion(true);
-        LinkedList <VoFolio> Lista = new LinkedList <VoFolio>();
-        try {
-        	Lista = this.folios.listarFolios(con);
-            this.ipc.liberarConexion(con, true);
-        } catch (Exception e) {
-            this.ipc.liberarConexion(con, false);
-            throw new PersistenciaException("Error de conexion");
-        }
-        return Lista;
-    }
-    
-    
-    public VOFolioMaxRev folioMasRevisado() throws PersistenciaException, RemoteException {
-        IConexion con = this.ipc.obtenerConexion(true);
-        VOFolioMaxRev VoF = new VOFolioMaxRev();
-        try {
-            VoF = this.folios.folioMasRevisado(con); 
-            this.ipc.liberarConexion(con, true);
-        } catch (Exception e) {
-            this.ipc.liberarConexion(con, false);
-            throw new PersistenciaException("Error en el alta de Folio");
-        }
-        return VoF;
-    }
-    
-	///////////////////////////
-	//////////REVISION/////////
-	///////////////////////////
-    
-    public void agregarRevision(String codFolio, String desc) throws RemoteException, PersistenciaException {
-    	System.out.println("Entro a la fachada");
-    	IConexion con = this.ipc.obtenerConexion(true);
-    	System.out.println("Tengo Conexion");
-        try {
-        	System.out.println("1");
-        	Folio Fol = this.folios.find(codFolio, con);
-        	System.out.println("2");
-        	//Si existe folio
-        	if (Fol != null){
-        		System.out.println("3");
-        		int Numero = Fol.cantidadRevisiones(con) + 1;
-        		System.out.println("4");
-            	Revision rev = new Revision(Numero, codFolio, desc);
-            	System.out.println("5");
-            	Fol.addRevision(rev, con);
-            	System.out.println("6");
-        	}else{
-        		throw new Exc_Persistencia("No existe Folio");
-        	}
-        	
-		    this.ipc.liberarConexion(con, true);
-		} catch (Exception e) {
-		    this.ipc.liberarConexion(con, false);
-		    throw new PersistenciaException("Error de conexion");
-		}
-    }
-    
-    public int cantidadRevisiones(String codFolio) throws RemoteException, PersistenciaException {
-        IConexion con = this.ipc.obtenerConexion(true);
-        int Cantidad =0;
-        try {
-        	Folio Fol = this.folios.find(codFolio, con);
-        	if (Fol != null){
-            	Cantidad = Fol.cantidadRevisiones(con);
-        	}else{
-        		throw new Exc_Persistencia("No existe Folio");
-        	}
-        	
-            this.ipc.liberarConexion(con, true);
-        } catch (Exception e) {
-            this.ipc.liberarConexion(con, false);
-            throw new PersistenciaException("Error de conexion");
-        }
-        return Cantidad;
-    }
-    
-    public VORevision kEsimo(String codFolio, int Numero) throws RemoteException, PersistenciaException {
-        IConexion con = this.ipc.obtenerConexion(true);
-        VORevision VoR = new VORevision();
-        try {
-        	Folio Fol = this.folios.find(codFolio, con);
-        	if (Fol != null){
-            	Revision rev = Fol.obtenerRevision(Numero, con);
-            	VoR.setNumero(Numero);
-            	VoR.setCodigoFolio(codFolio);
-            	VoR.setDescripcion(rev.getDescripcion());
-        	}else{
-        		throw new Exc_Persistencia("No existe Folio");
-        	}
-        	
-            this.ipc.liberarConexion(con, true);
-        } catch (Exception e) {
-            this.ipc.liberarConexion(con, false);
-            throw new PersistenciaException("Error de conexion");
-        }
-        return VoR;
-    }
-    
-    public LinkedList <VORevision> listarRevisiones(String codFolio, int Numero) throws RemoteException, PersistenciaException {
-        IConexion con = this.ipc.obtenerConexion(true);
-        LinkedList <VORevision> Lista = new LinkedList <VORevision>();
-        try {
-        	Folio Fol = this.folios.find(codFolio, con);
-        	if (Fol != null){
-        		Lista = Fol.listarRevisiones(con);
-        	}else{
-        		throw new Exc_Persistencia("No existe Folio");
-        	}
-            this.ipc.liberarConexion(con, true);
-        } catch (Exception e) {
-            this.ipc.liberarConexion(con, false);
-            throw new PersistenciaException("Error de conexion");
-        }
-        return Lista;
-    }
-    
-    public void borrarFolioRevisiones(String codFolio) throws RemoteException, PersistenciaException {
-        IConexion con = this.ipc.obtenerConexion(true);
-        try {
-        	Folio Fol = this.folios.find(codFolio, con);
-        	if (Fol != null){
-        		Fol.borrarRevisiones(con);
-        	}else{
-        		throw new Exc_Persistencia("No existe Folio");
-        	}
-            this.ipc.liberarConexion(con, true);
-        } catch (Exception e) {
-            this.ipc.liberarConexion(con, false);
-            throw new PersistenciaException("Error de conexion");
         }
     }
 
+
+    public LinkedList<VoFolio> listarFolios() throws RemoteException, PersistenciaException {
+        IConexion con = this.ipc.obtenerConexion(true);
+        LinkedList<VoFolio> lista = new LinkedList<VoFolio>();
+        try {
+            lista = this.daoFolios.listarFolios(con);
+            this.ipc.liberarConexion(con, true);
+        } catch (Exception e) {
+            this.ipc.liberarConexion(con, false);
+            throw new PersistenciaException("Error de conexion al listar folio");
+        }
+        return lista;
+    }
+
+
+    public VOFolioMaxRev folioMasRevisado() throws PersistenciaException, RemoteException {
+        IConexion con = this.ipc.obtenerConexion(true);
+        VOFolioMaxRev voFolio = new VOFolioMaxRev();
+        try {
+            voFolio = this.daoFolios.folioMasRevisado(con);
+            this.ipc.liberarConexion(con, true);
+        } catch (Exception e) {
+            this.ipc.liberarConexion(con, false);
+            throw new PersistenciaException("Error al listar folio mas revisado");
+        }
+        return voFolio;
+    }
+
+    ///////////////////////////
+    //////////REVISION/////////
+    ///////////////////////////
+
+    public int agregarRevision(String codFolio, String desc) throws RemoteException, PersistenciaException {
+        IConexion con = this.ipc.obtenerConexion(true);
+        int numero = -1;
+        try {
+            Folio folio = this.daoFolios.find(codFolio, con);
+
+            //Si existe folio
+            //if (folio != null) {
+                numero = folio.cantidadRevisiones(con) + 1;
+                Revision rev = new Revision(numero, codFolio, desc);
+
+                folio.addRevision(rev, con);
+            /*} else {
+                throw new PersistenciaException("No existe Folio");
+            }*/
+            this.ipc.liberarConexion(con, true);
+        } catch (PersistenciaException e) {
+
+            this.ipc.liberarConexion(con, false);
+            throw new PersistenciaException("No existe Folio");
+        } catch (Exception e) {
+            this.ipc.liberarConexion(con, false);
+            throw new PersistenciaException("Error al agregar la revision");
+        }
+        return numero;
+    }
+
+    /*public int cantidadRevisiones(String codFolio) throws RemoteException, PersistenciaException, NoExisteFolioException {
+        IConexion con = this.ipc.obtenerConexion(true);
+        int cantidad = 0;
+        try {
+            Folio folio = this.daoFolios.find(codFolio, con);
+            if (folio != null) {
+                cantidad = folio.cantidadRevisiones(con);
+            } else {
+                throw new NoExisteFolioException("No existe Folio");
+            }
+
+            this.ipc.liberarConexion(con, true);
+        } catch (Exception e) {
+            this.ipc.liberarConexion(con, false);
+            throw new PersistenciaException("Error de conexion");
+        }
+        return cantidad;
+    }*/
+
+    public LinkedList<VORevision> listarRevisiones(String codFolio) throws RemoteException, PersistenciaException {
+
+        IConexion con = this.ipc.obtenerConexion(true);
+        LinkedList<VORevision> lista = new LinkedList<VORevision>();
+        try {
+            Folio folio = this.daoFolios.find(codFolio, con);
+            if (folio != null) {
+                lista = folio.listarRevisiones(con);
+            } else {
+                throw new PersistenciaException("No existe Folio");
+            }
+            this.ipc.liberarConexion(con, true);
+        } catch (PersistenciaException e) {
+            this.ipc.liberarConexion(con, false);
+            throw new PersistenciaException(e.getMessage());
+        } catch (Exception e) {
+            this.ipc.liberarConexion(con, false);
+            throw new PersistenciaException("Error de conexion");
+        }
+        return lista;
+    }
+	    public String darDescripcion(String codFolio, int Numero) throws RemoteException, PersistenciaException {
+    	IConexion con = this.ipc.obtenerConexion(true);
+
+    		Folio folio;
+    		Revision rev = new Revision();
+			try {
+				folio = this.daoFolios.find(codFolio, con);
+				boolean sePuede = folio.tieneRevision(Numero, con);
+				if (sePuede){
+					rev = folio.obtenerRevision(Numero, con);
+				}else{
+					throw new PersistenciaException("No existe Revision");
+				}
+					
+			} catch (LecturaArchivoException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ConfiguracionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ConsultaRevisionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			return rev.getDescripcion();
+    	
+    }
+    public void borrarFolioRevisiones(String codFolio) throws RemoteException, PersistenciaException {
+
+        IConexion con = this.ipc.obtenerConexion(true);
+        try {
+            Folio folio = this.daoFolios.find(codFolio, con);
+            if (folio != null) {
+
+                folio.borrarRevisiones(con);
+                this.daoFolios.delete(codFolio, con);
+            } else {
+                throw new PersistenciaException("No existe Folio");
+            }
+            this.ipc.liberarConexion(con, true);
+        } catch (Exception e) {
+            this.ipc.liberarConexion(con, false);
+            throw new PersistenciaException("Error de conexion");
+        }
+    }
 
 }

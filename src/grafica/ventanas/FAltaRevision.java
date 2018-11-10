@@ -1,167 +1,195 @@
 package grafica.ventanas;
 
-<<<<<<< HEAD
-import grafica.controladores.ControladorAltaRevision;
-=======
->>>>>>> parent of d30371c... asa
-import java.awt.Dimension;
-import javax.swing.JFrame;
-<<<<<<< HEAD
-import javax.swing.JTextField;
-import javax.swing.JLabel;
 import javax.swing.JButton;
-import java.awt.Font;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-
-
-public class FAltaRevision extends Ventana {
-	private JFrame frame;
-	private JTextField CodigoFolio;
-	private JTextField descripcion;
-	private JTextField textCodigoFolio;
-	private JTextField textDescripcion;
-	
-	/* Constructor de la ventana */
-	public FAltaRevision() {
-		//llamo el constructor de la clase Ventana para que me inicialize la controladora
-		super();
-		initialize();
-	}
-	
-	/* Inicializo los componentes de la ventana */
-	private void initialize(){
-		/* marco de la ventana secundaria */
-		frame = new JFrame();
-		frame.setResizable(false);
-		frame.setSize(new Dimension(419, 322));
-		//frame.setIconImage(Toolkit.getDefaultToolkit().getImage("Imagenes\\icon.png"));
-		frame.setTitle("Ingreso Revision");
-		
-
-		
-		
-		/* cuando intenten cerrarme, solamente me cierro yo */
-		frame.getContentPane().setLayout(null);
-		WindowAdapter manFrame = (new WindowAdapter(){
-			public void windowClosing (WindowEvent arg0){ 
-				setVentanaAbierta(null);
-				setVisible(false); // cierro el frame
-				
-				}
-		});
-		frame.addWindowListener(manFrame);
-		
-		JLabel lblFolio = new JLabel("Folio: ");
-		lblFolio.setBounds(10, 39, 38, 25);
-		frame.getContentPane().add(lblFolio);
-		
-		JLabel lblRevision = new JLabel("Revision");
-		lblRevision.setFont(new Font("Tahoma", Font.BOLD, 14));
-		lblRevision.setBounds(10, 125, 69, 25);
-		frame.getContentPane().add(lblRevision);
-		
-		JButton btnGuardar = new JButton("Guardar");
-		
-		btnGuardar.setBounds(99, 220, 89, 23);
-		frame.getContentPane().add(btnGuardar);
-		
-		JButton btnVolver = new JButton("Volver");
-		btnVolver.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				setVisible(false);
-				setVentanaAbierta(null);
-			}
-		});
-		btnVolver.setBounds(197, 220, 89, 23);
-		frame.getContentPane().add(btnVolver);
-		
-
-		final JLabel lblDescripcion = new JLabel("Descripcion:");
-		lblDescripcion.setBounds(10, 151, 69, 25);
-		frame.getContentPane().add(lblDescripcion);
-		
-		
-		textCodigoFolio = new JTextField();
-		textCodigoFolio.setBounds(58, 41, 86, 20);
-		frame.getContentPane().add(textCodigoFolio);
-		textCodigoFolio.setColumns(10);
-		
-		textDescripcion = new JTextField();
-		textDescripcion.setBounds(75, 153, 86, 20);
-		frame.getContentPane().add(textDescripcion);
-		textDescripcion.setColumns(10);
-		lblDescripcion.setVisible(false);
-
-		
-		btnGuardar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				//codigo de lo que hace el boton INGRESAR
-				try{
-					//Obtengo los datos de la pantalla.
-					String codigoFolio = textCodigoFolio.getText().trim();
-					String Descripcion = textDescripcion.getText().trim();
-					if(!codigoFolio.isEmpty()){	
-						 if (!Descripcion.isEmpty()){
-							//Se los mando a la controladora para que me revise que los valores sean correctos.
-<<<<<<< HEAD
-							 System.out.println("1");
-							 ControladorAltaRevision c;
-							 System.out.println("2");
-						
-							 c = new ControladorAltaRevision((FAltaRevision)getVentanaAbierta());
-							 System.out.println("3");
-							 c.altaRevision(codigoFolio, Descripcion);
-							 System.out.println("4");
-=======
-							 
->>>>>>> parent of d30371c... asa
-						 }else{
-							 mostrarError("La descripcion de la Revision esta vacia",0);
-						 }
-					}else{
-						mostrarError("El Codigo del Folio esta vacio",0);
-					}
-=======
+import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
+import javax.swing.JRootPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableModel;
 
-public class FAltaRevision extends JFrame {
+import grafica.controladores.ControladorRevision;
+import logica.vo.VORevision;
 
-	private JPanel contentPane;
+import java.util.LinkedList;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+public class FAltaRevision extends JInternalFrame {
+	private static JInternalFrame frame;
+	private JTextField textField;
+	private JTable tablaRevisiones;
+	private ControladorRevision controlador = new ControladorRevision(this);
+	DefaultTableModel modelo;
 	/**
 	 * Launch the application.
 	 */
+	
+	private static FAltaRevision f = null;
+	private JTextField txtCodigo;
+	private JTextField txtCaratula;
+   
+    //singleton
+    public static FAltaRevision getInstancia() {
+        if (f == null) {
+        	FAltaRevision.f = new FAltaRevision();
+        }
+        return FAltaRevision.f;
+    }
+
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				try {
-					FAltaRevision frame = new FAltaRevision();
-					frame.setVisible(true);
->>>>>>> origin/master
-				} catch (Exception e) {
-					mostrarError("Error al cargar el archivo .properties", 0);
+				frame = new JInternalFrame("frame", false, false, false, false);
+				frame.putClientProperty("JInternalFrame.isPalette", Boolean.TRUE);
+				frame.getRootPane().setWindowDecorationStyle(JRootPane.NONE);
+				frame.setVisible(true);			
+			
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	private FAltaRevision() {
+		setClosable(true);
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		
+		getContentPane().setLayout(null);
+		
+		JPanel panel = new JPanel();
+		panel.setBounds(0, 0, 756, 636);
+		getContentPane().add(panel);
+		panel.setLayout(null);
+		
+		String[] columns = {"Codigo Folio","Descripcion","Numero"};
+		modelo = new DefaultTableModel(columns,0); //0 es la cantidad de rows
+		//this.listarRevisiones();
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(24, 234, 696, 362);
+		panel.add(scrollPane);
+		
+		//Creo la JTable
+		final JTable tablaFolios = new JTable(modelo);
+		tablaFolios.setModel(modelo);
+		scrollPane.setViewportView(tablaFolios);
+		tablaFolios.setLayout(null);
+		scrollPane.setViewportView(tablaFolios);
+		tablaFolios.setModel(modelo);
+		tablaFolios.setBorder(new LineBorder(new Color(0, 0, 0)));
+		
+		txtCodigo = new JTextField();
+		txtCodigo.setBounds(204, 53, 295, 20);
+		panel.add(txtCodigo);
+		txtCodigo.setColumns(10);
+		
+		txtCaratula = new JTextField();
+		txtCaratula.setColumns(10);
+		txtCaratula.setBounds(204, 84, 295, 20);
+		panel.add(txtCaratula);
+		
+		JLabel lblCodigo = new JLabel("Codigo Folio");
+		lblCodigo.setBounds(112, 56, 82, 14);
+		panel.add(lblCodigo);
+		
+		JLabel lblCaratula = new JLabel("Descripcion");
+		lblCaratula.setBounds(112, 90, 82, 14);
+		panel.add(lblCaratula);
+		
+		JButton btnAgregar = new JButton("Agregar");
+		btnAgregar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String codigoFolio = txtCodigo.getText();
+				String descripcion = txtCaratula.getText();
+			
+				if (codigoFolio.equals("") && descripcion.equals("")) {
+					imprimirVentana("Ingrese todos los datos necesarios para una revision.");
+				} else {
+					int numero = controlador.altaRevision(codigoFolio, descripcion);
+					
+					if (numero > 0) {
+						Object[] fila = new Object[3]; 
+					    fila[0] = codigoFolio;
+					    fila[1] = descripcion;
+					    fila[2] = numero;
+					    modelo.addRow(fila);
+					}
 				}
+				
 			}
 		});
 		
+		btnAgregar.setBounds(167, 157, 177, 23);
+		panel.add(btnAgregar);
 		
-		
-		
-	}
+		JButton btnBuscarRevisionesFolio = new JButton("Buscar Revisiones Folio");
+		btnBuscarRevisionesFolio.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				String codigoFolio = txtCodigo.getText();
 
-	/* Indico si deseo que la ventana sea visible o no */
-	public void setVisible (boolean visible) {
-		frame.setVisible(visible);
+				modelo.getDataVector().removeAllElements();
+				modelo.fireTableDataChanged();
+
+				if (codigoFolio.equals("")) {
+					imprimirVentana("Ingrese codigo folio para realizar la busqueda.");
+				} else {
+					LinkedList<VORevision> listado = new LinkedList<VORevision>();
+					
+					listado = controlador.listarRevisiones(codigoFolio);
+					modelo.setRowCount(0);
+					
+					for (VORevision revision : listado) { 
+					    Object[] fila = new Object[3]; 
+					    fila[0] = revision.getCodigoFolio(); 
+					    fila[1] = revision.getDescripcion(); 
+					    fila[2] = revision.getNumero(); 
+
+			  		    modelo.addRow(fila); 
+					}
+				}
+			}
+		});
+		btnBuscarRevisionesFolio.setBounds(373, 157, 163, 23);
+		panel.add(btnBuscarRevisionesFolio);
+	
+		setBounds(0, 0, 756, 636);
+	
+		inicialize();
+		
+
 	}
-	@Override
-	public void toFront(){
-		frame.toFront();
+	private void inicialize() {
+		
+	}
+	
+	public void imprimirVentana(String msg) {
+		
+		JOptionPane.showMessageDialog (frame, msg);
+	}
+	
+	public void listarRevisiones (String codFolio) {
+		
+		LinkedList<VORevision> listado = new LinkedList<VORevision>();
+		
+		listado = controlador.listarRevisiones(codFolio);
+		modelo.setRowCount(0);
+		
+		for (VORevision revision : listado) { 
+		    Object[] fila = new Object[3]; 
+		    fila[0] = revision.getCodigoFolio(); 
+		    fila[1] = revision.getDescripcion(); 
+		    fila[2] = revision.getNumero(); 
+		    
+  		    modelo.addRow(fila); 
+		}
+		
 	}
 }
-
-
-	

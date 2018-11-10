@@ -1,36 +1,24 @@
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-<<<<<<< HEAD
 
 import logica.excepciones.ConexionBDException;
 import logica.excepciones.ConfiguracionException;
-import logica.excepciones.Exc_Persistencia;
 import persistencia.config.Propiedades;
-=======
-import logica.excepciones.Exc_Persistencia;
-import persistencia.datos.Propiedades;
->>>>>>> parent of d30371c... asa
 
 
 public class main
 {
-<<<<<<< HEAD
-	public static void main (final String[] args) throws ConexionBDException, IOException, Exc_Persistencia
-=======
-	public static void main (final String[] args) throws Exc_Persistencia, IOException
->>>>>>> parent of d30371c... asa
+	public static void main (final String[] args) throws ConexionBDException, IOException
 	{
 	try {
 				Propiedades p = new Propiedades();
 				String driver = p.getDriver();
-				String url = p.buscar("url");
-				String usuario = p.buscar("usuario");
-				String password = p.buscar("password");
+				String url = p.getUrl();
+				String usuario = p.getUser();
+				String password = p.getPass();
 
 				// 1. cargo dinamicamente el driver de MySQL 
 				Class.forName(driver);
@@ -52,14 +40,14 @@ public class main
 						"descripcion Varchar(60) not null,\r\n" + 
 						"primary key (numero, codigoFolio),\r\n" + 
 						"CONSTRAINT fk_codigoFolio FOREIGN KEY (codigoFolio) REFERENCES Juridico.Folios (Codigo)\r\n" + 
-						");");
+						"ON DELETE CASCADE);");
 				pstmt.execute();
 				System.out.println("Creo la tabla Revisiones");
 				
 				String insert = "INSERT INTO Juridico.Folios VALUES (?,?,?)";
 				pstmt = con.prepareStatement(insert);
 				pstmt.setString(1, "FGH-0015");
-				pstmt.setString(2, "La comuna contra la señora con 38 gatos");
+				pstmt.setString(2, "La comuna contra la seï¿½ora con 38 gatos");
 				pstmt.setInt(3, 5);
 				pstmt.executeUpdate();
 				System.out.println("Inserte primer tupla");	
@@ -102,7 +90,7 @@ public class main
 			catch (ClassNotFoundException  e){	
 				e.printStackTrace();
 			}
-			catch (Exc_Persistencia  e){	
+			catch (ConfiguracionException  e){	
 				e.printStackTrace();
 			}
 

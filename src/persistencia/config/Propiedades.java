@@ -3,26 +3,21 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-<<<<<<< HEAD
-import logica.excepciones.Exc_Persistencia;;
-=======
 import logica.excepciones.ConfiguracionException;
-import logica.excepciones.Exc_Persistencia;
->>>>>>> parent of d30371c... asa
 
 public class Propiedades {
 	
 	private Properties prop;
 	
 	
-	public Propiedades() throws Exc_Persistencia {	
+	public Propiedades() throws ConfiguracionException {	
 		prop = new Properties();
 		String pathProperties =  ".settings/datos.properties";
 		try {
 			prop.load(new FileInputStream(pathProperties));
 		} catch (IOException ex) {
 			// TODO Auto-generated catch block
-			throw new Exc_Persistencia("No se ha podido cargar la configuracion"); 
+			throw new ConfiguracionException("No se ha podido cargar la configuracion"); 
 		} 				
 	}
 	
@@ -74,33 +69,40 @@ public class Propiedades {
 		fabrica = prop.getProperty("fabrica");
 		return fabrica;
 	}
-	
-	public String buscar(String nomProp) throws Exc_Persistencia { 
 
-		try{
-			Properties p = new Properties();
-			String nombreProperties = ".settings/datos.properties";
-			p.load(new FileInputStream(nombreProperties));
-			if(nomProp == "driver"){
-				String archivo = p.getProperty("driver");
-				return archivo;
-			}else if(nomProp == "url"){
-				String archivo = p.getProperty("url");
-				return archivo;
-			}else if((nomProp == "usuario")){
-				String archivo = p.getProperty("usuario");
-				return archivo;
-			}else if((nomProp == "fabrica")){
-				String archivo = p.getProperty("fabrica");
-				return archivo;
-			}else if((nomProp == "password")){
-				String archivo = p.getProperty("password");
-				return archivo;
-			}else{
-				throw new Exc_Persistencia("No se encuentra los datos en la Properties");
-			}
-		} catch (IOException e){ 
-			throw new Exc_Persistencia("Hubo un error al buscar la properties");
-		}	
+	public String getTamanioPool()
+	{
+		String tamanio;
+        tamanio = prop.getProperty("tamanioPool");
+		return tamanio;
 	}
+
+//	public String buscar(String nomProp) throws ConfiguracionException {
+//
+//		try{
+//			Properties p = new Properties();
+//			String nombreProperties = ".settings/datos.properties";
+//			p.load(new FileInputStream(nombreProperties));
+//			if(nomProp == "driver"){
+//				String archivo = p.getProperty("driver");
+//				return archivo;
+//			}else if(nomProp == "url"){
+//				String archivo = p.getProperty("url");
+//				return archivo;
+//			}else if((nomProp == "usuario")){
+//				String archivo = p.getProperty("usuario");
+//				return archivo;
+//			}else if((nomProp == "password")){
+//				String archivo = p.getProperty("password");
+//				return archivo;
+//			}else if ((nomProp == "fabrica")){
+//				String archivo = p.getProperty("fabrica");
+//				return archivo;
+//			}else{
+//				throw new ConfiguracionException("No se encuentra los datos en la Properties");
+//			}
+//		} catch (IOException e){
+//			throw new ConfiguracionException("Hubo un error al buscar la properties");
+//		}
+//	}
 }

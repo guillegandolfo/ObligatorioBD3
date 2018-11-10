@@ -4,6 +4,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.LinkedList;
 
+import logica.excepciones.NoExisteFolioException;
 import logica.excepciones.PersistenciaException;
 import logica.excepciones.YaExisteFolioException;
 import logica.vo.VOFolioMaxRev;
@@ -18,25 +19,15 @@ public interface IFachada extends Remote {
     
     public VOFolioMaxRev folioMasRevisado() throws PersistenciaException, RemoteException;
     
-<<<<<<< HEAD
-    public void agregarRevision(String codFolio, String desc) throws RemoteException, PersistenciaException;
-=======
-    public void altaRevision(String codFolio, String desc, int cedN) throws RemoteException, PersistenciaException;
->>>>>>> parent of d30371c... asa
+    public int agregarRevision(String codFolio, String desc) throws RemoteException, PersistenciaException;
     
-    public int cantidadRevisiones(String codFolio) throws RemoteException, PersistenciaException;
+   // public int cantidadRevisiones(String codFolio) throws RemoteException, PersistenciaException, NoExisteFolioException;
     
-    public LinkedList <VORevision> listarRevisiones(String codFolio, int Numero) throws RemoteException, PersistenciaException;
+    public LinkedList <VORevision> listarRevisiones(String codFolio) throws RemoteException, PersistenciaException;
+    
+    public String darDescripcion(String codFolio, int Numero) throws RemoteException, PersistenciaException;
     
     public void borrarFolioRevisiones(String codFolio) throws RemoteException, PersistenciaException;
-    
-    /*public VORevision kEsimo(String codFolio, int Numero) throws RemoteException, PersistenciaException;
-    
-    public boolean member(String Codigo) throws PersistenciaException, RemoteException;
-    
-    public VoFolio find(String Codigo) throws PersistenciaException, RemoteException;
-    
-    public void delete(String Codigo) throws PersistenciaException, RemoteException;*/
     
 }
 

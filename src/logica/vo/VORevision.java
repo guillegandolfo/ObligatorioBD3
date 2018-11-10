@@ -15,11 +15,17 @@ public class VORevision implements Serializable{
 		this.setDescripcion("");
 	}
 	
-	public VORevision(int Numero, String CodigoFolio, String Descripcion) {
+	public VORevision(String codigoFolio, String descripcion) {
 		super();
-		this.setNumero(Numero);;
-		this.setCodigoFolio(CodigoFolio);
-		this.setDescripcion(Descripcion);
+		this.setCodigoFolio(codigoFolio);
+		this.setDescripcion(descripcion);
+	}
+	
+	public VORevision(int numero, String codigoFolio, String descripcion) {
+		super();
+		this.setCodigoFolio(codigoFolio);
+		this.setDescripcion(descripcion);
+		this.setNumero(numero);
 	}
 	
 	public int getNumero() {

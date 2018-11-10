@@ -8,11 +8,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-<<<<<<< HEAD
 import logica.excepciones.ConfiguracionException;
-import logica.excepciones.Exc_Persistencia;
-=======
->>>>>>> parent of d30371c... asa
 import logica.excepciones.PersistenciaException;
 import persistencia.config.Propiedades;
 
@@ -28,26 +24,15 @@ public class PoolConexiones implements IPoolConexiones {
 	private int creadas;
 	private int tope;
 	
-<<<<<<< HEAD
-	public PoolConexiones () throws ConfiguracionException, Exc_Persistencia {
+	public PoolConexiones () throws ConfiguracionException {
 		
 		try {
-			/*Properties p = new Properties();
-			String archivo = "config/config.properties";
-			p.load(new FileInputStream(archivo));*/
-=======
-	public PoolConexiones () throws PersistenciaException {
-		
-		try {
-			Properties p = new Properties();
-			String archivo = "config/config.properties";
-			p.load(new FileInputStream(archivo));
->>>>>>> parent of d30371c... asa
 			
-			driver = p.getProperty("driver");
-			url = p.getProperty("url");
-			user = p.getProperty("username");
-			password = p.getProperty("password");
+			Propiedades p = new Propiedades();
+			driver = p.getDriver();
+			url = p.getUrl();
+			user = p.getUser();
+			password = p.getPass();
 			
 			//Definir pool
 			tamanio = 4;//leer de properties
@@ -55,20 +40,10 @@ public class PoolConexiones implements IPoolConexiones {
 			conexiones = new Conexion[tamanio];
 			nivelTransaccionalidad = Connection.TRANSACTION_SERIALIZABLE;
 
-<<<<<<< HEAD
-		} catch (Exc_Persistencia e) {
+		} catch (ConfiguracionException e) {
 			// TODO Auto-generated catch block
 			throw new ConfiguracionException("Ocurrio un error con la configuracion de datos de los servidores");
 		} 	
-=======
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			throw new PersistenciaException("Ocurrio un error");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			throw new PersistenciaException("Ocurrio un error");
-		}	
->>>>>>> parent of d30371c... asa
 	}
 	
 	public IConexion obtenerConexion(boolean modifica) throws PersistenciaException {
@@ -86,7 +61,7 @@ public class PoolConexiones implements IPoolConexiones {
 						((Conexion) conexion).getConexion().setAutoCommit(false);
 						((Conexion) conexion).getConexion().setTransactionIsolation(nivelTransaccionalidad);
 					} catch(SQLException ex) {
-						throw new PersistenciaException("Ocurrio un error");
+						throw new PersistenciaException("Ocurrio un error al obtener una conexion");
 					}
 					tope--;
 				}
@@ -99,19 +74,14 @@ public class PoolConexiones implements IPoolConexiones {
 						Connection con = DriverManager.getConnection(url, user, password);
 						conexion = new Conexion(con);
 						creadas++;
-						
-						try {
-							((Conexion) conexion).getConexion().setAutoCommit(false);
-							((Conexion) conexion).getConexion().setTransactionIsolation(nivelTransaccionalidad);
-						} catch(SQLException ex) {
-							throw new PersistenciaException("Ocurrio un error");
-						}
-						
+						((Conexion) conexion).getConexion().setAutoCommit(false);
+						((Conexion) conexion).getConexion().setTransactionIsolation(nivelTransaccionalidad);
+					
 					} catch (ClassNotFoundException e) {
 						
-						throw new PersistenciaException("Ocurrio un error");
+						throw new PersistenciaException("Ocurrio un error al crear una nueva conexion");
 					} catch (SQLException e) {
-						throw new PersistenciaException("Ocurrio un error");
+						throw new PersistenciaException("Ocurrio un error al conectarse con la base de datos");
 					}
 				}
 				else {

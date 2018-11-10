@@ -1,20 +1,20 @@
 package persistencia.daos;
 import java.lang.String;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 
-import logica.vo.VORevision;
-import logica.excepciones.Exc_Persistencia;
+import logica.excepciones.ConsultaRevisionException;
+import logica.excepciones.PersistenciaException;
 import logica.objetos.Revision;
+import logica.vo.VORevision;
 import persistencia.consultas.Consultas;
 import persistencia.poolConexiones.Conexion;
 import persistencia.poolConexiones.IConexion;
 
-public class DAORevisiones {
+public class DAORevisiones implements IDAORevisiones {
 
 	private String codigoFolio;
 	
@@ -31,7 +31,7 @@ public class DAORevisiones {
 		this.codigoFolio = codigoFolio;
 	}
 
-	public void InsBack(String Desc ,IConexion ic) throws Exc_Persistencia{
+	public void insBack(Revision rev, IConexion ic) throws PersistenciaException {
 
 		try 
 		{
@@ -57,11 +57,11 @@ public class DAORevisiones {
 				}
 				maxrevisionid ++;
 				query = consulta.InsertarRevision();
-				pstmt = con.prepareStatement(query);
-				pstmt.setInt(1,maxrevisionid );
-				pstmt.setString(2, this.codigoFolio);
-				pstmt.setString(3, Desc);
-				pstmt.executeUpdate();
+				PreparedStatement pstmt2 = con.prepareStatement(query);
+				pstmt2.setInt(1,maxrevisionid );
+				pstmt2.setString(2, this.codigoFolio);
+				pstmt2.setString(3, rev.getDescripcion());
+				pstmt2.executeUpdate();
 			}
 			
 			rs.close();
@@ -69,13 +69,13 @@ public class DAORevisiones {
 				
 		}
 		catch(SQLException e) {
-			throw new Exc_Persistencia("Error Al Insertar Revision");
+			throw new PersistenciaException("Error Al Insertar Revision");
 		}
 		
 		}
 		
 	
-	public int Largo(IConexion ic) throws Exc_Persistencia{
+	public int largo(IConexion ic) throws ConsultaRevisionException {
     	
 		int Cantidad = 0;
 		try{
@@ -95,13 +95,13 @@ public class DAORevisiones {
             pstmt.close();
           
 	        } catch (SQLException e) {
-	            throw new Exc_Persistencia("Error en la conexion");
+	            throw new ConsultaRevisionException("Error en la conexion");
 	        }
 			return Cantidad;
 		}
 
 	
-	public VORevision kEsimo(int numero, IConexion ic) throws Exc_Persistencia{
+	public VORevision kEsimo(int numero, IConexion ic) throws ConsultaRevisionException {
     	
 		VORevision rev = new VORevision();
 		try{
@@ -123,13 +123,13 @@ public class DAORevisiones {
         pstmt.close();
       
         } catch (SQLException e) {
-            throw new Exc_Persistencia("Error en la conexion");
+            throw new ConsultaRevisionException("Error en la conexion");
         }
 		
 		return rev;
 	}
 	
-	public LinkedList <VORevision> listarRevisiones(IConexion ic) throws SQLException, Exc_Persistencia{
+	public LinkedList <VORevision> listarRevisiones(IConexion ic) throws ConsultaRevisionException {
 		
 		LinkedList <VORevision> Lista = new LinkedList <VORevision>();
 		try{
@@ -151,11 +151,11 @@ public class DAORevisiones {
 				
 				//Recorro resultados
 				while (rs.next()){
-					int Numero = rs.getInt("numero");
-					String CodigoFolio = rs.getString("codigoFolio");
-					String Descripcion = rs.getString("descripcion");
+					int numero = rs.getInt("numero");
+					String codigoFolio = rs.getString("codigoFolio");
+					String descripcion = rs.getString("descripcion");
 					
-					VORevision Revision = new VORevision(Numero, CodigoFolio, Descripcion);
+					VORevision Revision = new VORevision(numero, codigoFolio, descripcion);
 					Lista.add(Revision);
 				}
 			}
@@ -164,15 +164,15 @@ public class DAORevisiones {
 		    pstmt.close();
 	      
 	    } catch (SQLException e) {
-	        throw new Exc_Persistencia("Error en la conexion");
+	        throw new ConsultaRevisionException("Error en la conexion");
 	    }
 			
 		return Lista;
 	}	
 		
-	public void borrarRevisiones(IConexion ic) throws Exc_Persistencia{
+	public void borrarRevisiones(IConexion ic) throws PersistenciaException {
     	
-		try{
+		/*try{
 		Conexion c = (Conexion) ic;
         Connection con = c.getConexion();
 		Consultas consulta = new Consultas();
@@ -193,8 +193,8 @@ public class DAORevisiones {
 		pstmt.close();
       
         } catch (SQLException e) {
-            throw new Exc_Persistencia("Error en la conexion");
-        }
+            throw new PersistenciaException("Error en la conexion");
+        }*/
 	}
 
 	

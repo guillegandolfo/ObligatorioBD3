@@ -1,10 +1,6 @@
 package grafica.ventanas;
 
-import javax.swing.DefaultDesktopManager;
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
@@ -12,31 +8,21 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
 import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
-import javax.swing.border.MatteBorder;
-import javax.swing.event.InternalFrameEvent;
 import javax.swing.table.DefaultTableModel;
 
 import grafica.controladores.ControladorFolio;
-import logica.Fachada;
-import logica.excepciones.ConfiguracionException;
+import logica.excepciones.PersistenciaException;
+import logica.excepciones.ServidorException;
 import logica.vo.VoFolio;
-import persistencia.daos.DAOFolios;
-import persistencia.daos.IDAOFolios;
-import persistencia.poolConexiones.IPoolConexiones;
-import persistencia.poolConexiones.PoolConexiones;
 
-import java.beans.PropertyChangeListener;
-import java.rmi.RemoteException;
 import java.util.LinkedList;
-import java.beans.PropertyChangeEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JSpinner;
 
 public class FAbFolio extends JInternalFrame {
 	private static JInternalFrame frame;
@@ -49,6 +35,8 @@ public class FAbFolio extends JInternalFrame {
 	 */
 	
 	private static FAbFolio f = null;
+	private JTextField txtCodigo;
+	private JTextField txtCaratula;
    
     //singleton
     public static FAbFolio getInstancia() {
@@ -77,8 +65,10 @@ public class FAbFolio extends JInternalFrame {
 
 	/**
 	 * Create the frame.
+	 * @throws PersistenciaException 
+	 * @throws ServidorException 
 	 */
-	private FAbFolio() {
+	private FAbFolio()  {
 		setClosable(true);
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		
@@ -89,35 +79,6 @@ public class FAbFolio extends JInternalFrame {
 		getContentPane().add(panel);
 		panel.setLayout(null);
 		
-		JButton btnBorrar = new JButton("Borrar");
-		btnBorrar.setBounds(304, 197, 89, 23);
-		panel.add(btnBorrar);
-		
-		JButton button = new JButton("New button");
-		button.setBounds(426, 197, 89, 23);
-		panel.add(button);
-		
-		JButton btnAgregar = new JButton("Agregar");
-		btnAgregar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				VoFolio folio = new VoFolio("codigo6", "caratula", 1);
-				Boolean ok = controlador.agregarFolio(folio);
-				
-				if (ok){
-					Object[] fila = new Object[3]; 
-				    fila[0] = folio.getCodigo(); 
-				    fila[1] = folio.getCaratula(); 
-				    fila[2] = folio.getPaginas();			             
-				    modelo.addRow(fila);
-				}
-			}
-		});
-		btnAgregar.setBounds(190, 197, 89, 23);
-		panel.add(btnAgregar);
-		//setBounds(0, 0, 740, 573);
-		setBounds(289, 0, 756, 636);
-		//desk.setBounds(0, 0, 740, 573);
-		
 		String[] columns = {"Codigo","Caratula","Paginas"};
 		modelo = new DefaultTableModel(columns,0); //0 es la cantidad de rows
 		this.listarFolios();
@@ -126,36 +87,104 @@ public class FAbFolio extends JInternalFrame {
 		panel.add(scrollPane);
 		
 		//Creo la JTable
-		JTable tablaFolios = new JTable(modelo);
+		final JTable tablaFolios = new JTable(modelo);
 		tablaFolios.setModel(modelo);
 		scrollPane.setViewportView(tablaFolios);
 		tablaFolios.setLayout(null);
-		scrollPane.setViewportView(tablaFolios);
-		tablaFolios.setModel(modelo);
 		tablaFolios.setBorder(new LineBorder(new Color(0, 0, 0)));
 		
-		inicialize();
+		txtCodigo = new JTextField();
+		txtCodigo.setBounds(183, 56, 296, 20);
+		panel.add(txtCodigo);
+		txtCodigo.setColumns(10);
 		
-
-	}
-	private void inicialize() {
+		txtCaratula = new JTextField();
+		txtCaratula.setColumns(10);
+		txtCaratula.setBounds(183, 87, 296, 20);
+		panel.add(txtCaratula);
 		
+		JLabel lblCodigo = new JLabel("Codigo");
+		lblCodigo.setBounds(53, 59, 87, 14);
+		panel.add(lblCodigo);
+		
+		JLabel lblCaratula = new JLabel("Caratula");
+		lblCaratula.setBounds(53, 93, 87, 14);
+		panel.add(lblCaratula);
+		
+		final JSpinner txtPaginas = new JSpinner();
+		txtPaginas.setBounds(183, 118, 296, 20);
+		panel.add(txtPaginas);
+		
+		JLabel lblCantPaginas = new JLabel("Cant. Paginas");
+		lblCantPaginas.setBounds(53, 124, 99, 14);
+		panel.add(lblCantPaginas);
+		
+		JButton btnBorrar = new JButton("Borrar");
+		btnBorrar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				int rowSeleccionada = tablaFolios.getSelectedRow();
+				if (rowSeleccionada < 0) {
+					imprimirVentana("Seleccione folio a borrar");
+				} else {
+					//VoFolio voFolio = new VoFolio((String) tablaFolios.getValueAt(rowSeleccionada, 1), (String)tablaFolios.getValueAt(rowSeleccionada, 2), (Integer)tablaFolios.getValueAt(rowSeleccionada, 3));	
+					Boolean borrar = controlador.borrarFolio((String) tablaFolios.getValueAt(rowSeleccionada, 0));
+					modelo.removeRow(rowSeleccionada);
+					if (!borrar) {
+						imprimirVentana("Ocurrio un error al borrar el folio");
+					}
+				}
+			}
+		});
+		btnBorrar.setBounds(340, 186, 139, 23);
+		panel.add(btnBorrar);
+		
+		JButton btnAgregar = new JButton("Agregar");
+		btnAgregar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String codigo = txtCodigo.getText();
+				String caratula = txtCaratula.getText();
+				Integer paginas = (Integer) txtPaginas.getValue();
+			
+				if (codigo.equals("") || caratula.equals("") || paginas <= 0 ) {
+					imprimirVentana("Ingrese todos los datos necesarios para un folio.");
+				} else {
+					VoFolio folio = new VoFolio(codigo, caratula, paginas);
+					Boolean ok = controlador.agregarFolio(folio);
+					
+					if (ok){
+						Object[] fila = new Object[3]; 
+					    fila[0] = folio.getCodigo(); 
+					    fila[1] = folio.getCaratula(); 
+					    fila[2] = folio.getPaginas();			             
+					    modelo.addRow(fila);
+					}
+				}
+				
+			}
+		});
+		
+		btnAgregar.setBounds(183, 186, 133, 23);
+		panel.add(btnAgregar);
+		setBounds(289, 0, 756, 636);
 	}
+	
 	public void imprimirVentana(String msg) {
 		
 		JOptionPane.showMessageDialog (frame, msg);
 	}
-	public void listarFolios () {
+	
+	public void listarFolios ()  {
 		
 		LinkedList<VoFolio> listado = new LinkedList<VoFolio>();
 		
 		listado = controlador.listarFolios();
 		modelo.setRowCount(0);
 		
-		for (VoFolio folio : listado) { 
+		for (VoFolio folio : listado) {
 		    Object[] fila = new Object[3]; 
 		    fila[0] = folio.getCodigo(); 
 		    fila[1] = folio.getCaratula(); 
+		    fila[2] = folio.getPaginas(); 
 
   		    modelo.addRow(fila); 
 		}

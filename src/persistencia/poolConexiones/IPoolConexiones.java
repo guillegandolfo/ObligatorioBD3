@@ -2,7 +2,7 @@ package persistencia.poolConexiones;
 
 import logica.excepciones.PersistenciaException;
 
-public interface IPoolConexiones  {
+public interface IPoolConexiones {
 
 	 public IConexion obtenerConexion (boolean ok) throws PersistenciaException;
 	 

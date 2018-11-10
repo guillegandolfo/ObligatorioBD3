@@ -1,19 +1,15 @@
 package persistencia.poolConexiones;
 
-import logica.excepciones.PersistenciaException;
-
-
-public class PoolConexionArchivo implements IPoolConexiones{
+public class PoolConexionesArchivo implements IPoolConexiones{
     private int escritores;
     private int lectores;
     
-    public PoolConexionArchivo(){
+    public PoolConexionesArchivo(){
        this.escritores = 0;
        this.lectores = 0;
     }
     
-    @Override
-    public IConexion obtenerConexion(boolean modifica) throws PersistenciaException {
+    public IConexion obtenerConexion(boolean modifica) {
         IConexion ret = null;
         synchronized (this) {
             while(ret == null){
@@ -44,10 +40,9 @@ public class PoolConexionArchivo implements IPoolConexiones{
         return ret;
     }
 
-    @Override
-    public void liberarConexion(IConexion con, boolean ok) throws PersistenciaException {
+    public void liberarConexion(IConexion con, boolean ok) {
         synchronized(this){
-            if(((ConexionArchivo) con).getModifica()){
+        	if(((ConexionArchivo) con).getModifica()){
                 this.escritores--;
             }
             else{

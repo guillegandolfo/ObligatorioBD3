@@ -1,10 +1,11 @@
 package persistencia.daos;
 
-import java.sql.SQLException;
 import java.util.LinkedList;
 
+import logica.excepciones.ConsultaRevisionException;
+import logica.excepciones.PersistenciaException;
+import logica.objetos.Revision;
 import persistencia.poolConexiones.IConexion;
-import logica.excepciones.Exc_Persistencia;
 import logica.vo.VORevision;
 
 
@@ -14,14 +15,14 @@ public interface IDAORevisiones {
 
 	public void setCodigoFolio(String codigoFolio);
 	
-	public void InsBack(String Desc ,IConexion ic) throws Exc_Persistencia;
+	public void insBack(Revision rev, IConexion ic) throws PersistenciaException;
 	
-	public int Largo(IConexion ic) throws Exc_Persistencia;
+	public int largo(IConexion ic) throws ConsultaRevisionException;
 	
-	public VORevision kEsimo(int numero, IConexion ic) throws Exc_Persistencia;
+	public VORevision kEsimo(int numero, IConexion ic) throws ConsultaRevisionException;
 	
-	public LinkedList <VORevision> listarRevisiones(IConexion ic) throws SQLException, Exc_Persistencia;
+	public LinkedList <VORevision> listarRevisiones(IConexion ic) throws ConsultaRevisionException;
 	
-	public void borrarRevisiones(IConexion ic) throws Exc_Persistencia;
+	public void borrarRevisiones(IConexion ic) throws PersistenciaException;
 	
 }
