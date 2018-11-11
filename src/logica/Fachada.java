@@ -13,7 +13,7 @@ import logica.vo.VORevision;
 import logica.vo.VoFolio;
 import persistencia.config.Propiedades;
 import persistencia.daos.IDAOFolios;
-import persistencia.fabrica.FabricaAbstracta;
+import persistencia.Fabrica.FabricaAbstracta;
 import persistencia.poolConexiones.IConexion;
 import persistencia.poolConexiones.IPoolConexiones;
 

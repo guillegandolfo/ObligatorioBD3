@@ -7,7 +7,7 @@ import logica.vo.VORevision;
 import persistencia.config.Propiedades;
 import persistencia.daos.DAORevisiones;
 import persistencia.daos.IDAORevisiones;
-import persistencia.fabrica.FabricaAbstracta;
+import persistencia.Fabrica.FabricaAbstracta;
 import persistencia.poolConexiones.IConexion;
 
 import java.io.Serializable;

@@ -1,4 +1,4 @@
-package persistencia.fabrica;
+package persistencia.Fabrica;
 
 import logica.excepciones.ConfiguracionException;
 import persistencia.daos.DAOFolios;
