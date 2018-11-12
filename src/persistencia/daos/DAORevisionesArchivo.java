@@ -10,6 +10,7 @@ import java.io.Serializable;
 import java.util.LinkedList;
 
 import logica.excepciones.ConsultaRevisionException;
+import logica.excepciones.LecturaArchivoException;
 import logica.excepciones.PersistenciaException;
 import logica.objetos.Revision;
 import logica.vo.VORevision;
@@ -59,14 +60,12 @@ public class DAORevisionesArchivo implements IDAORevisiones ,Serializable {
 	         }
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			throw new PersistenciaException("Error al leer revision");
     	} finally {
 	        try {
 				br.close();
 				fr.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				throw new PersistenciaException("Error al leer revision");
 			}
     	}
@@ -74,7 +73,7 @@ public class DAORevisionesArchivo implements IDAORevisiones ,Serializable {
     }
 
 
-    public void insBack(Revision rev, IConexion ic)throws PersistenciaException {
+    public void insBack(Revision rev, IConexion ic)throws PersistenciaException, LecturaArchivoException {
 
         //int num = this.largo(ic);
     	String archivo = this.folder.getPath()+"/ " + rev.getNumero() + "-" + this.getCodigoFolio() + ".txt";
@@ -94,12 +93,11 @@ public class DAORevisionesArchivo implements IDAORevisiones ,Serializable {
 					bufferedWriter.write(rev.getDescripcion());
 				}
 			} catch (PersistenciaException e) {
-				// TODO Auto-generated catch block
-//				e.printStackTrace();
+				throw new PersistenciaException("Error al intentar una revision como archivo");
 			}
        	
         } catch (IOException e) {
-			// TODO Auto-generated catch block
+        	throw new LecturaArchivoException("Error al intentar leer archivo de revision");
 			
 	    } finally {
 	    
@@ -136,8 +134,35 @@ public class DAORevisionesArchivo implements IDAORevisiones ,Serializable {
 	}
 
 	
-	public VORevision kEsimo(int numero, IConexion ic) throws ConsultaRevisionException {
-		return null;
+    public VORevision kEsimo(int numero, IConexion ic) throws ConsultaRevisionException {
+    	VORevision vorev = new VORevision();
+    	try 
+		{
+    		Revision rev = new Revision();
+    		
+    		FileReader fr = null;
+            BufferedReader br = null;
+    		for(File archRevision : this.folder.listFiles())
+    		{
+    			 try {
+    					rev = this.leerRevisionDeArchivo(archRevision.getPath());
+    				} catch (PersistenciaException e) {
+    					// TODO Auto-generated catch block
+    					e.printStackTrace();
+    				}
+    			 if(rev.getNumero() == numero) 
+    			 {
+    				 vorev = new VORevision(rev.getNumero(), rev.getCodigoFolio(), rev.getDescripcion()); 
+    				 break;
+    			 }
+    		}
+		}
+    	catch(Exception e) 
+    	{
+    		throw new ConsultaRevisionException(e.getMessage());
+    	}
+			
+		return vorev;
 	}
 
 
@@ -152,7 +177,7 @@ public class DAORevisionesArchivo implements IDAORevisiones ,Serializable {
         }
     }
 
-    public LinkedList<VORevision> listarRevisiones(IConexion ic) {
+    public LinkedList<VORevision> listarRevisiones(IConexion ic) throws PersistenciaException {
 
     	ConexionArchivo con = (ConexionArchivo) ic;
     	LinkedList<VORevision> listRevisiones = new LinkedList<VORevision>();
@@ -164,8 +189,7 @@ public class DAORevisionesArchivo implements IDAORevisiones ,Serializable {
                     rev = this.leerRevisionDeArchivo(archRevision.getPath());
                 }
 			} catch (PersistenciaException e) {
-				// TODO Auto-generated catch block
-				//e.printStackTrace();
+				throw new PersistenciaException("Error al itentar listar las revisiones en archivos");
 			}
             VORevision vor = new VORevision(rev.getNumero(), rev.getCodigoFolio(), rev.getDescripcion());
             listRevisiones.add(vor);
@@ -175,63 +199,5 @@ public class DAORevisionesArchivo implements IDAORevisiones ,Serializable {
     }
 
     
-	/*public int Largo(IConexion ic) throws Exc_Persistencia{
-	
-	Revision rev = new Revision();
-	int Cantidad = 0;
-	try 
-	{
-		for(File archRevision : this.folder.listFiles()){
-			Cantidad ++;
-		}
-	}
-	catch()
-	{
-		
-	}
 
-		return Cantidad;
-	}*/
-
-/*public VORevision kEsimo(int numero, IConexion ic) throws Exc_Persistencia{
-	
-	VORevision rev = new VORevision();
-	try{
-	Conexion c = (Conexion) ic;
-    Connection con = c.getConexion();
-    Consultas consulta = new Consultas();
-	String query = consulta.existeRevision();
-	PreparedStatement pstmt = con.prepareStatement(query);
-	pstmt.setString(1, this.codigoFolio);
-	pstmt.setInt(2, numero);
-	ResultSet rs = pstmt.executeQuery();
-    if (rs.next()){
-    	rev.setNumero(rs.getInt(1));
-    	rev.setCodigoFolio(rs.getString(2));
-    	rev.setDescripcion(rs.getString(3));
-    }
-    
-    rs.close();
-    pstmt.close();
-  
-    } catch (SQLException e) {
-        throw new Exc_Persistencia("Error en la conexion");
-    }
-	
-	return rev;
-}*/
-
-    
-   /* public Revision find(String cod, IConexion ic) throws PersistenciaException {
-    	ConexionArchivo con = (ConexionArchivo) ic;
-    	Revision rev = new Revision();
-        for(File archFolio : this.folder.listFiles()){
-            String nombreArch = archFolio.getName();
-            if(nombreArch.contains("Revisiones-" + cod + ".txt")){
-            	rev.setCodigoFolio(cod);
-            	rev = this.leerRevisionDeArchivo(archFolio.getPath());
-            }
-        }
-        return rev;
-    }*/
 }

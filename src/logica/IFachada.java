@@ -4,6 +4,9 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.LinkedList;
 
+import logica.excepciones.ConfiguracionException;
+import logica.excepciones.ConsultaRevisionException;
+import logica.excepciones.LecturaArchivoException;
 import logica.excepciones.NoExisteFolioException;
 import logica.excepciones.PersistenciaException;
 import logica.excepciones.YaExisteFolioException;
@@ -25,7 +28,7 @@ public interface IFachada extends Remote {
     
     public LinkedList <VORevision> listarRevisiones(String codFolio) throws RemoteException, PersistenciaException;
     
-    public String darDescripcion(String codFolio, int Numero) throws RemoteException, PersistenciaException;
+    public String darDescripcion(String codFolio, int Numero) throws RemoteException, PersistenciaException, LecturaArchivoException, ConfiguracionException, ConsultaRevisionException;
     
     public void borrarFolioRevisiones(String codFolio) throws RemoteException, PersistenciaException;
     

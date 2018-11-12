@@ -2,6 +2,7 @@ package logica.objetos;
 
 import logica.excepciones.ConfiguracionException;
 import logica.excepciones.ConsultaRevisionException;
+import logica.excepciones.LecturaArchivoException;
 import logica.excepciones.PersistenciaException;
 import logica.vo.VORevision;
 import persistencia.config.Propiedades;
@@ -116,7 +117,7 @@ public class Folio implements Serializable {
 		return this.revisiones.largo(con);
 	}
 	
-	public void addRevision(Revision rev, IConexion con) throws PersistenciaException {
+	public void addRevision(Revision rev, IConexion con) throws PersistenciaException, LecturaArchivoException {
 		this.revisiones.insBack(rev, con);
 	}
 	
@@ -126,7 +127,7 @@ public class Folio implements Serializable {
 		return revision;
 	}
 	
-	public LinkedList <VORevision> listarRevisiones(IConexion con) throws ConsultaRevisionException {
+	public LinkedList <VORevision> listarRevisiones(IConexion con) throws ConsultaRevisionException, PersistenciaException {
 		
 		return this.revisiones.listarRevisiones(con);
 	}

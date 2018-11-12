@@ -11,6 +11,9 @@ import javax.swing.JTable;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 import grafica.controladores.ControladorFolioMasRevisado;
+import logica.excepciones.ConfiguracionException;
+import logica.excepciones.ConsultaRevisionException;
+import logica.excepciones.LecturaArchivoException;
 import logica.vo.VOFolioMaxRev;
 
 import javax.swing.JLabel;
@@ -119,8 +122,18 @@ public class FolioMasRevisado extends JInternalFrame {
 					if (Numero <= 0){
 						imprimirVentana("Ingrese un numero valido");
 					}else{
-						String descripcion = controlador.getDescripcion(codigo, Numero);
-						textResultado.setText(descripcion);
+						String descripcion;
+						try {
+							descripcion = controlador.getDescripcion(codigo, Numero);
+							textResultado.setText(descripcion);
+						} catch (LecturaArchivoException e) {
+							imprimirVentana(e.getMessage());
+						} catch (ConfiguracionException e) {
+							imprimirVentana(e.getMessage());
+						} catch (ConsultaRevisionException e) {
+							imprimirVentana(e.getMessage());
+						}
+						
 					}
 				}
 			}

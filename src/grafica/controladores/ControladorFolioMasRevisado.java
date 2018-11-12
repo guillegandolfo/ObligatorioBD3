@@ -8,6 +8,8 @@ import java.rmi.RemoteException;
 import grafica.ventanas.FolioMasRevisado;
 import logica.IFachada;
 import logica.excepciones.ConfiguracionException;
+import logica.excepciones.ConsultaRevisionException;
+import logica.excepciones.LecturaArchivoException;
 import logica.excepciones.PersistenciaException;
 import logica.vo.VOFolioMaxRev;
 import persistencia.config.Propiedades;
@@ -55,7 +57,7 @@ public class ControladorFolioMasRevisado {
 		return VOFMR;
 	}
 	
-	public String getDescripcion(String codigo, int numRevision) {
+	public String getDescripcion(String codigo, int numRevision) throws LecturaArchivoException, ConfiguracionException, ConsultaRevisionException {
 		
 		String Descripcion = "Error";
 		try {
