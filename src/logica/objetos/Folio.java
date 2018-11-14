@@ -106,7 +106,7 @@ public class Folio implements Serializable {
 		
 		boolean tiene = false;
 		int largo = this.revisiones.largo(con);
-		if (largo != 0){
+		if (largo >= numR){
 			tiene = true;
 		}
 		

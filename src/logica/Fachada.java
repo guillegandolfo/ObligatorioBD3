@@ -188,7 +188,6 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
     }
 	    public String darDescripcion(String codFolio, int Numero) throws RemoteException, PersistenciaException, LecturaArchivoException, ConfiguracionException, ConsultaRevisionException {
     	IConexion con = this.ipc.obtenerConexion(true);
-
     		Folio folio;
     		Revision rev = new Revision();
 			try {
@@ -197,18 +196,22 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 				if (sePuede){
 					rev = folio.obtenerRevision(Numero, con);
 				}else{
+					this.ipc.liberarConexion(con, false);
 					throw new PersistenciaException("No existe Revision");
 				}
 					
-			} catch (LecturaArchivoException e) {				
+			} catch (LecturaArchivoException e) {	
+				this.ipc.liberarConexion(con, false);
 				throw new LecturaArchivoException(e.getMessage());
 			} catch (ConfiguracionException e) {
+				this.ipc.liberarConexion(con, false);
 				throw new ConfiguracionException(e.getMessage());
 			} catch (ConsultaRevisionException e) {
+				this.ipc.liberarConexion(con, false);
 				throw new ConsultaRevisionException(e.getMessage());
 			}
-			
-			return rev.getDescripcion();  	
+			this.ipc.liberarConexion(con, false);
+			return rev.getDescripcion();  
     }
 	    
 	    

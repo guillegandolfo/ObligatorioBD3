@@ -6,6 +6,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
 import grafica.ventanas.FolioMasRevisado;
+import logica.Fachada;
 import logica.IFachada;
 import logica.excepciones.ConfiguracionException;
 import logica.excepciones.ConsultaRevisionException;
@@ -27,6 +28,7 @@ public class ControladorFolioMasRevisado {
 			String ip = p.getIpServidor();
 			String puerto = p.getPuertoServidor();
 			int port = Integer.parseInt(puerto);
+			//Fachada fachada = Fachada.getInstancia();
 			fachada = (IFachada)Naming.lookup("//" + ip + ":" + port + "/logica");
 		} catch (IOException e) {
 		// TODO Auto-generated catch block
@@ -35,7 +37,8 @@ public class ControladorFolioMasRevisado {
 		catch (NotBoundException e) {
 			// TODO Auto-generated catch block
 			vent.imprimirVentana(e.getMessage());
-		} catch (ConfiguracionException e) {
+		}
+		catch (ConfiguracionException e) {
 			// TODO Auto-generated catch block
 			vent.imprimirVentana(e.getMessage());
 		}
@@ -61,7 +64,9 @@ public class ControladorFolioMasRevisado {
 		
 		String Descripcion = "Error";
 		try {
+			
 			Descripcion = fachada.darDescripcion(codigo, numRevision);
+			
 		} catch (PersistenciaException e) {
 			this.ventana.imprimirVentana("No existe Revision");
 		} catch (RemoteException e) {
